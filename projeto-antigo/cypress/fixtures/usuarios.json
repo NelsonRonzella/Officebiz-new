@@ -1,0 +1,31 @@
+{
+  "admin": {
+    "nome": "Admin Exemplo",
+    "email": "admin@exemplo.com",
+    "senha": "testeteste",
+    "dashboard": "/dashboard"
+  },
+  "licenciado": {
+    "nome": "Licenciado Exemplo",
+    "email": "licenciado@exemplo.com",
+    "senha": "testeteste",
+    "dashboard": "/pedidos"
+  },
+  "cliente": {
+    "nome": "Cliente Exemplo",
+    "email": "cliente@exemplo.com",
+    "senha": "testeteste",
+    "dashboard": "/pedidos"
+  },
+  "prestador": {
+    "nome": "Prestador Exemplo",
+    "email": "prestador@exemplo.com",
+    "senha": "testeteste",
+    "dashboard": "/pedidos"
+  },
+  "inativo": {
+    "nome": "Usuário Inativo",
+    "email": "inativo@exemplo.com",
+    "senha": "testeteste"
+  }
+}

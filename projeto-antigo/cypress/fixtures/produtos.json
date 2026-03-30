@@ -1,0 +1,31 @@
+{
+  "pontual": {
+    "nome": "Produto Pontual Teste",
+    "descricao": "Produto para testes E2E",
+    "preco": "150,00",
+    "tipo": "pontual",
+    "etapa": {
+      "titulo": "Etapa de Teste",
+      "descricao": "Descrição da etapa de teste",
+      "tempo": "5",
+      "ordem": "1"
+    }
+  },
+  "recorrente": {
+    "nome": "Produto Recorrente Teste",
+    "descricao": "Produto recorrente para testes E2E",
+    "preco": "299,00",
+    "tipo": "recorrente",
+    "aba": {
+      "titulo": "Aba de Teste",
+      "descricao": "Descrição da aba de teste",
+      "ordem": "1"
+    }
+  },
+  "inativo": {
+    "nome": "Produto Inativo Teste",
+    "descricao": "Este produto não deve aparecer na criação de pedidos",
+    "preco": "50,00",
+    "tipo": "pontual"
+  }
+}

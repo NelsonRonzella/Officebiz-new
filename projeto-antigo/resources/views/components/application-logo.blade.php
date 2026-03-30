@@ -1,0 +1,1 @@
+<img src="/logo.png" class="mx-auto" style="max-width: 60%;" />
