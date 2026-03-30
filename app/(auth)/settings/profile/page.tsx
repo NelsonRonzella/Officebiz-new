@@ -14,8 +14,16 @@ export default async function ProfilePage() {
     where: { id: session.user.id },
     select: {
       name: true,
-      phone: true,
+      telefone: true,
       companyName: true,
+      cpf: true,
+      cnpj: true,
+      cep: true,
+      endereco: true,
+      numero: true,
+      bairro: true,
+      cidade: true,
+      estado: true,
     },
   })
 
@@ -37,8 +45,17 @@ export default async function ProfilePage() {
       <ProfileForm
         initialData={{
           name: user.name ?? "",
-          phone: user.phone ?? "",
+          phone: user.telefone ?? "",
           companyName: user.companyName ?? "",
+          cpf: user.cpf ?? "",
+          cnpj: user.cnpj ?? "",
+          telefone: user.telefone ?? "",
+          cep: user.cep ?? "",
+          endereco: user.endereco ?? "",
+          numero: user.numero ?? "",
+          bairro: user.bairro ?? "",
+          cidade: user.cidade ?? "",
+          estado: user.estado ?? "",
         }}
       />
     </div>

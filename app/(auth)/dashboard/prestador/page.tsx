@@ -1,0 +1,83 @@
+import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth"
+import { db } from "@/lib/db"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { ClipboardList, Info } from "lucide-react"
+
+export default async function PrestadorDashboardPage() {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    redirect("/login")
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      name: true,
+      role: true,
+    },
+  })
+
+  if (!user) {
+    redirect("/login")
+  }
+
+  if (user.role !== "PRESTADOR") {
+    redirect("/dashboard")
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Welcome */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">
+            Bem-vindo, {user.name || "Prestador"}!
+          </CardTitle>
+          <CardDescription>
+            Acompanhe seus pedidos e atividades por aqui.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      {/* Orders placeholder */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <ClipboardList className="size-5 text-primary" />
+            <CardTitle>Seus Pedidos</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Nenhum pedido atribuído ainda. Pedidos aparecerão aqui quando forem
+            disponibilizados.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Info card */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Info className="size-5 text-primary" />
+            <CardTitle>Informação</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Como prestador, você receberá pedidos para executar. Acompanhe tudo
+            por aqui.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

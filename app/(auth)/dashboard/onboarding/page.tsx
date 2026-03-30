@@ -14,7 +14,7 @@ export default async function OnboardingPage() {
     where: { id: session.user.id },
     select: {
       name: true,
-      phone: true,
+      telefone: true,
       companyName: true,
       companyLogo: true,
       onboardingCompleted: true,
@@ -35,7 +35,7 @@ export default async function OnboardingPage() {
       <OnboardingWizard
         initialData={{
           name: user.name,
-          phone: user.phone,
+          phone: user.telefone,
           companyName: user.companyName,
           companyLogo: user.companyLogo,
         }}

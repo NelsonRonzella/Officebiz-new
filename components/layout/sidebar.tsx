@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import {
   LayoutDashboard,
-  User,
+  Users,
   CreditCard,
+  User,
   Headphones,
   LogOut,
   Menu,
@@ -19,29 +20,115 @@ import {
   SheetTrigger,
   SheetContent,
 } from "@/components/ui/sheet"
+import type { Role } from "@prisma/client"
 
-const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Perfil", href: "/settings/profile", icon: User },
-  { label: "Assinatura", href: "/settings/billing", icon: CreditCard },
-  { label: "Suporte", href: "/suporte", icon: Headphones },
-]
+interface NavItem {
+  label: string
+  href: string
+  icon: typeof LayoutDashboard
+}
 
-function SidebarNav() {
+function getNavItems(role?: Role): NavItem[] {
+  switch (role) {
+    case "ADMIN":
+      return [
+        { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+        { label: "Usuários", href: "/admin/users", icon: Users },
+      ]
+    case "LICENCIADO":
+      return [
+        { label: "Dashboard", href: "/dashboard/licenciado", icon: LayoutDashboard },
+        { label: "Clientes", href: "/app/clientes", icon: Users },
+      ]
+    case "PRESTADOR":
+      return [
+        { label: "Dashboard", href: "/dashboard/prestador", icon: LayoutDashboard },
+      ]
+    case "CLIENTE":
+      return [
+        { label: "Dashboard", href: "/dashboard/cliente", icon: LayoutDashboard },
+      ]
+    default:
+      return [
+        { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      ]
+  }
+}
+
+function getSecondaryItems(role?: Role): NavItem[] {
+  const items: NavItem[] = [
+    { label: "Perfil", href: "/settings/profile", icon: User },
+  ]
+
+  if (role === "LICENCIADO") {
+    items.unshift({ label: "Assinatura", href: "/settings/billing", icon: CreditCard })
+  }
+
+  if (role !== "ADMIN") {
+    items.push({ label: "Suporte", href: "/suporte", icon: Headphones })
+  }
+
+  return items
+}
+
+function getDashboardHref(role?: Role): string {
+  switch (role) {
+    case "ADMIN":
+      return "/admin"
+    case "LICENCIADO":
+      return "/dashboard/licenciado"
+    case "PRESTADOR":
+      return "/dashboard/prestador"
+    case "CLIENTE":
+      return "/dashboard/cliente"
+    default:
+      return "/dashboard"
+  }
+}
+
+interface SidebarNavProps {
+  role?: Role
+}
+
+function SidebarNav({ role }: SidebarNavProps) {
   const pathname = usePathname()
+  const navItems = getNavItems(role)
+  const secondaryItems = getSecondaryItems(role)
 
   return (
     <div className="flex h-full flex-col" style={{ background: "hsl(var(--sidebar-background))", color: "hsl(var(--sidebar-foreground))" }}>
       {/* Logo */}
       <div className="flex h-16 items-center px-6">
-        <Link href="/dashboard" className="text-xl font-bold tracking-tight text-white">
+        <Link href={getDashboardHref(role)} className="text-xl font-bold tracking-tight text-white">
           OfficeBiz
         </Link>
       </div>
 
-      {/* Navigation */}
+      {/* Primary Navigation */}
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => {
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + "/")
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+                  : "text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+              )}
+            >
+              <item.icon className="size-5" />
+              {item.label}
+            </Link>
+          )
+        })}
+
+        <Separator className="my-4 bg-[hsl(var(--sidebar-border))]" />
+
+        {secondaryItems.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/")
           return (
@@ -77,12 +164,16 @@ function SidebarNav() {
   )
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  role?: Role
+}
+
+export function Sidebar({ role }: SidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:w-64 md:flex-col">
-        <SidebarNav />
+        <SidebarNav role={role} />
       </aside>
 
       {/* Mobile hamburger + Sheet */}
@@ -97,7 +188,7 @@ export function Sidebar() {
             <span className="sr-only">Abrir menu</span>
           </SheetTrigger>
           <SheetContent side="left" showCloseButton={false} className="w-64 p-0">
-            <SidebarNav />
+            <SidebarNav role={role} />
           </SheetContent>
         </Sheet>
         <span className="text-lg font-bold tracking-tight text-foreground">

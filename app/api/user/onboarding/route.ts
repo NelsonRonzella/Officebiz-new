@@ -17,7 +17,7 @@ export async function PUT(req: Request) {
       where: { id: session.user.id },
       data: {
         name,
-        phone,
+        telefone: phone,
         companyName,
         companyLogo,
         onboardingCompleted: true,

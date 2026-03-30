@@ -12,13 +12,30 @@ enum Plan {
   PRO
 }
 
+enum Role {
+  ADMIN
+  LICENCIADO
+  PRESTADOR
+  CLIENTE
+}
+
 model User {
   id                     String    @id @default(cuid())
   name                   String?
   email                  String    @unique
   emailVerified          DateTime?
   image                  String?
-  phone                  String?
+  role                   Role      @default(LICENCIADO)
+  active                 Boolean   @default(true)
+  cpf                    String?
+  cnpj                   String?
+  telefone               String?
+  cep                    String?
+  endereco               String?
+  numero                 String?
+  bairro                 String?
+  cidade                 String?
+  estado                 String?
   companyName            String?
   companyLogo            String?
   onboardingCompleted    Boolean   @default(false)
@@ -28,10 +45,13 @@ model User {
   stripePriceId          String?
   stripeSubscriptionId   String?   @unique
   stripeCurrentPeriodEnd DateTime?
+  createdBy              String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
   accounts               Account[]
   sessions               Session[]
+  creator                User?     @relation("CreatedUsers", fields: [createdBy], references: [id])
+  createdUsers           User[]    @relation("CreatedUsers")
 }
 
 model Account {

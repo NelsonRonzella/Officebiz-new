@@ -30,6 +30,49 @@ export async function sendOtpEmail(email: string, code: string) {
   }
 }
 
+export async function sendInviteEmail(email: string, name: string) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
+
+  const { error } = await resend.emails.send({
+    from: "OfficeBiz <noreply@officebiz.com.br>",
+    to: email,
+    subject: "Você foi convidado para a OfficeBiz",
+    html: `
+      <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+        <div style="text-align: center; margin-bottom: 32px;">
+          <h1 style="color: #1E3A5F; font-size: 24px; margin: 0;">OfficeBiz</h1>
+        </div>
+        <div style="background: #F8FAFC; border-radius: 12px; padding: 32px; text-align: center;">
+          <p style="color: #1E3A5F; font-size: 18px; font-weight: 600; margin: 0 0 16px;">
+            Olá, ${name}!
+          </p>
+          <p style="color: #64748B; font-size: 14px; line-height: 1.6; margin: 0 0 24px;">
+            Você foi convidado para utilizar a plataforma OfficeBiz.
+            Clique no botão abaixo para acessar sua conta.
+          </p>
+          <a
+            href="${appUrl}/login"
+            style="display: inline-block; background: #1E3A5F; color: #ffffff; text-decoration: none; padding: 12px 32px; border-radius: 8px; font-size: 14px; font-weight: 600;"
+          >
+            Acessar OfficeBiz
+          </a>
+          <p style="color: #94A3B8; font-size: 13px; margin: 24px 0 0;">
+            Seu email de acesso: <strong>${email}</strong>
+          </p>
+        </div>
+        <p style="color: #94A3B8; font-size: 12px; text-align: center; margin-top: 24px;">
+          Se você não reconhece este convite, ignore este email.
+        </p>
+      </div>
+    `,
+  })
+
+  if (error) {
+    console.error("Failed to send invite email:", error)
+    throw new Error("Failed to send invite email")
+  }
+}
+
 export function generateOtp(): string {
   return Math.floor(100000 + Math.random() * 900000).toString()
 }
