@@ -1,100 +1,155 @@
-import {
-  Building2,
-  BarChart3,
-  ShieldCheck,
-  Palette,
-  FileText,
-  Globe,
-  Mail,
-  Smartphone,
-} from "lucide-react";
+"use client";
+
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  CnpjIllustration,
+  ContabilidadeIllustration,
+  MarcaIllustration,
+  LogoIllustration,
+  PapelariaIllustration,
+  SiteIllustration,
+  EmailIllustration,
+  CartaoVirtualIllustration,
+} from "@/components/illustrations/service-illustrations";
 
 const services = [
   {
-    icon: Building2,
+    Illustration: CnpjIllustration,
     title: "Abertura de CNPJ",
     description:
-      "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
+      "MEI, ME, EPP — todo o processo de formalizacao empresarial simplificado.",
+    featured: true,
   },
   {
-    icon: BarChart3,
+    Illustration: ContabilidadeIllustration,
     title: "Contabilidade",
     description:
-      "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
+      "Escrituracao, impostos, folha de pagamento e obrigacoes acessorias.",
+    featured: true,
   },
   {
-    icon: ShieldCheck,
+    Illustration: MarcaIllustration,
     title: "Registro de Marca",
     description:
       "Pesquisa de anterioridade e registro junto ao INPI com acompanhamento.",
+    featured: false,
   },
   {
-    icon: Palette,
+    Illustration: LogoIllustration,
     title: "Logotipos",
     description:
-      "Criação de identidade visual profissional com manual de marca.",
+      "Criacao de identidade visual profissional com manual de marca.",
+    featured: false,
   },
   {
-    icon: FileText,
+    Illustration: PapelariaIllustration,
     title: "Papelaria",
     description:
-      "Cartões de visita, papel timbrado, envelopes e materiais impressos.",
+      "Cartoes de visita, papel timbrado, envelopes e materiais impressos.",
+    featured: false,
   },
   {
-    icon: Globe,
+    Illustration: SiteIllustration,
     title: "Sites",
     description:
-      "Sites institucionais e landing pages otimizadas para conversão.",
+      "Sites institucionais e landing pages otimizadas para conversao.",
+    featured: false,
   },
   {
-    icon: Mail,
-    title: "E-mail e Domínios",
+    Illustration: EmailIllustration,
+    title: "E-mail e Dominios",
     description:
-      "Registro de domínio e configuração de e-mail profissional.",
+      "Registro de dominio e configuracao de e-mail profissional.",
+    featured: false,
   },
   {
-    icon: Smartphone,
-    title: "Cartão Virtual",
+    Illustration: CartaoVirtualIllustration,
+    title: "Cartao Virtual",
     description:
-      "Cartão de visita digital interativo com QR Code e link compartilhável.",
+      "Cartao de visita digital interativo com QR Code e link compartilhavel.",
+    featured: false,
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
 export function Services() {
   return (
-    <section id="services" className="py-20 lg:py-28 bg-surface">
+    <section id="services" className="py-20 lg:py-28 bg-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Serviços que você pode oferecer aos seus clientes
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Um portfólio completo, pronto para revenda. Sem precisar de equipe
-            própria.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
+              Portfolio completo
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Servicos que voce pode oferecer aos seus clientes
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Um portfolio completo, pronto para revenda. Sem precisar de equipe
+              propria.
+            </p>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Bento grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5"
+        >
           {services.map((service) => (
-            <Card
+            <motion.div
               key={service.title}
-              className="group border border-border bg-white hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+              variants={itemVariants}
+              className={service.featured ? "sm:col-span-2 lg:col-span-2" : ""}
             >
-              <CardContent className="p-6 flex flex-col items-start gap-3">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <service.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {service.description}
-                </p>
-              </CardContent>
-            </Card>
+              <Card
+                className={`group relative overflow-hidden border border-border/60 bg-card hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 h-full ${
+                  service.featured ? "bg-gradient-to-br from-primary/[0.03] to-transparent" : ""
+                }`}
+              >
+                <CardContent className={`flex ${service.featured ? "flex-row items-center gap-6 p-8" : "flex-col items-start gap-4 p-6"}`}>
+                  <div
+                    className={`shrink-0 ${
+                      service.featured ? "w-24 h-24" : "w-16 h-16"
+                    }`}
+                  >
+                    <service.Illustration className="w-full h-full" />
+                  </div>
+                  <div>
+                    <h3 className={`font-semibold text-foreground mb-1.5 ${service.featured ? "text-lg" : ""}`}>
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </CardContent>
+                {/* Hover glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
