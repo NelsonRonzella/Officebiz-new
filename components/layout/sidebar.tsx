@@ -14,6 +14,7 @@ import {
   Package,
   Video,
   ClipboardList,
+  DollarSign,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -23,6 +24,7 @@ import {
   SheetTrigger,
   SheetContent,
 } from "@/components/ui/sheet"
+import { NotificationBell } from "@/components/notifications/notification-bell"
 import type { Role } from "@prisma/client"
 
 interface NavItem {
@@ -40,6 +42,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Produtos", href: "/admin/produtos", icon: Package },
         { label: "Tutoriais", href: "/admin/tutoriais", icon: Video },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+        { label: "Financeiro", href: "/admin/financeiro", icon: DollarSign },
       ]
     case "LICENCIADO":
       return [
@@ -47,6 +50,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Clientes", href: "/app/clientes", icon: Users },
         { label: "Produtos", href: "/app/produtos", icon: Package },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+        { label: "Financeiro", href: "/app/financeiro", icon: DollarSign },
       ]
     case "PRESTADOR":
       return [
@@ -108,11 +112,14 @@ function SidebarNav({ role }: SidebarNavProps) {
 
   return (
     <div className="flex h-full flex-col" style={{ background: "hsl(var(--sidebar-background))", color: "hsl(var(--sidebar-foreground))" }}>
-      {/* Logo */}
-      <div className="flex h-16 items-center px-6">
+      {/* Logo + Notification Bell */}
+      <div className="flex h-16 items-center justify-between px-6">
         <Link href={getDashboardHref(role)} className="text-xl font-bold tracking-tight text-white">
           OfficeBiz
         </Link>
+        <NotificationBell
+          notificationsHref={role === "ADMIN" ? "/admin/notificacoes" : "/app/notificacoes"}
+        />
       </div>
 
       {/* Primary Navigation */}
@@ -202,9 +209,12 @@ export function Sidebar({ role }: SidebarProps) {
             <SidebarNav role={role} />
           </SheetContent>
         </Sheet>
-        <span className="text-lg font-bold tracking-tight text-foreground">
+        <span className="flex-1 text-lg font-bold tracking-tight text-foreground">
           OfficeBiz
         </span>
+        <NotificationBell
+          notificationsHref={role === "ADMIN" ? "/admin/notificacoes" : "/app/notificacoes"}
+        />
       </div>
     </>
   )

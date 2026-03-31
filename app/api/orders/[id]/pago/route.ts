@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { createNotification, createBulkNotifications } from "@/lib/notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -25,7 +26,7 @@ export async function PATCH(
 
     const order = await db.order.findUnique({
       where: { id },
-      select: { id: true, status: true },
+      select: { id: true, status: true, criadoPor: true },
     })
 
     if (!order) {
@@ -43,6 +44,32 @@ export async function PATCH(
       where: { id },
       data: { status: "PAGO" },
     })
+
+    // Notify order creator (licenciado): payment confirmed
+    createNotification(
+      order.criadoPor,
+      "Pagamento confirmado",
+      "O pagamento do pedido foi confirmado. Aguardando um prestador aceitar.",
+      "SUCCESS",
+      `/app/pedidos/${id}`
+    ).catch(console.error)
+
+    // Notify all prestadores: new order available
+    db.user
+      .findMany({ where: { role: "PRESTADOR", active: true }, select: { id: true } })
+      .then((prestadores) => {
+        const ids = prestadores.map((p) => p.id)
+        if (ids.length > 0) {
+          createBulkNotifications(
+            ids,
+            "Novo pedido disponível",
+            "Um novo pedido pago está disponível para aceitar.",
+            "ORDER_UPDATE",
+            `/app/pedidos/${id}`
+          )
+        }
+      })
+      .catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

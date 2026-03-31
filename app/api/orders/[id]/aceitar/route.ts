@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { startFirstStep } from "@/lib/order-service"
+import { createNotification, createBulkNotifications } from "@/lib/notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -26,7 +27,10 @@ export async function PATCH(
 
     const order = await db.order.findUnique({
       where: { id },
-      include: { product: { select: { type: true } } },
+      include: {
+        product: { select: { type: true } },
+        criador: { select: { id: true } },
+      },
     })
 
     if (!order) {
@@ -59,6 +63,36 @@ export async function PATCH(
     if (order.product.type === "PONTUAL") {
       await startFirstStep(order.id)
     }
+
+    // Notify order creator: prestador accepted
+    createNotification(
+      order.criadoPor,
+      "Prestador aceitou o pedido",
+      "Um prestador aceitou o seu pedido e o trabalho está em andamento.",
+      "SUCCESS",
+      `/app/pedidos/${id}`
+    ).catch(console.error)
+
+    // Notify admins
+    db.user
+      .findMany({ where: { role: "ADMIN" }, select: { id: true } })
+      .then(async (admins) => {
+        const prestador = await db.user.findUnique({
+          where: { id: currentUser.id },
+          select: { name: true },
+        })
+        const adminIds = admins.map((a) => a.id)
+        if (adminIds.length > 0) {
+          createBulkNotifications(
+            adminIds,
+            "Pedido aceito",
+            `Pedido aceito por ${prestador?.name || "prestador"}.`,
+            "ORDER_UPDATE",
+            `/app/pedidos/${id}`
+          )
+        }
+      })
+      .catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

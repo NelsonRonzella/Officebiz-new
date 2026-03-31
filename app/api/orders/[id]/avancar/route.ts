@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { advanceStep } from "@/lib/order-service"
+import { createNotification } from "@/lib/notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -31,7 +32,10 @@ export async function PATCH(
 
     const order = await db.order.findUnique({
       where: { id },
-      include: { product: { select: { type: true } } },
+      include: {
+        product: { select: { type: true } },
+        criador: { select: { id: true } },
+      },
     })
 
     if (!order) {
@@ -69,6 +73,18 @@ export async function PATCH(
         steps: { orderBy: { order: "asc" } },
       },
     })
+
+    // Notify order creator about step advancement
+    const stepTitle = updated?.currentStep?.title || "próxima etapa"
+    createNotification(
+      order.criadoPor,
+      "Pedido avançou de etapa",
+      nextStep
+        ? `O pedido avançou para: ${stepTitle}.`
+        : "Todas as etapas foram concluídas.",
+      "ORDER_UPDATE",
+      `/app/pedidos/${id}`
+    ).catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

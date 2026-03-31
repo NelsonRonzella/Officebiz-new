@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { createNotification } from "@/lib/notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -25,7 +26,7 @@ export async function PATCH(
 
     const order = await db.order.findUnique({
       where: { id },
-      select: { id: true, status: true },
+      select: { id: true, status: true, criadoPor: true, userId: true },
     })
 
     if (!order) {
@@ -46,6 +47,26 @@ export async function PATCH(
         currentStepId: null,
       },
     })
+
+    // Notify order creator (licenciado)
+    createNotification(
+      order.criadoPor,
+      "Pedido concluído!",
+      "O pedido foi marcado como concluído.",
+      "SUCCESS",
+      `/app/pedidos/${id}`
+    ).catch(console.error)
+
+    // Notify client (order.userId) if different from creator
+    if (order.userId !== order.criadoPor) {
+      createNotification(
+        order.userId,
+        "Serviço concluído",
+        "O serviço do seu pedido foi concluído com sucesso.",
+        "SUCCESS",
+        `/app/pedidos/${id}`
+      ).catch(console.error)
+    }
 
     return NextResponse.json(updated)
   } catch (error) {

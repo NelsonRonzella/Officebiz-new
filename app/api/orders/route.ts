@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { canCreateOrders } from "@/lib/permissions"
 import { createOrderSteps, createOrderCategories } from "@/lib/order-service"
+import { createBulkNotifications } from "@/lib/notifications"
 
 function canViewOrder(
   order: { userId: string; criadoPor: string; prestadorId: string | null; status: string },
@@ -213,6 +214,23 @@ export async function POST(req: NextRequest) {
         },
       })
     }
+
+    // Notify admin users about new order
+    db.user
+      .findMany({ where: { role: "ADMIN" }, select: { id: true } })
+      .then((admins) => {
+        const adminIds = admins.map((a) => a.id)
+        if (adminIds.length > 0) {
+          createBulkNotifications(
+            adminIds,
+            "Novo pedido criado",
+            `Um novo pedido foi criado e está aguardando pagamento.`,
+            "ORDER_UPDATE",
+            `/app/pedidos/${order.id}`
+          )
+        }
+      })
+      .catch(console.error)
 
     // Return created order with includes
     const createdOrder = await db.order.findUnique({

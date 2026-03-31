@@ -60,6 +60,7 @@ model User {
   prestadorLogsChanged   OrderPrestadorLog[] @relation("PrestadorLogChanger")
   prestadorLogsOld       OrderPrestadorLog[] @relation("PrestadorLogOld")
   prestadorLogsNew       OrderPrestadorLog[] @relation("PrestadorLogNew")
+  notifications          Notification[]
 }
 
 model Account {
@@ -179,6 +180,8 @@ model Order {
   prestadorId     String?
   progresso       Int           @default(0)
   currentStepId   String?
+  costPrice       Decimal?      @db.Decimal(10, 2)
+  salePrice       Decimal?      @db.Decimal(10, 2)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -258,6 +261,29 @@ model OrderPrestadorLog {
   changedBy       User     @relation("PrestadorLogChanger", fields: [changedById], references: [id])
   oldPrestador    User?    @relation("PrestadorLogOld", fields: [oldPrestadorId], references: [id])
   newPrestador    User?    @relation("PrestadorLogNew", fields: [newPrestadorId], references: [id])
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ORDER_UPDATE
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, read])
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 model Lead {

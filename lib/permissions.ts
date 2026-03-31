@@ -40,6 +40,18 @@ export function canManageTutorials(role: Role): boolean {
   return role === "ADMIN"
 }
 
+export function canViewFinancialDashboard(role: Role): boolean {
+  return role === "ADMIN"
+}
+
+export function canViewFinancialOrders(role: Role): boolean {
+  return role === "ADMIN" || role === "LICENCIADO"
+}
+
+export function canViewOwnFinancials(role: Role): boolean {
+  return role === "LICENCIADO"
+}
+
 export function canViewTutorials(role: Role): boolean {
   return role === "ADMIN" || role === "LICENCIADO" || role === "PRESTADOR"
 }
