@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendOtpEmail(email: string, code: string) {
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: `Seu código de acesso: ${code}`,
     html: `
@@ -34,7 +34,7 @@ export async function sendInviteEmail(email: string, name: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: "Você foi convidado para a OfficeBiz",
     html: `
@@ -77,7 +77,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: "Bem-vindo ao OfficeBiz!",
     html: `
@@ -126,7 +126,7 @@ export async function sendOrderCreatedEmail(email: string, orderInfo: OrderEmail
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: `Novo pedido criado — ${orderInfo.productName}`,
     html: `
@@ -169,7 +169,7 @@ export async function sendOrderPaidEmail(email: string, orderInfo: OrderEmailInf
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: `Pagamento confirmado — ${orderInfo.productName}`,
     html: `
@@ -212,7 +212,7 @@ export async function sendOrderCompletedEmail(email: string, orderInfo: OrderEma
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: `Pedido concluído — ${orderInfo.productName}`,
     html: `
@@ -255,7 +255,7 @@ export async function sendTrialExpiringEmail(email: string, name: string, daysLe
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.officebiz.com.br"
 
   const { error } = await resend.emails.send({
-    from: "OfficeBiz <noreply@officebiz.com.br>",
+    from: "OfficeBiz <noreply@zella.digital>",
     to: email,
     subject: `Seu período de teste expira em ${daysLeft} dias`,
     html: `
