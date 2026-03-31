@@ -38,7 +38,7 @@ export const Controlled: Story = {
       <div className="space-y-4 w-64">
         <Slider
           value={value}
-          onValueChange={setValue}
+          onValueChange={(newValue) => setValue(Array.isArray(newValue) ? [...newValue] : [newValue as number])}
           max={100}
           step={1}
         />

@@ -6,9 +6,8 @@ import {
   InputOTPSeparator,
 } from "@/components/ui/input-otp"
 
-const meta: Meta<typeof InputOTP> = {
+const meta: Meta = {
   title: "UI/InputOTP",
-  component: InputOTP,
   tags: ["autodocs"],
 }
 

@@ -25,7 +25,7 @@ export const Default: Story = {
       <Collapsible open={open} onOpenChange={setOpen} className="w-72 space-y-2">
         <div className="flex items-center justify-between space-x-4 px-4">
           <h4 className="text-sm font-semibold">@peduarte starred 3 repositories</h4>
-          <CollapsibleTrigger asChild>
+          <CollapsibleTrigger>
             <Button variant="ghost" size="icon-sm">
               <IconChevronDown />
             </Button>
@@ -52,7 +52,7 @@ export const DefaultOpen: Story = {
     <Collapsible defaultOpen className="w-72 space-y-2">
       <div className="flex items-center justify-between space-x-4 px-4">
         <h4 className="text-sm font-semibold">Open by default</h4>
-        <CollapsibleTrigger asChild>
+        <CollapsibleTrigger>
           <Button variant="ghost" size="icon-sm">
             <IconChevronDown />
           </Button>

@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <Accordion type="single" collapsible className="w-full max-w-md">
+    <Accordion className="w-full max-w-md">
       <AccordionItem value="item-1">
         <AccordionTrigger>Is it accessible?</AccordionTrigger>
         <AccordionContent>
@@ -42,7 +42,7 @@ export const Default: Story = {
 
 export const MultipleOpen: Story = {
   render: () => (
-    <Accordion type="multiple" className="w-full max-w-md">
+    <Accordion multiple className="w-full max-w-md">
       <AccordionItem value="item-1">
         <AccordionTrigger>First item</AccordionTrigger>
         <AccordionContent>Content for the first item.</AccordionContent>
@@ -61,7 +61,7 @@ export const MultipleOpen: Story = {
 
 export const DefaultOpen: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-md">
+    <Accordion defaultValue={["item-1"]} className="w-full max-w-md">
       <AccordionItem value="item-1">
         <AccordionTrigger>Opened by default</AccordionTrigger>
         <AccordionContent>

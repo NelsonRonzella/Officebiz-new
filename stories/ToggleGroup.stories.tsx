@@ -7,10 +7,6 @@ const meta: Meta<typeof ToggleGroup> = {
   component: ToggleGroup,
   tags: ["autodocs"],
   argTypes: {
-    type: {
-      control: "select",
-      options: ["single", "multiple"],
-    },
     variant: {
       control: "select",
       options: ["default", "outline"],
@@ -23,7 +19,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <ToggleGroup type="multiple">
+    <ToggleGroup>
       <ToggleGroupItem value="bold" aria-label="Toggle bold"><IconBold /></ToggleGroupItem>
       <ToggleGroupItem value="italic" aria-label="Toggle italic"><IconItalic /></ToggleGroupItem>
       <ToggleGroupItem value="underline" aria-label="Toggle underline"><IconUnderline /></ToggleGroupItem>
@@ -33,7 +29,7 @@ export const Default: Story = {
 
 export const SingleSelection: Story = {
   render: () => (
-    <ToggleGroup type="single" defaultValue="center">
+    <ToggleGroup defaultValue={["center"]}>
       <ToggleGroupItem value="left" aria-label="Left aligned"><IconAlignLeft /></ToggleGroupItem>
       <ToggleGroupItem value="center" aria-label="Center aligned"><IconAlignCenter /></ToggleGroupItem>
       <ToggleGroupItem value="right" aria-label="Right aligned"><IconAlignRight /></ToggleGroupItem>
@@ -44,7 +40,7 @@ export const SingleSelection: Story = {
 
 export const Outline: Story = {
   render: () => (
-    <ToggleGroup type="multiple" variant="outline">
+    <ToggleGroup variant="outline">
       <ToggleGroupItem value="bold" aria-label="Bold"><IconBold /></ToggleGroupItem>
       <ToggleGroupItem value="italic" aria-label="Italic"><IconItalic /></ToggleGroupItem>
       <ToggleGroupItem value="underline" aria-label="Underline"><IconUnderline /></ToggleGroupItem>
@@ -54,7 +50,7 @@ export const Outline: Story = {
 
 export const WithText: Story = {
   render: () => (
-    <ToggleGroup type="single" defaultValue="monthly">
+    <ToggleGroup defaultValue={["monthly"]}>
       <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
       <ToggleGroupItem value="yearly">Yearly</ToggleGroupItem>
     </ToggleGroup>

@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button variant="outline">Open Popover</Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -49,7 +49,7 @@ export const Default: Story = {
 export const Simple: Story = {
   render: () => (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button>Info</Button>
       </PopoverTrigger>
       <PopoverContent>

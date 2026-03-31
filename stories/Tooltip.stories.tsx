@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <TooltipTrigger>
         <Button variant="outline">Hover me</Button>
       </TooltipTrigger>
       <TooltipContent>
@@ -41,7 +41,7 @@ export const Default: Story = {
 export const WithIcon: Story = {
   render: () => (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <TooltipTrigger>
         <Button size="icon">
           <IconPlus />
         </Button>
@@ -57,25 +57,25 @@ export const AllPositions: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button variant="outline" size="sm">Top</Button>
         </TooltipTrigger>
         <TooltipContent side="top">Top tooltip</TooltipContent>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button variant="outline" size="sm">Right</Button>
         </TooltipTrigger>
         <TooltipContent side="right">Right tooltip</TooltipContent>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button variant="outline" size="sm">Bottom</Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">Bottom tooltip</TooltipContent>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button variant="outline" size="sm">Left</Button>
         </TooltipTrigger>
         <TooltipContent side="left">Left tooltip</TooltipContent>

@@ -113,10 +113,10 @@ function SidebarNav({ role }: SidebarNavProps) {
   const secondaryItems = getSecondaryItems(role)
 
   return (
-    <div className="flex h-full flex-col" style={{ background: "hsl(var(--sidebar-background))", color: "hsl(var(--sidebar-foreground))" }}>
+    <div className="flex h-full flex-col" style={{ background: "var(--sidebar)", color: "var(--sidebar-foreground)" }}>
       {/* Logo + Notification Bell */}
       <div className="flex h-16 items-center justify-between px-6">
-        <Link href={getDashboardHref(role)} className="text-xl font-bold tracking-tight text-white">
+        <Link href={getDashboardHref(role)} className="text-xl font-bold tracking-tight" style={{ color: "var(--sidebar-foreground)" }}>
           OfficeBiz
         </Link>
         <NotificationBell
@@ -136,8 +136,8 @@ function SidebarNav({ role }: SidebarNavProps) {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-                  : "text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+                  ? "bg-[var(--sidebar-accent)] text-[var(--sidebar-accent-foreground)]"
+                  : "text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--sidebar-accent-foreground)]"
               )}
             >
               <item.icon className="size-5" />
@@ -146,7 +146,7 @@ function SidebarNav({ role }: SidebarNavProps) {
           )
         })}
 
-        <Separator className="my-4 bg-[hsl(var(--sidebar-border))]" />
+        <Separator className="my-4 bg-[var(--sidebar-border)]" />
 
         {secondaryItems.map((item) => {
           const isActive =
@@ -158,8 +158,8 @@ function SidebarNav({ role }: SidebarNavProps) {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-                  : "text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+                  ? "bg-[var(--sidebar-accent)] text-[var(--sidebar-accent-foreground)]"
+                  : "text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--sidebar-accent-foreground)]"
               )}
             >
               <item.icon className="size-5" />
@@ -171,10 +171,10 @@ function SidebarNav({ role }: SidebarNavProps) {
 
       {/* Footer */}
       <div className="px-3 pb-4">
-        <Separator className="mb-4 bg-[hsl(var(--sidebar-border))]" />
+        <Separator className="mb-4 bg-[var(--sidebar-border)]" />
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[hsl(var(--sidebar-foreground))] transition-colors hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--sidebar-foreground)] transition-colors hover:bg-[var(--sidebar-accent)] hover:text-[var(--sidebar-accent-foreground)]"
         >
           <LogOut className="size-5" />
           Sair

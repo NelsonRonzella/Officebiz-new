@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline">Open Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -66,7 +66,7 @@ export const Default: Story = {
 export const WithCheckboxes: Story = {
   render: () => (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline">View Options</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -83,7 +83,7 @@ export const WithCheckboxes: Story = {
 export const WithRadioGroup: Story = {
   render: () => (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline">Panel Position</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -102,7 +102,7 @@ export const WithRadioGroup: Story = {
 export const WithSubmenu: Story = {
   render: () => (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline">With Submenu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

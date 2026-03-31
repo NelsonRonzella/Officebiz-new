@@ -2,11 +2,11 @@
 
 import type { Meta, StoryObj } from "@storybook/react"
 import * as React from "react"
+import { type DateRange } from "react-day-picker"
 import { Calendar } from "@/components/ui/calendar"
 
-const meta: Meta<typeof Calendar> = {
+const meta: Meta = {
   title: "UI/Calendar",
-  component: Calendar,
   tags: ["autodocs"],
 }
 
@@ -29,12 +29,12 @@ export const Default: Story = {
 
 export const Range: Story = {
   render: () => {
-    const [range, setRange] = React.useState<{ from?: Date; to?: Date } | undefined>()
+    const [range, setRange] = React.useState<DateRange | undefined>()
     return (
       <Calendar
         mode="range"
         selected={range}
-        onSelect={setRange as any}
+        onSelect={setRange}
         className="rounded-md border"
       />
     )

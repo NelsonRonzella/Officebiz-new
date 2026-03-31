@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <Button variant="outline">Open Sheet</Button>
       </SheetTrigger>
       <SheetContent>
@@ -45,7 +45,7 @@ export const Default: Story = {
           </div>
         </div>
         <SheetFooter>
-          <SheetClose asChild>
+          <SheetClose>
             <Button type="submit">Save changes</Button>
           </SheetClose>
         </SheetFooter>
@@ -57,7 +57,7 @@ export const Default: Story = {
 export const LeftSide: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <Button variant="outline">Open Left Sheet</Button>
       </SheetTrigger>
       <SheetContent side="left">
@@ -77,7 +77,7 @@ export const LeftSide: Story = {
 export const TopSide: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <Button variant="outline">Open Top Sheet</Button>
       </SheetTrigger>
       <SheetContent side="top">

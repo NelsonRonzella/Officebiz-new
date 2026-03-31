@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <HoverCard>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger>
         <Button variant="link">@nextjs</Button>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
@@ -47,7 +47,7 @@ export const Default: Story = {
 export const SimpleContent: Story = {
   render: () => (
     <HoverCard>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger>
         <span className="underline cursor-pointer text-sm">Hover me</span>
       </HoverCardTrigger>
       <HoverCardContent>
