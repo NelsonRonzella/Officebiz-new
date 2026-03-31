@@ -51,3 +51,7 @@ prisma/*.db-journal
 next-env.d.ts
 
 .vercel
+
+*storybook.log
+storybook-static
+storybook-static
