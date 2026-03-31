@@ -130,7 +130,7 @@ export function ProductsTable({ initialProducts, initialTotal }: ProductsTablePr
         <Tabs
           defaultValue=""
           onValueChange={(val) => {
-            setTypeFilter(val as string)
+            setTypeFilter((val ?? "") as string)
             setPage(1)
           }}
         >
@@ -147,7 +147,7 @@ export function ProductsTable({ initialProducts, initialTotal }: ProductsTablePr
           <Select
             value={activeFilter}
             onValueChange={(val) => {
-              setActiveFilter(val)
+              setActiveFilter(val ?? "")
               setPage(1)
             }}
           >

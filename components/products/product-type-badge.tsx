@@ -1,8 +1,6 @@
 import { Badge } from "@/components/ui/badge"
-import type { ProductType } from "@prisma/client"
-
 interface ProductTypeBadgeProps {
-  type: ProductType
+  type: string
 }
 
 export function ProductTypeBadge({ type }: ProductTypeBadgeProps) {

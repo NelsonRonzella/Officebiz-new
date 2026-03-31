@@ -141,7 +141,7 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
         <Tabs
           defaultValue=""
           onValueChange={(val) => {
-            setRoleFilter(val as string)
+            setRoleFilter((val ?? "") as string)
             setPage(1)
           }}
         >
