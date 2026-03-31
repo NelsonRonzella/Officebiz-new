@@ -13,6 +13,7 @@ import {
   Menu,
   Package,
   Video,
+  ClipboardList,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -38,21 +39,25 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Usuários", href: "/admin/users", icon: Users },
         { label: "Produtos", href: "/admin/produtos", icon: Package },
         { label: "Tutoriais", href: "/admin/tutoriais", icon: Video },
+        { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
       ]
     case "LICENCIADO":
       return [
         { label: "Dashboard", href: "/dashboard/licenciado", icon: LayoutDashboard },
         { label: "Clientes", href: "/app/clientes", icon: Users },
         { label: "Produtos", href: "/app/produtos", icon: Package },
+        { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
       ]
     case "PRESTADOR":
       return [
         { label: "Dashboard", href: "/dashboard/prestador", icon: LayoutDashboard },
         { label: "Produtos", href: "/app/produtos", icon: Package },
+        { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
       ]
     case "CLIENTE":
       return [
         { label: "Dashboard", href: "/dashboard/cliente", icon: LayoutDashboard },
+        { label: "Meus Pedidos", href: "/app/pedidos", icon: ClipboardList },
       ]
     default:
       return [
