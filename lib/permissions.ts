@@ -24,6 +24,26 @@ export function canAccessBilling(role: Role): boolean {
   return role === "LICENCIADO"
 }
 
+export function canManageProducts(role: Role): boolean {
+  return role === "ADMIN"
+}
+
+export function canViewProducts(role: Role): boolean {
+  return role === "ADMIN" || role === "LICENCIADO" || role === "PRESTADOR"
+}
+
+export function canViewProductPrice(role: Role): boolean {
+  return role === "ADMIN" || role === "LICENCIADO"
+}
+
+export function canManageTutorials(role: Role): boolean {
+  return role === "ADMIN"
+}
+
+export function canViewTutorials(role: Role): boolean {
+  return role === "ADMIN" || role === "LICENCIADO" || role === "PRESTADOR"
+}
+
 export function getDashboardPath(role: Role): string {
   switch (role) {
     case "ADMIN":

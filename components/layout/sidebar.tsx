@@ -11,6 +11,8 @@ import {
   Headphones,
   LogOut,
   Menu,
+  Package,
+  Video,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -34,15 +36,19 @@ function getNavItems(role?: Role): NavItem[] {
       return [
         { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { label: "Usuários", href: "/admin/users", icon: Users },
+        { label: "Produtos", href: "/admin/produtos", icon: Package },
+        { label: "Tutoriais", href: "/admin/tutoriais", icon: Video },
       ]
     case "LICENCIADO":
       return [
         { label: "Dashboard", href: "/dashboard/licenciado", icon: LayoutDashboard },
         { label: "Clientes", href: "/app/clientes", icon: Users },
+        { label: "Produtos", href: "/app/produtos", icon: Package },
       ]
     case "PRESTADOR":
       return [
         { label: "Dashboard", href: "/dashboard/prestador", icon: LayoutDashboard },
+        { label: "Produtos", href: "/app/produtos", icon: Package },
       ]
     case "CLIENTE":
       return [

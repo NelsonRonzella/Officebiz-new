@@ -90,6 +90,68 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum ProductType {
+  PONTUAL
+  RECORRENTE
+}
+
+model Product {
+  id                 String                    @id @default(cuid())
+  name               String
+  description        String                    @db.Text
+  price              Decimal                   @db.Decimal(10, 2)
+  type               ProductType
+  active             Boolean                   @default(true)
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  steps              ProductStep[]
+  documentCategories ProductDocumentCategory[]
+  tutorials          TutorialProduct[]
+}
+
+model ProductStep {
+  id           String   @id @default(cuid())
+  productId    String
+  title        String
+  description  String   @db.Text
+  order        Int
+  durationDays Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductDocumentCategory {
+  id          String   @id @default(cuid())
+  productId   String
+  title       String
+  description String   @db.Text
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Tutorial {
+  id          String            @id @default(cuid())
+  title       String
+  description String            @db.Text
+  link        String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  products    TutorialProduct[]
+}
+
+model TutorialProduct {
+  id         String   @id @default(cuid())
+  tutorialId String
+  productId  String
+  tutorial   Tutorial @relation(fields: [tutorialId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([tutorialId, productId])
+}
+
 model Lead {
   id        String   @id @default(cuid())
   name      String

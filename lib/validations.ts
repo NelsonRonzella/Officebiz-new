@@ -62,4 +62,47 @@ export const createClientSchema = z.object({
 export type ProfileInput = z.infer<typeof profileSchema>
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
+export const productStepSchema = z.object({
+  title: z.string().min(2, "Título obrigatório"),
+  description: z.string().min(5, "Descrição obrigatória"),
+  durationDays: z.number().int().positive("Prazo deve ser positivo"),
+  order: z.number().int().min(0),
+})
+
+export const productCategorySchema = z.object({
+  title: z.string().min(2, "Título obrigatório"),
+  description: z.string().min(5, "Descrição obrigatória"),
+  order: z.number().int().min(0),
+})
+
+export const productBaseSchema = z.object({
+  name: z.string().min(2, "Nome obrigatório"),
+  description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
+  price: z.number().positive("Preço deve ser positivo"),
+})
+
+export const pontualProductSchema = productBaseSchema.extend({
+  type: z.literal("PONTUAL"),
+  steps: z.array(productStepSchema).min(1, "Mínimo 1 etapa"),
+  tutorialIds: z.array(z.string()).optional(),
+})
+
+export const recorrenteProductSchema = productBaseSchema.extend({
+  type: z.literal("RECORRENTE"),
+  categories: z.array(productCategorySchema).min(1, "Mínimo 1 categoria"),
+  tutorialIds: z.array(z.string()).optional(),
+})
+
+export const createProductSchema = z.union([pontualProductSchema, recorrenteProductSchema])
+
+export const tutorialSchema = z.object({
+  title: z.string().min(2, "Título obrigatório"),
+  description: z.string().min(5, "Descrição obrigatória"),
+  link: z.string().url("Link inválido"),
+  productIds: z.array(z.string()).optional(),
+})
+
 export type CreateClientInput = z.infer<typeof createClientSchema>
+export type PontualProductInput = z.infer<typeof pontualProductSchema>
+export type RecorrenteProductInput = z.infer<typeof recorrenteProductSchema>
+export type TutorialInput = z.infer<typeof tutorialSchema>
