@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { markAsRead, markAllAsRead } from "@/lib/notifications"
+import { notificationReadSchema } from "@/lib/validations"
 
 export async function PATCH(req: NextRequest) {
   try {
@@ -10,14 +11,24 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json()
+    const parsed = notificationReadSchema.safeParse(body)
 
-    if (body.all === true) {
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Dados inválidos", details: parsed.error.issues },
+        { status: 400 }
+      )
+    }
+
+    const data = parsed.data
+
+    if ("all" in data && data.all === true) {
       await markAllAsRead(session.user.id)
       return NextResponse.json({ success: true })
     }
 
-    if (body.id && typeof body.id === "string") {
-      await markAsRead(body.id, session.user.id)
+    if ("id" in data) {
+      await markAsRead(data.id, session.user.id)
       return NextResponse.json({ success: true })
     }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { createBulkNotifications } from "@/lib/notifications"
+import { orderMessageSchema } from "@/lib/validations"
 
 export async function POST(
   req: NextRequest,
@@ -40,14 +41,16 @@ export async function POST(
     }
 
     const body = await req.json()
-    const { message, file, fileName } = body
+    const parsed = orderMessageSchema.safeParse(body)
 
-    if (!message) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Mensagem é obrigatória" },
+        { error: "Dados inválidos", details: parsed.error.issues },
         { status: 400 }
       )
     }
+
+    const { message, file, fileName } = parsed.data
 
     const orderMessage = await db.orderMessage.create({
       data: {

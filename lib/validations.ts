@@ -102,7 +102,28 @@ export const tutorialSchema = z.object({
   productIds: z.array(z.string()).optional(),
 })
 
+export const createOrderSchema = z.object({
+  userId: z.string().min(1, "userId é obrigatório"),
+  productId: z.string().min(1, "productId é obrigatório"),
+  message: z.string().optional(),
+  file: z.string().optional(),
+})
+
+export const orderMessageSchema = z.object({
+  message: z.string().min(1, "Mensagem é obrigatória"),
+  file: z.string().optional(),
+  fileName: z.string().optional(),
+})
+
+export const notificationReadSchema = z.union([
+  z.object({ all: z.literal(true) }),
+  z.object({ id: z.string().min(1, "ID é obrigatório") }),
+])
+
 export type CreateClientInput = z.infer<typeof createClientSchema>
 export type PontualProductInput = z.infer<typeof pontualProductSchema>
 export type RecorrenteProductInput = z.infer<typeof recorrenteProductSchema>
 export type TutorialInput = z.infer<typeof tutorialSchema>
+export type CreateOrderInput = z.infer<typeof createOrderSchema>
+export type OrderMessageInput = z.infer<typeof orderMessageSchema>
+export type NotificationReadInput = z.infer<typeof notificationReadSchema>

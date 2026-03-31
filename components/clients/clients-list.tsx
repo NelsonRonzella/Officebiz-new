@@ -11,6 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Search, Plus, ChevronLeft, ChevronRight, Loader2 } from "lucide-react"
 
 interface Client {
@@ -34,6 +41,7 @@ export function ClientsList() {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
+  const [activeFilter, setActiveFilter] = useState("")
   const [page, setPage] = useState(1)
   const [data, setData] = useState<UsersResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -64,6 +72,9 @@ export function ClientsList() {
       if (debouncedSearch) {
         params.set("search", debouncedSearch)
       }
+      if (activeFilter) {
+        params.set("active", activeFilter)
+      }
 
       const res = await fetch(`/api/users?${params.toString()}`)
 
@@ -78,7 +89,7 @@ export function ClientsList() {
     } finally {
       setIsLoading(false)
     }
-  }, [page, debouncedSearch])
+  }, [page, debouncedSearch, activeFilter])
 
   useEffect(() => {
     fetchClients()
@@ -105,15 +116,34 @@ export function ClientsList() {
           </Button>
         </div>
 
-        {/* Search */}
-        <div className="relative mt-2">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nome ou email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
+        {/* Search and Filters */}
+        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome ou email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+
+          <Select
+            value={activeFilter}
+            onValueChange={(val) => {
+              setActiveFilter(val === " " ? "" : (val ?? ""))
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value=" ">Todos</SelectItem>
+              <SelectItem value="true">Ativos</SelectItem>
+              <SelectItem value="false">Inativos</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
 
@@ -130,8 +160,8 @@ export function ClientsList() {
           </div>
         ) : !data || data.users.length === 0 ? (
           <div className="py-12 text-center text-sm text-muted-foreground">
-            {debouncedSearch
-              ? "Nenhum cliente encontrado para esta busca."
+            {debouncedSearch || activeFilter
+              ? "Nenhum cliente encontrado para os filtros aplicados."
               : "Nenhum cliente cadastrado ainda."}
           </div>
         ) : (
@@ -181,33 +211,36 @@ export function ClientsList() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {data.total > 0 && (
               <div className="mt-4 flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
-                  {data.total} {data.total === 1 ? "cliente" : "clientes"} no
-                  total
+                  Mostrando {Math.min((page - 1) * limit + 1, data.total)}–
+                  {Math.min(page * limit, data.total)} de {data.total}{" "}
+                  {data.total === 1 ? "cliente" : "clientes"}
                 </p>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page <= 1}
-                    onClick={() => setPage((p) => p - 1)}
-                  >
-                    <ChevronLeft className="size-4" />
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    {page} de {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page >= totalPages}
-                    onClick={() => setPage((p) => p + 1)}
-                  >
-                    <ChevronRight className="size-4" />
-                  </Button>
-                </div>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page <= 1}
+                      onClick={() => setPage((p) => p - 1)}
+                    >
+                      <ChevronLeft className="size-4" />
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {page} de {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page >= totalPages}
+                      onClick={() => setPage((p) => p + 1)}
+                    >
+                      <ChevronRight className="size-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </>

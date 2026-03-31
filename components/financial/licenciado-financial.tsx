@@ -6,9 +6,12 @@ import {
   TrendingUp,
   ShoppingCart,
   Loader2,
+  Percent,
+  Receipt,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCurrency, getStatusLabel, formatDate } from "@/lib/financial"
+import { SalesLineChart } from "@/components/charts/chart-wrapper"
 
 interface MonthlyData {
   month: string
@@ -75,12 +78,16 @@ export function LicenciadoFinancial() {
     )
   }
 
-  const maxRevenue = Math.max(...data.monthlyBreakdown.map((m) => m.revenue), 1)
+  const avgTicket = data.orderCount > 0 ? data.totalSales / data.orderCount : 0
+  const avgMargin =
+    data.totalSales > 0
+      ? ((data.totalProfit / data.totalSales) * 100).toFixed(1)
+      : "0.0"
 
   return (
     <div className="space-y-8">
-      {/* Stat Cards */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      {/* KPI Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-4">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -112,47 +119,42 @@ export function LicenciadoFinancial() {
         <Card>
           <CardContent className="flex items-center gap-4">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-              <ShoppingCart className="size-6" />
+              <Receipt className="size-6" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
-                {data.orderCount}
+                {formatCurrency(avgTicket)}
               </p>
-              <p className="text-sm text-muted-foreground">Qtd Pedidos</p>
+              <p className="text-sm text-muted-foreground">Ticket Médio</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning">
+              <Percent className="size-6" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-foreground">
+                {avgMargin}%
+              </p>
+              <p className="text-sm text-muted-foreground">Margem Média</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Monthly Chart */}
+      {/* Line Chart: Vendas Mensais */}
       <Card>
         <CardHeader>
-          <CardTitle>Receita Mensal (últimos 6 meses)</CardTitle>
+          <CardTitle>Vendas Mensais (últimos 6 meses)</CardTitle>
         </CardHeader>
         <CardContent>
           {data.monthlyBreakdown.length === 0 ? (
             <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
           ) : (
-            <div className="flex items-end gap-3" style={{ height: 180 }}>
-              {data.monthlyBreakdown.map((m) => {
-                const heightPercent = maxRevenue > 0 ? (m.revenue / maxRevenue) * 100 : 0
-                return (
-                  <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="text-xs font-medium text-foreground">
-                      {formatCurrency(m.revenue)}
-                    </span>
-                    <div
-                      className="w-full rounded-t-md bg-primary transition-all"
-                      style={{
-                        height: `${Math.max(heightPercent, 2)}%`,
-                        minHeight: 4,
-                      }}
-                    />
-                    <span className="text-xs text-muted-foreground">{m.month}</span>
-                  </div>
-                )
-              })}
-            </div>
+            <SalesLineChart data={data.monthlyBreakdown} />
           )}
         </CardContent>
       </Card>

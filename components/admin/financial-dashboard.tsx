@@ -10,6 +10,10 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCurrency } from "@/lib/financial"
+import {
+  RevenueLineChart,
+  RevenueCostBarChart,
+} from "@/components/charts/chart-wrapper"
 
 interface FinancialSummary {
   totalRevenue: number
@@ -93,8 +97,6 @@ export function FinancialDashboard({ initialPeriod }: FinancialDashboardProps) {
     )
   }
 
-  const maxRevenue = Math.max(...data.monthlyData.map((m) => m.revenue), 1)
-
   return (
     <div className="space-y-8">
       {/* Period Selector */}
@@ -173,38 +175,36 @@ export function FinancialDashboard({ initialPeriod }: FinancialDashboardProps) {
         </Card>
       </div>
 
-      {/* Monthly Revenue Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Receita Mensal</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.monthlyData.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
-          ) : (
-            <div className="flex items-end gap-3" style={{ height: 200 }}>
-              {data.monthlyData.map((m) => {
-                const heightPercent = maxRevenue > 0 ? (m.revenue / maxRevenue) * 100 : 0
-                return (
-                  <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="text-xs font-medium text-foreground">
-                      {formatCurrency(m.revenue)}
-                    </span>
-                    <div
-                      className="w-full rounded-t-md bg-primary transition-all"
-                      style={{
-                        height: `${Math.max(heightPercent, 2)}%`,
-                        minHeight: 4,
-                      }}
-                    />
-                    <span className="text-xs text-muted-foreground">{m.month}</span>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Charts Grid */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Line Chart: Receita Mensal */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Receita Mensal</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {data.monthlyData.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
+            ) : (
+              <RevenueLineChart data={data.monthlyData} />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Bar Chart: Receita vs Custo */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Receita vs Custo por Mês</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {data.monthlyData.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
+            ) : (
+              <RevenueCostBarChart data={data.monthlyData} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Tables Grid */}
       <div className="grid gap-6 lg:grid-cols-2">

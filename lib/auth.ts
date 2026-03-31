@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { NextAuthConfig } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
+import { sendWelcomeEmail } from "./email"
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(db),
@@ -59,6 +60,9 @@ export const authConfig: NextAuthConfig = {
               trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
             },
           })
+
+          // Send welcome email (fire-and-forget)
+          sendWelcomeEmail(email, user.name || "").catch(console.error)
         } else if (!user.emailVerified) {
           await db.user.update({
             where: { id: user.id },

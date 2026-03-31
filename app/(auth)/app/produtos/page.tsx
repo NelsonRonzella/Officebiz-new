@@ -24,29 +24,6 @@ export default async function ProdutosPage() {
     redirect(getDashboardPath(user.role))
   }
 
-  const products = await db.product.findMany({
-    where: { active: true },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      type: true,
-      _count: {
-        select: {
-          steps: true,
-          documentCategories: true,
-        },
-      },
-    },
-    orderBy: { name: "asc" },
-  })
-
-  const serializedProducts = products.map((p) => ({
-    ...p,
-    price: p.price.toString(),
-  }))
-
   const showPrice = canViewProductPrice(user.role)
 
   return (
@@ -60,7 +37,7 @@ export default async function ProdutosPage() {
         </p>
       </div>
 
-      <ProductsList products={serializedProducts} showPrice={showPrice} />
+      <ProductsList showPrice={showPrice} />
     </div>
   )
 }

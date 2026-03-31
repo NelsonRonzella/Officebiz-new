@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { canManageUsers, canManageClients } from "@/lib/permissions"
 import { createUserSchema, createClientSchema } from "@/lib/validations"
 import { sendInviteEmail } from "@/lib/email"
+import { hasAccess } from "@/lib/subscription"
 
 export async function GET(req: NextRequest) {
   try {
@@ -96,7 +97,13 @@ export async function POST(req: NextRequest) {
 
     const currentUser = await db.user.findUnique({
       where: { id: session.user.id },
-      select: { id: true, role: true },
+      select: {
+        id: true,
+        role: true,
+        plan: true,
+        trialEndsAt: true,
+        stripeCurrentPeriodEnd: true,
+      },
     })
 
     if (!currentUser) {
@@ -105,6 +112,14 @@ export async function POST(req: NextRequest) {
 
     if (!canManageUsers(currentUser.role) && !canManageClients(currentUser.role)) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
+    }
+
+    // Plan gating for LICENCIADO users
+    if (currentUser.role === "LICENCIADO" && !hasAccess(currentUser)) {
+      return NextResponse.json(
+        { error: "Plano expirado. Faça upgrade para continuar." },
+        { status: 403 }
+      )
     }
 
     const body = await req.json()

@@ -1,8 +1,17 @@
 import Link from "next/link"
-import { Users, Briefcase, UserCheck } from "lucide-react"
+import {
+  Users,
+  Briefcase,
+  UserCheck,
+  DollarSign,
+  Clock,
+  UserPlus,
+} from "lucide-react"
 import { db } from "@/lib/db"
 import { StatCard } from "@/components/admin/stat-card"
 import { RoleBadge } from "@/components/admin/role-badge"
+import { AdminDashboardCharts } from "@/components/admin/admin-dashboard-charts"
+import { formatCurrency, getStatusLabel, toNumber } from "@/lib/financial"
 import {
   Card,
   CardContent,
@@ -11,7 +20,20 @@ import {
 } from "@/components/ui/card"
 
 export default async function AdminDashboardPage() {
-  const [licenciados, prestadores, clientes, recentUsers] = await Promise.all([
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+  const [
+    licenciados,
+    prestadores,
+    clientes,
+    recentUsers,
+    completedOrders,
+    pendingOrdersCount,
+    newUsersThisMonth,
+    allOrders,
+    ordersByStatusRaw,
+  ] = await Promise.all([
     db.user.count({ where: { role: "LICENCIADO" } }),
     db.user.count({ where: { role: "PRESTADOR" } }),
     db.user.count({ where: { role: "CLIENTE" } }),
@@ -27,7 +49,56 @@ export default async function AdminDashboardPage() {
         createdAt: true,
       },
     }),
+    db.order.findMany({
+      where: { status: "CONCLUIDO" },
+      select: { salePrice: true },
+    }),
+    db.order.count({
+      where: {
+        status: { notIn: ["CONCLUIDO", "CANCELADO"] },
+      },
+    }),
+    db.user.count({
+      where: { createdAt: { gte: startOfMonth } },
+    }),
+    db.order.findMany({
+      select: { createdAt: true, status: true },
+    }),
+    db.order.groupBy({
+      by: ["status"],
+      _count: { id: true },
+    }),
   ])
+
+  // Calculate total revenue
+  const totalRevenue = completedOrders.reduce(
+    (sum, o) => sum + toNumber(o.salePrice),
+    0
+  )
+
+  // Build orders by month (last 6 months)
+  const ordersByMonth: Array<{ month: string; count: number }> = []
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1)
+    const monthKey = date.toLocaleDateString("pt-BR", {
+      month: "short",
+      year: "2-digit",
+    })
+    const count = allOrders.filter((o) => {
+      const d = new Date(o.createdAt)
+      return d >= date && d < nextMonth
+    }).length
+
+    ordersByMonth.push({ month: monthKey, count })
+  }
+
+  // Build orders by status
+  const ordersByStatus = ordersByStatusRaw.map((g) => ({
+    status: g.status,
+    label: getStatusLabel(g.status),
+    count: g._count.id,
+  }))
 
   return (
     <div className="space-y-8">
@@ -40,7 +111,7 @@ export default async function AdminDashboardPage() {
         </p>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Row 1: Users */}
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard
           title="Total Licenciados"
@@ -61,6 +132,34 @@ export default async function AdminDashboardPage() {
           color="bg-secondary text-secondary-foreground"
         />
       </div>
+
+      {/* Stats - Row 2: Financial & Orders */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatCard
+          title="Receita Total"
+          value={formatCurrency(totalRevenue)}
+          icon={DollarSign}
+          color="bg-success/10 text-success"
+        />
+        <StatCard
+          title="Pedidos Pendentes"
+          value={pendingOrdersCount}
+          icon={Clock}
+          color="bg-warning/10 text-warning"
+        />
+        <StatCard
+          title="Novos Usuários Este Mês"
+          value={newUsersThisMonth}
+          icon={UserPlus}
+          color="bg-primary/10 text-primary"
+        />
+      </div>
+
+      {/* Charts */}
+      <AdminDashboardCharts
+        ordersByMonth={ordersByMonth}
+        ordersByStatus={ordersByStatus}
+      />
 
       {/* Recent Users Table */}
       <Card>
@@ -100,7 +199,7 @@ export default async function AdminDashboardPage() {
                         href={`/admin/users/${user.id}`}
                         className="hover:underline"
                       >
-                        {user.name || "—"}
+                        {user.name || "\u2014"}
                       </Link>
                     </td>
                     <td className="hidden px-6 py-3 text-sm text-muted-foreground sm:table-cell">

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { createNotification } from "@/lib/notifications"
+import { sendOrderCompletedEmail } from "@/lib/email"
 
 export async function PATCH(
   _req: NextRequest,
@@ -26,7 +27,14 @@ export async function PATCH(
 
     const order = await db.order.findUnique({
       where: { id },
-      select: { id: true, status: true, criadoPor: true, userId: true },
+      select: {
+        id: true,
+        status: true,
+        criadoPor: true,
+        userId: true,
+        user: { select: { name: true, email: true } },
+        product: { select: { name: true } },
+      },
     })
 
     if (!order) {
@@ -67,6 +75,13 @@ export async function PATCH(
         `/app/pedidos/${id}`
       ).catch(console.error)
     }
+
+    // Send email to client about order completion
+    sendOrderCompletedEmail(order.user.email, {
+      clientName: order.user.name || "Cliente",
+      productName: order.product.name,
+      orderId: id,
+    }).catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

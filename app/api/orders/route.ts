@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { canCreateOrders } from "@/lib/permissions"
+import { hasAccess } from "@/lib/subscription"
 import { createOrderSteps, createOrderCategories } from "@/lib/order-service"
 import { createBulkNotifications } from "@/lib/notifications"
+import { sendOrderCreatedEmail } from "@/lib/email"
+import { createOrderSchema } from "@/lib/validations"
 
 function canViewOrder(
   order: { userId: string; criadoPor: string; prestadorId: string | null; status: string },
@@ -145,27 +148,43 @@ export async function POST(req: NextRequest) {
 
     const currentUser = await db.user.findUnique({
       where: { id: session.user.id },
-      select: { id: true, role: true },
+      select: {
+        id: true,
+        role: true,
+        plan: true,
+        trialEndsAt: true,
+        stripeCurrentPeriodEnd: true,
+      },
     })
 
     if (!currentUser || !canCreateOrders(currentUser.role)) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
 
-    const body = await req.json()
-    const { userId, productId, message, file } = body
-
-    if (!userId || !productId) {
+    // Plan gating for LICENCIADO users
+    if (currentUser.role === "LICENCIADO" && !hasAccess(currentUser)) {
       return NextResponse.json(
-        { error: "userId e productId são obrigatórios" },
+        { error: "Plano expirado. Faça upgrade para continuar." },
+        { status: 403 }
+      )
+    }
+
+    const body = await req.json()
+    const parsed = createOrderSchema.safeParse(body)
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Dados inválidos", details: parsed.error.issues },
         { status: 400 }
       )
     }
 
+    const { userId, productId, message, file } = parsed.data
+
     // Validate user exists and is a client
     const client = await db.user.findUnique({
       where: { id: userId },
-      select: { id: true, role: true },
+      select: { id: true, role: true, name: true, email: true },
     })
 
     if (!client) {
@@ -175,7 +194,7 @@ export async function POST(req: NextRequest) {
     // Validate product exists and is active
     const product = await db.product.findUnique({
       where: { id: productId },
-      select: { id: true, type: true, active: true },
+      select: { id: true, type: true, active: true, name: true },
     })
 
     if (!product) {
@@ -231,6 +250,13 @@ export async function POST(req: NextRequest) {
         }
       })
       .catch(console.error)
+
+    // Send email to client about new order
+    sendOrderCreatedEmail(client.email, {
+      clientName: client.name || "Cliente",
+      productName: product.name,
+      orderId: order.id,
+    }).catch(console.error)
 
     // Return created order with includes
     const createdOrder = await db.order.findUnique({

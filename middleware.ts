@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Protected routes that require authentication
-const protectedPaths = ["/dashboard", "/settings"]
+const protectedPaths = ["/dashboard", "/settings", "/app", "/admin"]
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -31,5 +31,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/settings/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/settings/:path*",
+    "/app/:path*",
+    "/admin/:path*",
+  ],
 }

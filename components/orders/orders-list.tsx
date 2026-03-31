@@ -306,32 +306,36 @@ export function OrdersList() {
               </table>
             </div>
 
-            {totalPages > 1 && (
+            {data.total > 0 && (
               <div className="mt-4 flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
-                  {data.total} {data.total === 1 ? "pedido" : "pedidos"} no total
+                  Mostrando {Math.min((page - 1) * limit + 1, data.total)}–
+                  {Math.min(page * limit, data.total)} de {data.total}{" "}
+                  {data.total === 1 ? "pedido" : "pedidos"}
                 </p>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page <= 1}
-                    onClick={() => setPage((p) => p - 1)}
-                  >
-                    <ChevronLeft className="size-4" />
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    {page} de {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page >= totalPages}
-                    onClick={() => setPage((p) => p + 1)}
-                  >
-                    <ChevronRight className="size-4" />
-                  </Button>
-                </div>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page <= 1}
+                      onClick={() => setPage((p) => p - 1)}
+                    >
+                      <ChevronLeft className="size-4" />
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {page} de {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page >= totalPages}
+                      onClick={() => setPage((p) => p + 1)}
+                    >
+                      <ChevronRight className="size-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </>

@@ -13,6 +13,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { RoleBadge } from "@/components/admin/role-badge"
 import type { Role } from "@prisma/client"
 
@@ -47,6 +54,7 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState("")
   const [roleFilter, setRoleFilter] = useState("")
+  const [activeFilter, setActiveFilter] = useState("")
   const [loading, setLoading] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [invitingId, setInvitingId] = useState<string | null>(null)
@@ -61,6 +69,7 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
       })
       if (search) params.set("search", search)
       if (roleFilter) params.set("role", roleFilter)
+      if (activeFilter) params.set("active", activeFilter)
 
       const res = await fetch(`/api/users?${params}`)
       const data = await res.json()
@@ -76,7 +85,7 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
     } finally {
       setLoading(false)
     }
-  }, [page, search, roleFilter])
+  }, [page, search, roleFilter, activeFilter])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -154,17 +163,36 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
           </TabsList>
         </Tabs>
 
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nome ou email..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value)
+        <div className="flex items-center gap-2">
+          <Select
+            value={activeFilter}
+            onValueChange={(val) => {
+              setActiveFilter(val === " " ? "" : (val ?? ""))
               setPage(1)
             }}
-            className="pl-9"
-          />
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value=" ">Todos</SelectItem>
+              <SelectItem value="true">Ativos</SelectItem>
+              <SelectItem value="false">Inativos</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome ou email..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value)
+                setPage(1)
+              }}
+              className="pl-9"
+            />
+          </div>
         </div>
       </div>
 
@@ -281,33 +309,36 @@ export function UsersTable({ initialUsers, initialTotal }: UsersTableProps) {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {total > 0 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {total} usuário{total !== 1 ? "s" : ""} encontrado
+            Mostrando {Math.min((page - 1) * limit + 1, total)}–
+            {Math.min(page * limit, total)} de {total} usuário
             {total !== 1 ? "s" : ""}
           </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-            <span className="text-sm text-muted-foreground">
-              {page} de {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-            >
-              <ChevronRight className="size-4" />
-            </Button>
-          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {page} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

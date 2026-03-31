@@ -1,4 +1,4 @@
-import type { Decimal } from "@prisma/client/runtime/library"
+import type { Decimal } from "@prisma/client/runtime/client"
 
 interface OrderForCalc {
   costPrice: Decimal | null
