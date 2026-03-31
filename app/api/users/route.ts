@@ -36,10 +36,16 @@ export async function GET(req: NextRequest) {
 
     const where: Record<string, unknown> = {}
 
-    // Licenciado can only see their own clients
+    // Licenciado can only see their own clients and prestadores
     if (currentUser.role === "LICENCIADO") {
       where.createdBy = currentUser.id
-      where.role = "CLIENTE"
+      const allowedRoles = ["CLIENTE", "PRESTADOR"]
+      const requestedRole = role && allowedRoles.includes(role) ? role : undefined
+      if (requestedRole) {
+        where.role = requestedRole
+      } else {
+        where.role = { in: allowedRoles }
+      }
     } else {
       // Admin filters
       if (role) {
@@ -124,8 +130,13 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json()
 
-    // Licenciado can only create CLIENTE
+    // Licenciado can create CLIENTE or PRESTADOR
     if (currentUser.role === "LICENCIADO") {
+      const allowedRoles = ["CLIENTE", "PRESTADOR"] as const
+      type AllowedRole = typeof allowedRoles[number]
+      const requestedRole: AllowedRole =
+        allowedRoles.includes(body.role) ? body.role : "CLIENTE"
+
       const parsed = createClientSchema.safeParse(body)
       if (!parsed.success) {
         return NextResponse.json(
@@ -148,7 +159,7 @@ export async function POST(req: NextRequest) {
       const user = await db.user.create({
         data: {
           ...parsed.data,
-          role: "CLIENTE",
+          role: requestedRole,
           emailVerified: null,
           createdBy: currentUser.id,
         },
@@ -179,9 +190,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Auto-assign TRIAL plan when creating a LICENCIADO
+    const planData =
+      parsed.data.role === "LICENCIADO"
+        ? {
+            plan: "TRIAL" as const,
+            trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          }
+        : {}
+
     const user = await db.user.create({
       data: {
         ...parsed.data,
+        ...planData,
         emailVerified: null,
         createdBy: currentUser.id,
       },

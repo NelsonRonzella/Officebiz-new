@@ -8,6 +8,10 @@ export function canManageClients(role: Role): boolean {
   return role === "ADMIN" || role === "LICENCIADO"
 }
 
+export function canManagePrestadores(role: Role): boolean {
+  return role === "LICENCIADO"
+}
+
 export function canCreateOrders(role: Role): boolean {
   return role === "ADMIN" || role === "LICENCIADO"
 }

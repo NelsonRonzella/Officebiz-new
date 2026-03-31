@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react"
 import {
   LayoutDashboard,
   Users,
+  UserCog,
   CreditCard,
   User,
   Headphones,
@@ -48,6 +49,7 @@ function getNavItems(role?: Role): NavItem[] {
       return [
         { label: "Dashboard", href: "/dashboard/licenciado", icon: LayoutDashboard },
         { label: "Clientes", href: "/app/clientes", icon: Users },
+        { label: "Prestadores", href: "/app/prestadores", icon: UserCog },
         { label: "Produtos", href: "/app/produtos", icon: Package },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
         { label: "Financeiro", href: "/app/financeiro", icon: DollarSign },

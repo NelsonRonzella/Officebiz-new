@@ -59,6 +59,15 @@ export const createClientSchema = z.object({
   cnpj: z.string().optional(),
 })
 
+export const createPrestadorSchema = z.object({
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.email("Email inválido"),
+  telefone: z.string().optional(),
+  cpf: z.string().optional(),
+  cnpj: z.string().optional(),
+  especialidade: z.string().optional(),
+})
+
 export type ProfileInput = z.infer<typeof profileSchema>
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
@@ -121,6 +130,7 @@ export const notificationReadSchema = z.union([
 ])
 
 export type CreateClientInput = z.infer<typeof createClientSchema>
+export type CreatePrestadorInput = z.infer<typeof createPrestadorSchema>
 export type PontualProductInput = z.infer<typeof pontualProductSchema>
 export type RecorrenteProductInput = z.infer<typeof recorrenteProductSchema>
 export type TutorialInput = z.infer<typeof tutorialSchema>
