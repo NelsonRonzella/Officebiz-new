@@ -127,6 +127,81 @@ async function consultarInpi(numeroProcesso) {
   return { data, status: 200 }
 }
 
+async function consultarInpiPorNome(nome) {
+  const cookie = await createSession()
+  if (!cookie) return { error: "Falha ao criar sessão INPI", status: 502 }
+
+  try {
+    const params = new URLSearchParams({
+      Action: "searchMarca",
+      tipoPesquisa: "BY_MARCA_CLASSIF_BASICA",
+      marca: nome,
+      classeInter: "",
+      buscaExata: "sim",
+      txt: "",
+    })
+
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15_000)
+    const res = await fetch(`${INPI_BASE}/servlet/MarcasServletController`, {
+      method: "POST",
+      headers: {
+        "User-Agent": UA,
+        Cookie: cookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+      signal: controller.signal,
+    })
+    clearTimeout(timeout)
+
+    const html = await res.text()
+    if (!html || html.length < 100) return { error: "Falha na busca INPI", status: 502 }
+
+    const $ = cheerio.load(html)
+    const countMatch = html.match(/encontrados <b>(\d+)<\/b>/)
+    const total = countMatch ? parseInt(countMatch[1]) : 0
+
+    const resultados = []
+    $('tr[bgColor="#E0E0E0"]').each((_, row) => {
+      const cells = $(row).find("td")
+      const numero = cells.eq(0).text().trim()
+      const marca = cells.eq(3).text().trim()
+      const situacao = cells.eq(5).text().trim()
+      const titular = cells.eq(6).text().trim()
+      const classe = cells.eq(7).text().trim()
+
+      if (marca) {
+        resultados.push({
+          numero: numero !== "-" ? numero : "",
+          marca,
+          situacao,
+          titular,
+          classe,
+        })
+      }
+    })
+
+    const disponivel = total === 0
+
+    return {
+      data: {
+        consulta: nome,
+        total,
+        disponivel,
+        mensagem: disponivel
+          ? `Nenhuma marca "${nome}" encontrada. O nome pode estar disponível para registro.`
+          : `Encontradas ${total} marcas com o nome "${nome}".`,
+        resultados: resultados.slice(0, 20),
+      },
+      status: 200,
+    }
+  } catch (err) {
+    console.error("INPI nome erro:", err.message)
+    return { error: "Falha ao consultar INPI", status: 502 }
+  }
+}
+
 // --- HTTP Server ---
 
 const server = http.createServer(async (req, res) => {
@@ -195,7 +270,28 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
-  // --- INPI scraping ---
+  // --- INPI search by brand name ---
+  if (url.pathname === "/inpi/marca" && req.method === "GET") {
+    const q = url.searchParams.get("q")
+    if (!q || q.trim().length < 2) {
+      res.writeHead(400)
+      res.end(JSON.stringify({ error: "Nome da marca deve ter pelo menos 2 caracteres" }))
+      return
+    }
+
+    try {
+      const result = await consultarInpiPorNome(q.trim())
+      res.writeHead(result.status)
+      res.end(JSON.stringify(result.data || { error: result.error }))
+    } catch (err) {
+      console.error("INPI marca erro:", err.message)
+      res.writeHead(500)
+      res.end(JSON.stringify({ error: "Erro interno do relay" }))
+    }
+    return
+  }
+
+  // --- INPI search by process number ---
   if (url.pathname === "/inpi" && req.method === "GET") {
     const q = url.searchParams.get("q")
     if (!q) {
