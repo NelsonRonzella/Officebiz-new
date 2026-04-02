@@ -42,7 +42,9 @@ export async function GET(req: NextRequest) {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 20_000)
 
-    const relayRes = await fetch(`${RELAY_URL}/inpi/marca?q=${encodeURIComponent(q.trim())}`, {
+    const exata = req.nextUrl.searchParams.get("exata") ?? "1"
+    const classe = req.nextUrl.searchParams.get("classe") ?? ""
+    const relayRes = await fetch(`${RELAY_URL}/inpi/marca?q=${encodeURIComponent(q.trim())}&exata=${exata}&classe=${encodeURIComponent(classe)}`, {
       headers: { "X-Relay-Secret": RELAY_SECRET },
       signal: controller.signal,
     })

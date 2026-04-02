@@ -127,7 +127,7 @@ async function consultarInpi(numeroProcesso) {
   return { data, status: 200 }
 }
 
-async function consultarInpiPorNome(nome) {
+async function consultarInpiPorNome(nome, { buscaExata = "sim", classeNice = "" } = {}) {
   const cookie = await createSession()
   if (!cookie) return { error: "Falha ao criar sessão INPI", status: 502 }
 
@@ -136,9 +136,10 @@ async function consultarInpiPorNome(nome) {
       Action: "searchMarca",
       tipoPesquisa: "BY_MARCA_CLASSIF_BASICA",
       marca: nome,
-      classeInter: "",
-      buscaExata: "sim",
+      classeInter: classeNice,
+      buscaExata,
       txt: "",
+      registerPerPage: "100",
     })
 
     const controller = new AbortController()
@@ -280,7 +281,9 @@ const server = http.createServer(async (req, res) => {
     }
 
     try {
-      const result = await consultarInpiPorNome(q.trim())
+      const buscaExata = url.searchParams.get("exata") !== "0" ? "sim" : "nao"
+      const classeNice = url.searchParams.get("classe") || ""
+      const result = await consultarInpiPorNome(q.trim(), { buscaExata, classeNice })
       res.writeHead(result.status)
       res.end(JSON.stringify(result.data || { error: result.error }))
     } catch (err) {
