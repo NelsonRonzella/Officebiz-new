@@ -10,19 +10,20 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { GrowthIllustration } from "@/components/illustrations/growth-illustration";
+import { fadeInView, staggerContainer, fadeInItem } from "@/lib/motion";
 
 const advantages = [
   {
     icon: DollarSign,
     title: "Zero investimento",
     description:
-      "Sem taxa de licenca, sem setup, sem treinamento. Comece sem gastar nada.",
+      "Sem taxa de licença, sem setup, sem treinamento. Comece sem gastar nada.",
   },
   {
     icon: TrendingUp,
     title: "Ganhe em cada venda",
     description:
-      "Defina suas proprias margens. Quanto mais vende, mais lucra.",
+      "Defina suas próprias margens. Quanto mais vende, mais lucra.",
   },
   {
     icon: Users,
@@ -32,43 +33,33 @@ const advantages = [
   },
   {
     icon: Rocket,
-    title: "Escalavel",
+    title: "Escalável",
     description:
-      "Atenda 1 ou 1.000 clientes. A plataforma cresce com voce.",
+      "Atenda 1 ou 1.000 clientes. A plataforma cresce com você.",
   },
   {
     icon: Tag,
     title: "White-label",
     description:
-      "Ofereca tudo com a sua marca. Seus clientes nem sabem que existimos.",
+      "Ofereça tudo com a sua marca. Seus clientes nem sabem que existimos.",
   },
   {
     icon: Headphones,
     title: "Suporte dedicado",
     description:
-      "Canal direto com nossa equipe para duvidas e acompanhamento.",
+      "Canal direto com nossa equipe para dúvidas e acompanhamento.",
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
-};
+const containerVariants = staggerContainer(0.1);
+const itemVariants = fadeInItem("x", 20, 0.4);
 
 export function Advantages() {
   return (
     <section id="advantages" className="py-20 lg:py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          {...fadeInView}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">

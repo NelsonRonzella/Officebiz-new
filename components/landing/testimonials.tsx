@@ -1,22 +1,23 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Star, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { fadeInView } from "@/lib/motion";
 
 const testimonials = [
   {
     quote:
-      "Em menos de um mes ja tinha 5 clientes. A plataforma e intuitiva e o suporte responde super rapido. Melhor decisao que tomei!",
+      "Em menos de um mês já tinha 5 clientes. A plataforma é intuitiva e o suporte responde super rápido. Melhor decisão que tomei!",
     name: "Maria Silva",
     role: "Consultora Empresarial",
-    city: "Sao Paulo, SP",
+    city: "São Paulo, SP",
     avatar: "MS",
   },
   {
     quote:
-      "Eu ja atendia alguns clientes com contabilidade, mas com a OfficeBiz consegui ampliar meu portfolio sem contratar ninguem. Meu faturamento triplicou.",
+      "Eu já atendia alguns clientes com contabilidade, mas com a OfficeBiz consegui ampliar meu portfólio sem contratar ninguém. Meu faturamento triplicou.",
     name: "Carlos Mendes",
     role: "Contador",
     city: "Belo Horizonte, MG",
@@ -24,7 +25,7 @@ const testimonials = [
   },
   {
     quote:
-      "O modelo white-label e incrivel. Meus clientes acham que tenho uma mega estrutura. Recomendo para qualquer empreendedor digital.",
+      "O modelo white-label é incrível. Meus clientes acham que tenho uma mega estrutura. Recomendo para qualquer empreendedor digital.",
     name: "Ana Costa",
     role: "Empreendedora Digital",
     city: "Curitiba, PR",
@@ -34,24 +35,40 @@ const testimonials = [
 
 export function Testimonials() {
   const [active, setActive] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
 
   const next = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(next, 5000);
-    return () => clearInterval(interval);
+  const resetTimer = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(next, 5000);
   }, [next]);
+
+  useEffect(() => {
+    resetTimer();
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      } else {
+        resetTimer();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [resetTimer]);
 
   return (
     <section id="testimonials" className="py-20 lg:py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          {...fadeInView}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
@@ -125,7 +142,7 @@ export function Testimonials() {
             {testimonials.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActive(i)}
+                onClick={() => { setActive(i); resetTimer(); }}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   i === active
                     ? "bg-primary w-8"

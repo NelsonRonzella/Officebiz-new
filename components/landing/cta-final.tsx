@@ -20,7 +20,7 @@ const sourceOptions = [
   { value: "google", label: "Google" },
   { value: "instagram", label: "Instagram" },
   { value: "linkedin", label: "LinkedIn" },
-  { value: "indicacao", label: "Indicacao" },
+  { value: "indicacao", label: "Indicação" },
   { value: "outro", label: "Outro" },
 ];
 
@@ -56,7 +56,7 @@ export function CtaFinal() {
 
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Ola! Tenho interesse em ser licenciado OfficeBiz."
+    "Olá! Tenho interesse em ser licenciado OfficeBiz."
   )}`;
 
   return (
@@ -89,7 +89,7 @@ export function CtaFinal() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pronto para comecar?
+              Pronto para começar?
             </h2>
             <p className="text-lg text-primary-foreground/80 mb-10">
               Sem taxa de entrada. Sem risco. Sem burocracia.
@@ -116,7 +116,7 @@ export function CtaFinal() {
                   Recebemos seu contato!
                 </h3>
                 <p className="text-primary-foreground/80">
-                  Nossa equipe entrara em contato em ate 24 horas.
+                  Nossa equipe entrará em contato em até 24 horas.
                 </p>
               </div>
             ) : (
@@ -243,7 +243,7 @@ export function CtaFinal() {
               className="bg-white/10 text-primary-foreground border-white/15"
             >
               <ShieldCheck className="w-3 h-3 mr-1" />
-              Conexao segura SSL
+              Conexão segura SSL
             </Badge>
           </div>
         </div>

@@ -45,6 +45,21 @@ export function GradientBlobAlt({ className = "" }: { className?: string }) {
   );
 }
 
+const FLOATING_DOTS = [
+  { cx: 20, cy: 30, r: 3 },
+  { cx: 60, cy: 10, r: 2 },
+  { cx: 100, cy: 45, r: 4 },
+  { cx: 140, cy: 20, r: 2.5 },
+  { cx: 180, cy: 35, r: 3 },
+  { cx: 40, cy: 80, r: 2 },
+  { cx: 90, cy: 100, r: 3.5 },
+  { cx: 150, cy: 85, r: 2 },
+  { cx: 30, cy: 150, r: 2.5 },
+  { cx: 80, cy: 170, r: 3 },
+  { cx: 130, cy: 140, r: 2 },
+  { cx: 170, cy: 165, r: 4 },
+];
+
 export function FloatingDots({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -53,20 +68,7 @@ export function FloatingDots({ className = "" }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {[
-        { cx: 20, cy: 30, r: 3 },
-        { cx: 60, cy: 10, r: 2 },
-        { cx: 100, cy: 45, r: 4 },
-        { cx: 140, cy: 20, r: 2.5 },
-        { cx: 180, cy: 35, r: 3 },
-        { cx: 40, cy: 80, r: 2 },
-        { cx: 90, cy: 100, r: 3.5 },
-        { cx: 150, cy: 85, r: 2 },
-        { cx: 30, cy: 150, r: 2.5 },
-        { cx: 80, cy: 170, r: 3 },
-        { cx: 130, cy: 140, r: 2 },
-        { cx: 170, cy: 165, r: 4 },
-      ].map((dot, i) => (
+      {FLOATING_DOTS.map((dot, i) => (
         <circle
           key={i}
           cx={dot.cx}
@@ -95,53 +97,6 @@ export function Squiggle({ className = "" }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         opacity="0.2"
-      />
-    </svg>
-  );
-}
-
-export function WaveDivider({
-  className = "",
-  flip = false,
-}: {
-  className?: string;
-  flip?: boolean;
-}) {
-  return (
-    <div
-      className={`w-full overflow-hidden leading-none ${flip ? "rotate-180" : ""} ${className}`}
-    >
-      <svg
-        viewBox="0 0 1440 80"
-        preserveAspectRatio="none"
-        className="w-full h-12 md:h-16 lg:h-20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0 40 C240 80 480 0 720 40 C960 80 1200 0 1440 40 L1440 80 L0 80 Z"
-          fill="currentColor"
-        />
-      </svg>
-    </div>
-  );
-}
-
-export function HandDrawnCircle({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      className={className}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M50 8 C72 6, 92 22, 94 45 C96 68, 78 92, 55 94 C32 96, 8 78, 6 55 C4 32, 28 10, 50 8z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.15"
       />
     </svg>
   );

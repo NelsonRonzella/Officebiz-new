@@ -7,18 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SparkleStars, FloatingDots } from "@/components/illustrations/decorative-elements";
+import { fadeInView } from "@/lib/motion";
 
 const freeItems = [
-  "Taxa de Licenca — R$ 0",
+  "Taxa de Licença — R$ 0",
   "Taxa de Setup — R$ 0",
   "Taxa de Treinamento — R$ 0",
 ];
 
 const includedItems = [
-  "Plataforma completa de gestao",
+  "Plataforma completa de gestão",
   "Equipe de especialistas",
   "Suporte dedicado via WhatsApp",
-  "Marca propria (white-label)",
+  "Marca própria (white-label)",
   "Sem fidelidade ou multa",
 ];
 
@@ -31,17 +32,14 @@ export function Pricing() {
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          {...fadeInView}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
-            Investimento acessivel
+            Investimento acessível
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Quanto custa? Menos do que voce imagina.
+            Quanto custa? Menos do que você imagina.
           </h2>
         </motion.div>
 
@@ -83,7 +81,7 @@ export function Pricing() {
               {/* Price */}
               <div className="text-center space-y-2 mb-6">
                 <p className="text-sm text-muted-foreground uppercase tracking-wide font-medium">
-                  Manutencao mensal
+                  Manutenção mensal
                 </p>
                 <motion.p
                   initial={{ scale: 0.9, opacity: 0 }}
@@ -94,11 +92,11 @@ export function Pricing() {
                 >
                   R$ 390
                   <span className="text-lg font-normal text-muted-foreground">
-                    /mes
+                    /mês
                   </span>
                 </motion.p>
                 <p className="text-sm text-muted-foreground">
-                  Unico custo. Sem surpresas. Sem fidelidade.
+                  Único custo. Sem surpresas. Sem fidelidade.
                 </p>
                 <Badge
                   variant="secondary"
@@ -123,7 +121,7 @@ export function Pricing() {
               {/* CTA */}
               <a href="#contact">
                 <Button size="lg" className="w-full shadow-lg shadow-primary/20">
-                  Comecar agora — R$ 0 de entrada
+                  Começar agora — R$ 0 de entrada
                 </Button>
               </a>
             </CardContent>
@@ -141,8 +139,8 @@ export function Pricing() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             <strong className="text-foreground">Montar sozinho</strong> custa de
             R$ 5.000 a R$ 15.000 em equipe, ferramentas e infraestrutura.{" "}
-            <strong className="text-foreground">Com a OfficeBiz</strong>, voce
-            comeca com R$ 0 de entrada e paga apenas R$ 390/mes — com tudo
+            <strong className="text-foreground">Com a OfficeBiz</strong>, você
+            começa com R$ 0 de entrada e paga apenas R$ 390/mês — com tudo
             incluso.
           </p>
         </motion.div>

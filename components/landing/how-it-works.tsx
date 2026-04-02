@@ -3,12 +3,13 @@
 import { KeyRound, UserPlus, ClipboardList } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { fadeInView, staggerContainer, fadeInItem } from "@/lib/motion";
 
 const steps = [
   {
     number: "1",
     icon: KeyRound,
-    title: "Adquira sua licenca",
+    title: "Adquira sua licença",
     description:
       "Cadastre-se gratuitamente e receba acesso imediato ao painel de licenciado.",
     accent: "from-primary/10 to-primary/5",
@@ -18,44 +19,32 @@ const steps = [
     icon: UserPlus,
     title: "Cadastre seus clientes",
     description:
-      "Adicione seus clientes na plataforma e ofereca os servicos do portfolio.",
+      "Adicione seus clientes na plataforma e ofereça os serviços do portfólio.",
     accent: "from-accent/15 to-accent/5",
   },
   {
     number: "3",
     icon: ClipboardList,
-    title: "Faca pedidos pelo painel",
+    title: "Faça pedidos pelo painel",
     description:
-      "Solicite servicos com poucos cliques. Nossa equipe cuida de toda a execucao.",
+      "Solicite serviços com poucos cliques. Nossa equipe cuida de toda a execução.",
     accent: "from-primary/10 to-primary/5",
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.2 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+const containerVariants = staggerContainer(0.2);
+const itemVariants = fadeInItem("y", 30, 0.5);
 
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="py-20 lg:py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          {...fadeInView}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
-            Simples e rapido
+            Simples e rápido
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Como funciona? Simples assim.

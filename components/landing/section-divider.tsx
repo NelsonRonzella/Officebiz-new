@@ -2,14 +2,10 @@ export function SectionDivider({
   variant = "wave",
   flip = false,
   className = "",
-  from = "bg-background",
-  to = "bg-muted/30",
 }: {
   variant?: "wave" | "curve" | "slant";
   flip?: boolean;
   className?: string;
-  from?: string;
-  to?: string;
 }) {
   return (
     <div

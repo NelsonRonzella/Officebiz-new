@@ -12,20 +12,21 @@ import {
   EmailIllustration,
   CartaoVirtualIllustration,
 } from "@/components/illustrations/service-illustrations";
+import { fadeInView, staggerContainer, fadeInItem } from "@/lib/motion";
 
 const services = [
   {
     Illustration: CnpjIllustration,
     title: "Abertura de CNPJ",
     description:
-      "MEI, ME, EPP — todo o processo de formalizacao empresarial simplificado.",
+      "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
     featured: true,
   },
   {
     Illustration: ContabilidadeIllustration,
     title: "Contabilidade",
     description:
-      "Escrituracao, impostos, folha de pagamento e obrigacoes acessorias.",
+      "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
     featured: true,
   },
   {
@@ -39,50 +40,41 @@ const services = [
     Illustration: LogoIllustration,
     title: "Logotipos",
     description:
-      "Criacao de identidade visual profissional com manual de marca.",
+      "Criação de identidade visual profissional com manual de marca.",
     featured: false,
   },
   {
     Illustration: PapelariaIllustration,
     title: "Papelaria",
     description:
-      "Cartoes de visita, papel timbrado, envelopes e materiais impressos.",
+      "Cartões de visita, papel timbrado, envelopes e materiais impressos.",
     featured: false,
   },
   {
     Illustration: SiteIllustration,
     title: "Sites",
     description:
-      "Sites institucionais e landing pages otimizadas para conversao.",
+      "Sites institucionais e landing pages otimizadas para conversão.",
     featured: false,
   },
   {
     Illustration: EmailIllustration,
-    title: "E-mail e Dominios",
+    title: "E-mail e Domínios",
     description:
-      "Registro de dominio e configuracao de e-mail profissional.",
+      "Registro de domínio e configuração de e-mail profissional.",
     featured: false,
   },
   {
     Illustration: CartaoVirtualIllustration,
-    title: "Cartao Virtual",
+    title: "Cartão Virtual",
     description:
-      "Cartao de visita digital interativo com QR Code e link compartilhavel.",
+      "Cartão de visita digital interativo com QR Code e link compartilhável.",
     featured: false,
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
+const containerVariants = staggerContainer(0.08);
+const itemVariants = fadeInItem("y", 20, 0.4);
 
 export function Services() {
   return (
@@ -96,14 +88,14 @@ export function Services() {
             transition={{ duration: 0.5 }}
           >
             <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
-              Portfolio completo
+              Portfólio completo
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Servicos que voce pode oferecer aos seus clientes
+              Serviços que você pode oferecer aos seus clientes
             </h2>
             <p className="text-lg text-muted-foreground">
-              Um portfolio completo, pronto para revenda. Sem precisar de equipe
-              propria.
+              Um portfólio completo, pronto para revenda. Sem precisar de equipe
+              própria.
             </p>
           </motion.div>
         </div>

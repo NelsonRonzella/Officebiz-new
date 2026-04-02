@@ -140,9 +140,9 @@ export function SiteIllustration(props: IllustrationProps) {
       {/* Browser bar */}
       <rect x="12" y="16" width="56" height="12" rx="4" fill="var(--color-primary, #22c55e)" opacity="0.1" />
       <rect x="12" y="24" width="56" height="4" fill="var(--color-primary, #22c55e)" opacity="0.1" />
-      <circle cx="22" cy="22" r="2" fill="#ef4444" opacity="0.5" />
-      <circle cx="30" cy="22" r="2" fill="#f59e0b" opacity="0.5" />
-      <circle cx="38" cy="22" r="2" fill="#22c55e" opacity="0.5" />
+      <circle cx="22" cy="22" r="2" fill="var(--color-destructive, #ef4444)" opacity="0.5" />
+      <circle cx="30" cy="22" r="2" fill="var(--color-warning, #f59e0b)" opacity="0.5" />
+      <circle cx="38" cy="22" r="2" fill="var(--color-primary, #22c55e)" opacity="0.5" />
       {/* Content */}
       <rect x="18" y="34" width="24" height="4" rx="2" fill="var(--color-primary, #22c55e)" opacity="0.3" />
       <rect x="18" y="42" width="20" height="2" rx="1" fill="currentColor" opacity="0.1" className="text-foreground" />
@@ -205,14 +205,3 @@ export function CartaoVirtualIllustration(props: IllustrationProps) {
     </IllustrationBase>
   );
 }
-
-export const serviceIllustrations = {
-  "Abertura de CNPJ": CnpjIllustration,
-  Contabilidade: ContabilidadeIllustration,
-  "Registro de Marca": MarcaIllustration,
-  Logotipos: LogoIllustration,
-  Papelaria: PapelariaIllustration,
-  Sites: SiteIllustration,
-  "E-mail e Domínios": EmailIllustration,
-  "Cartão Virtual": CartaoVirtualIllustration,
-} as const;

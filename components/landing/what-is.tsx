@@ -3,65 +3,56 @@
 import { User, Monitor, Users, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { HandDrawnArrow } from "@/components/illustrations/decorative-elements";
+import { fadeInView, staggerContainer, fadeInItem } from "@/lib/motion";
 
 const steps = [
   {
     icon: User,
     title: "LICENCIADO",
-    subtitle: "Voce capta clientes e gerencia pedidos",
+    subtitle: "Você capta clientes e gerencia pedidos",
     color: "bg-primary/10 text-primary",
   },
   {
     icon: Monitor,
     title: "PLATAFORMA",
-    subtitle: "Sistema completo para gestao de pedidos",
+    subtitle: "Sistema completo para gestão de pedidos",
     color: "bg-accent/20 text-accent-foreground",
   },
   {
     icon: Users,
     title: "ESPECIALISTAS",
-    subtitle: "Nossa equipe executa cada servico",
+    subtitle: "Nossa equipe executa cada serviço",
     color: "bg-primary/10 text-primary",
   },
   {
     icon: Building2,
     title: "CLIENTE FINAL",
-    subtitle: "Recebe o servico com a sua marca",
+    subtitle: "Recebe o serviço com a sua marca",
     color: "bg-accent/20 text-accent-foreground",
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+const containerVariants = staggerContainer(0.15);
+const itemVariants = fadeInItem("y", 20, 0.5);
 
 export function WhatIs() {
   return (
     <section id="what-is" className="py-20 lg:py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          {...fadeInView}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
             Como tudo se conecta
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            O que e a OfficeBiz?
+            O que é a OfficeBiz?
           </h2>
           <p className="text-lg text-muted-foreground">
             Uma plataforma white-label que permite a qualquer pessoa oferecer
-            servicos empresariais completos — sem precisar de equipe propria.
-            Voce gerencia seus clientes, nos cuidamos da execucao.
+            serviços empresariais completos — sem precisar de equipe própria.
+            Você gerencia seus clientes, nós cuidamos da execução.
           </p>
         </motion.div>
 

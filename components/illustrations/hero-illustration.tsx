@@ -54,9 +54,9 @@ export function HeroIllustration({ className = "" }: { className?: string }) {
           <rect x="10" y="10" width="400" height="36" rx="16" fill="var(--color-muted, #f1f5f9)" />
           <rect x="10" y="30" width="400" height="16" fill="var(--color-muted, #f1f5f9)" />
           {/* Traffic lights */}
-          <circle cx="32" cy="28" r="5" fill="#ef4444" opacity="0.7" />
-          <circle cx="50" cy="28" r="5" fill="#f59e0b" opacity="0.7" />
-          <circle cx="68" cy="28" r="5" fill="#22c55e" opacity="0.7" />
+          <circle cx="32" cy="28" r="5" fill="var(--color-destructive, #ef4444)" opacity="0.7" />
+          <circle cx="50" cy="28" r="5" fill="var(--color-warning, #f59e0b)" opacity="0.7" />
+          <circle cx="68" cy="28" r="5" fill="var(--color-primary, #22c55e)" opacity="0.7" />
 
           {/* Sidebar */}
           <rect x="10" y="46" width="80" height="244" fill="var(--color-primary, #22c55e)" opacity="0.1" />
@@ -130,7 +130,7 @@ export function HeroIllustration({ className = "" }: { className?: string }) {
           </div>
           <div>
             <p className="text-[10px] font-semibold text-foreground">+12 clientes</p>
-            <p className="text-[8px] text-muted-foreground">este mes</p>
+            <p className="text-[8px] text-muted-foreground">este mês</p>
           </div>
         </motion.div>
       </motion.div>

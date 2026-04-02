@@ -30,19 +30,19 @@ export function Hero() {
             </Badge>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-              Tenha seu proprio negocio de servicos empresariais
+              Tenha seu próprio negócio de serviços empresariais
               <span className="text-primary"> — sem investimento inicial</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-              Plataforma completa + equipe de especialistas. Voce gerencia, nos
-              executamos. Tudo que uma empresa precisa, em um so lugar.
+              Plataforma completa + equipe de especialistas. Você gerencia, nós
+              executamos. Tudo que uma empresa precisa, em um só lugar.
             </p>
 
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Zero taxa de licenca
+                Zero taxa de licença
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -57,7 +57,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 mt-2">
               <a href="#contact">
                 <Button size="lg" className="shadow-lg shadow-primary/20">
-                  Quero minha licenca &rarr;
+                  Quero minha licença &rarr;
                 </Button>
               </a>
               <a href="#how-it-works">
