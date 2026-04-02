@@ -137,3 +137,21 @@ export type TutorialInput = z.infer<typeof tutorialSchema>
 export type CreateOrderInput = z.infer<typeof createOrderSchema>
 export type OrderMessageInput = z.infer<typeof orderMessageSchema>
 export type NotificationReadInput = z.infer<typeof notificationReadSchema>
+
+// ---------------------------------------------------------------------------
+// Consultas (public lookups)
+// ---------------------------------------------------------------------------
+export const consultaCnpjSchema = z
+  .string()
+  .transform((v) => v.replace(/\D/g, ""))
+  .pipe(z.string().length(14, "CNPJ deve ter 14 dígitos"))
+
+export const consultaDominioSchema = z
+  .string()
+  .min(4, "Domínio inválido")
+  .regex(/\.\w{2,}$/, "Domínio deve ter extensão válida (ex: .com.br)")
+
+export const consultaInpiSchema = z
+  .string()
+  .transform((v) => v.replace(/\D/g, ""))
+  .pipe(z.string().min(7, "Número do processo deve ter no mínimo 7 dígitos").max(12, "Número do processo deve ter no máximo 12 dígitos"))

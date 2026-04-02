@@ -16,6 +16,9 @@ import {
   Video,
   ClipboardList,
   DollarSign,
+  Building2,
+  Globe,
+  ShieldCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -44,6 +47,9 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Tutoriais", href: "/admin/tutoriais", icon: Video },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
         { label: "Financeiro", href: "/admin/financeiro", icon: DollarSign },
+        { label: "Consultar CNPJ", href: "/admin/consultas/cnpj", icon: Building2 },
+        { label: "Consultar Domínio", href: "/admin/consultas/dominio", icon: Globe },
+        { label: "Consultar INPI", href: "/admin/consultas/inpi", icon: ShieldCheck },
       ]
     case "LICENCIADO":
       return [
@@ -53,12 +59,18 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Produtos", href: "/app/produtos", icon: Package },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
         { label: "Financeiro", href: "/app/financeiro", icon: DollarSign },
+        { label: "Consultar CNPJ", href: "/app/consultas/cnpj", icon: Building2 },
+        { label: "Consultar Domínio", href: "/app/consultas/dominio", icon: Globe },
+        { label: "Consultar INPI", href: "/app/consultas/inpi", icon: ShieldCheck },
       ]
     case "PRESTADOR":
       return [
         { label: "Dashboard", href: "/dashboard/prestador", icon: LayoutDashboard },
         { label: "Produtos", href: "/app/produtos", icon: Package },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+        { label: "Consultar CNPJ", href: "/app/consultas/cnpj", icon: Building2 },
+        { label: "Consultar Domínio", href: "/app/consultas/dominio", icon: Globe },
+        { label: "Consultar INPI", href: "/app/consultas/inpi", icon: ShieldCheck },
       ]
     case "CLIENTE":
       return [
