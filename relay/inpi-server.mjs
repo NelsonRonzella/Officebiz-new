@@ -156,6 +156,46 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
+  // --- CNPJ proxy (Brasil API) ---
+  if (url.pathname === "/cnpj" && req.method === "GET") {
+    const q = url.searchParams.get("q")
+    if (!q) { res.writeHead(400); res.end(JSON.stringify({ error: "Parâmetro 'q' obrigatório" })); return }
+    try {
+      const clean = q.replace(/\D/g, "")
+      const apiRes = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${clean}`, {
+        headers: { "User-Agent": UA, Accept: "application/json" },
+      })
+      const data = await apiRes.json()
+      res.writeHead(apiRes.status)
+      res.end(JSON.stringify(data))
+    } catch (err) {
+      console.error("CNPJ erro:", err.message)
+      res.writeHead(502)
+      res.end(JSON.stringify({ error: "Erro ao consultar CNPJ" }))
+    }
+    return
+  }
+
+  // --- Domínio proxy (Brasil API) ---
+  if (url.pathname === "/dominio" && req.method === "GET") {
+    const q = url.searchParams.get("q")
+    if (!q) { res.writeHead(400); res.end(JSON.stringify({ error: "Parâmetro 'q' obrigatório" })); return }
+    try {
+      const apiRes = await fetch(`https://brasilapi.com.br/api/registrobr/v1/${encodeURIComponent(q.trim())}`, {
+        headers: { "User-Agent": UA, Accept: "application/json" },
+      })
+      const data = await apiRes.json()
+      res.writeHead(apiRes.status)
+      res.end(JSON.stringify(data))
+    } catch (err) {
+      console.error("Domínio erro:", err.message)
+      res.writeHead(502)
+      res.end(JSON.stringify({ error: "Erro ao consultar domínio" }))
+    }
+    return
+  }
+
+  // --- INPI scraping ---
   if (url.pathname === "/inpi" && req.method === "GET") {
     const q = url.searchParams.get("q")
     if (!q) {

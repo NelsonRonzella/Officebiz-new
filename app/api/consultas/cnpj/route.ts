@@ -5,6 +5,9 @@ import { canAccessConsultas } from "@/lib/permissions"
 import { consultaCnpjSchema } from "@/lib/validations"
 import { fetchCnpj } from "@/lib/consultas"
 
+const RELAY_URL = process.env.INPI_RELAY_URL
+const RELAY_SECRET = process.env.INPI_RELAY_SECRET || "officebiz-inpi-relay-2024"
+
 export async function GET(req: NextRequest) {
   const session = await requireAuth()
   if (!session?.user?.id) {
@@ -35,6 +38,28 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
+  // Try relay first (avoids cloud IP issues), fallback to direct
+  if (RELAY_URL) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 15_000)
+      const relayRes = await fetch(`${RELAY_URL}/cnpj?q=${encodeURIComponent(parsed.data)}`, {
+        headers: { "X-Relay-Secret": RELAY_SECRET },
+        signal: controller.signal,
+      })
+      clearTimeout(timeout)
+      const data = await relayRes.json()
+      if (relayRes.ok) return NextResponse.json(data)
+      // If relay returned an API error (not relay error), pass it through
+      if (relayRes.status === 404) {
+        return NextResponse.json({ error: "CNPJ não encontrado" }, { status: 404 })
+      }
+    } catch {
+      // Relay unavailable, try direct
+    }
+  }
+
+  // Direct fallback
   const data = await fetchCnpj(parsed.data)
   if (!data) {
     return NextResponse.json({ error: "CNPJ não encontrado" }, { status: 404 })
