@@ -19,19 +19,48 @@ const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 async function createInpiSession(): Promise<string | null> {
   try {
+    // Try with redirect: "follow" first (more compatible with serverless)
     const res = await fetch(`${INPI_BASE}/servlet/LoginController?action=login`, {
+      headers: {
+        "User-Agent": UA,
+        Accept: "text/html,application/xhtml+xml",
+      },
+      redirect: "follow",
+    })
+
+    // Extract JSESSIONID from multiple possible sources
+    // 1. Try getSetCookie (modern API)
+    const cookies = res.headers.getSetCookie?.() ?? []
+    const fromGetSetCookie = cookies
+      .map((c) => c.split(";")[0])
+      .find((c) => c.startsWith("JSESSIONID="))
+    if (fromGetSetCookie) return fromGetSetCookie
+
+    // 2. Try set-cookie header directly
+    const setCookie = res.headers.get("set-cookie") || ""
+    const match = setCookie.match(/JSESSIONID=([^;]+)/)
+    if (match) return `JSESSIONID=${match[1]}`
+
+    // 3. Try extracting from response URL (sometimes contains session)
+    const urlMatch = res.url?.match(/jsessionid=([^?&;]+)/i)
+    if (urlMatch) return `JSESSIONID=${urlMatch[1]}`
+
+    // 4. Retry with redirect: "manual" as fallback
+    const res2 = await fetch(`${INPI_BASE}/servlet/LoginController?action=login`, {
       headers: { "User-Agent": UA },
       redirect: "manual",
     })
-    const cookies = res.headers.getSetCookie?.() ?? []
-    const jsessionid = cookies
+    const cookies2 = res2.headers.getSetCookie?.() ?? []
+    const fromRetry = cookies2
       .map((c) => c.split(";")[0])
       .find((c) => c.startsWith("JSESSIONID="))
-    if (jsessionid) return jsessionid
+    if (fromRetry) return fromRetry
 
-    const setCookie = res.headers.get("set-cookie") || ""
-    const match = setCookie.match(/JSESSIONID=([^;]+)/)
-    return match ? `JSESSIONID=${match[1]}` : null
+    const setCookie2 = res2.headers.get("set-cookie") || ""
+    const match2 = setCookie2.match(/JSESSIONID=([^;]+)/)
+    if (match2) return `JSESSIONID=${match2[1]}`
+
+    return null
   } catch {
     return null
   }

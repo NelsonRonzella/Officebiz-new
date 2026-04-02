@@ -36,10 +36,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
 
-  const data = await fetchInpiMarca(parsed.data)
-  if (!data) {
-    return NextResponse.json({ error: "Processo não encontrado no INPI" }, { status: 404 })
+  try {
+    const data = await fetchInpiMarca(parsed.data)
+    if (!data) {
+      return NextResponse.json({ error: "Processo não encontrado no INPI. Verifique o número e tente novamente." }, { status: 404 })
+    }
+    return NextResponse.json(data)
+  } catch (error) {
+    console.error("INPI scraper error:", error)
+    return NextResponse.json({ error: "Erro ao consultar o INPI. O serviço pode estar temporariamente indisponível." }, { status: 502 })
   }
-
-  return NextResponse.json(data)
 }
