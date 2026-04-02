@@ -57,7 +57,8 @@ export function ConsultaForm<T>({
 
     setIsLoading(true)
     try {
-      const res = await fetch(`${apiEndpoint}?q=${encodeURIComponent(query)}`)
+      const cleanQuery = query.replace(/[.\-\/]/g, "").trim()
+      const res = await fetch(`${apiEndpoint}?q=${encodeURIComponent(cleanQuery)}`)
       const json = await res.json()
 
       if (!res.ok) {
