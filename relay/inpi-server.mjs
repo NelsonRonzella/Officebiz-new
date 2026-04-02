@@ -163,7 +163,7 @@ async function consultarInpiPorNome(nome, { buscaExata = "sim", classeNice = "" 
     const countMatch = html.match(/encontrados <b>(\d+)<\/b>/)
     const total = countMatch ? parseInt(countMatch[1]) : 0
 
-    const resultados = []
+    const allResults = []
     $('tr[bgColor="#E0E0E0"]').each((_, row) => {
       const cells = $(row).find("td")
       const numero = cells.eq(0).text().trim()
@@ -173,7 +173,7 @@ async function consultarInpiPorNome(nome, { buscaExata = "sim", classeNice = "" 
       const classe = cells.eq(7).text().trim()
 
       if (marca) {
-        resultados.push({
+        allResults.push({
           numero: numero !== "-" ? numero : "",
           marca,
           situacao,
@@ -183,17 +183,34 @@ async function consultarInpiPorNome(nome, { buscaExata = "sim", classeNice = "" 
       }
     })
 
-    const disponivel = total === 0
+    // Filter by Nice class if specified
+    const resultados = classeNice
+      ? allResults.filter((r) => {
+          // Match class number at start of string: "25 : 10", "NCL(9) 25", "25"
+          const classeStr = r.classe.replace(/\s/g, "")
+          return (
+            classeStr.startsWith(classeNice + ":") ||
+            classeStr === classeNice ||
+            classeStr.includes(")" + classeNice)
+          )
+        })
+      : allResults
+
+    const filteredTotal = resultados.length
+    const disponivel = filteredTotal === 0
+
+    const classeLabel = classeNice ? ` na classe ${classeNice}` : ""
 
     return {
       data: {
         consulta: nome,
-        total,
+        total: filteredTotal,
+        totalGeral: total,
         disponivel,
         mensagem: disponivel
-          ? `Nenhuma marca "${nome}" encontrada. O nome pode estar disponível para registro.`
-          : `Encontradas ${total} marcas com o nome "${nome}".`,
-        resultados: resultados.slice(0, 20),
+          ? `Nenhuma marca "${nome}" encontrada${classeLabel}. O nome pode estar disponível para registro.`
+          : `Encontradas ${filteredTotal} marcas com o nome "${nome}"${classeLabel}.`,
+        resultados: resultados.slice(0, 100),
       },
       status: 200,
     }
