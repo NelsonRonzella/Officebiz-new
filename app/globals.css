@@ -101,11 +101,11 @@
 
 /* Custom tokens (not auto-generated) */
 :root {
-  --chart-1: #171717;
-  --chart-2: #404040;
-  --chart-3: #737373;
-  --chart-4: #a3a3a3;
-  --chart-5: #d4d4d4;
+  --chart-1: #86efac;
+  --chart-2: #22c55e;
+  --chart-3: #16a34a;
+  --chart-4: #15803d;
+  --chart-5: #166534;
   --whatsapp: #25D366;
   --info: #525252;
   --info-foreground: #fafafa;
@@ -147,11 +147,11 @@
   --sidebar-border: #ffffff1a;
   --sidebar-ring: #525252;
 
-  --chart-1: #e5e5e5;
-  --chart-2: #a3a3a3;
-  --chart-3: #737373;
-  --chart-4: #525252;
-  --chart-5: #404040;
+  --chart-1: #86efac;
+  --chart-2: #22c55e;
+  --chart-3: #16a34a;
+  --chart-4: #15803d;
+  --chart-5: #166534;
 
   --whatsapp: #25D366;
   --info: #a3a3a3;
