@@ -4,13 +4,16 @@ import { useState, useCallback } from "react"
 import { BuscadorSidebar, type SearchParams } from "./buscador-sidebar"
 import { BuscadorResultados } from "./buscador-resultados"
 import type { LeadResultado } from "@/lib/leads-buscar"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export function BuscadorLeads() {
   const [leads, setLeads] = useState<LeadResultado[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<"buscar" | "resultados">("buscar")
 
   const handleSearch = useCallback(async (params: SearchParams) => {
+    setActiveTab("resultados")
     setIsLoading(true)
     setError(null)
     try {
@@ -47,23 +50,53 @@ export function BuscadorLeads() {
   }, [])
 
   return (
-    <div className="flex gap-6" style={{ minHeight: "calc(100vh - 12rem)" }}>
-      <aside className="w-72 shrink-0">
-        <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
-      </aside>
+    <div>
+      {/* Mobile: Tabs */}
+      <div className="sm:hidden">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "buscar" | "resultados")}>
+          <TabsList className="w-full mb-4">
+            <TabsTrigger value="buscar" className="flex-1">Buscar</TabsTrigger>
+            <TabsTrigger value="resultados" className="flex-1">
+              Resultados{leads.length > 0 ? ` (${leads.length})` : ""}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="buscar">
+            <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
+          </TabsContent>
+          <TabsContent value="resultados">
+            {error && (
+              <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
+            <BuscadorResultados
+              leads={leads}
+              isLoading={isLoading}
+              onSalvar={handleSalvar}
+              onIgnorar={handleIgnorar}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
 
-      <div className="flex-1 min-w-0">
-        {error && (
-          <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
-            {error}
-          </div>
-        )}
-        <BuscadorResultados
-          leads={leads}
-          isLoading={isLoading}
-          onSalvar={handleSalvar}
-          onIgnorar={handleIgnorar}
-        />
+      {/* Desktop: layout original side-by-side */}
+      <div className="hidden sm:flex gap-6" style={{ minHeight: "calc(100vh - 12rem)" }}>
+        <aside className="w-72 shrink-0">
+          <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
+        </aside>
+        <div className="flex-1 min-w-0">
+          {error && (
+            <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+          <BuscadorResultados
+            leads={leads}
+            isLoading={isLoading}
+            onSalvar={handleSalvar}
+            onIgnorar={handleIgnorar}
+          />
+        </div>
       </div>
     </div>
   )
