@@ -20,6 +20,7 @@ import {
   Globe,
   ShieldCheck,
   MapPin,
+  MessageCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -52,6 +53,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Consultar Domínio", href: "/admin/consultas/dominio", icon: Globe },
         { label: "Consultar INPI", href: "/admin/consultas/inpi", icon: ShieldCheck },
         { label: "Buscador de Leads", href: "/admin/leads", icon: MapPin },
+        { label: "WhatsApp", href: "/admin/whatsapp", icon: MessageCircle },
       ]
     case "LICENCIADO":
       return [
