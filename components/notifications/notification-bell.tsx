@@ -23,11 +23,11 @@ interface Notification {
 }
 
 const typeConfig = {
-  INFO: { icon: Info, dotClass: "bg-blue-500" },
-  SUCCESS: { icon: CheckCircle, dotClass: "bg-green-500" },
+  INFO: { icon: Info, dotClass: "bg-info" },
+  SUCCESS: { icon: CheckCircle, dotClass: "bg-success" },
   WARNING: { icon: AlertTriangle, dotClass: "bg-amber-500" },
   ORDER_UPDATE: { icon: Package, dotClass: "bg-violet-500" },
-  SYSTEM: { icon: Settings, dotClass: "bg-gray-500" },
+  SYSTEM: { icon: Settings, dotClass: "bg-muted-foreground" },
 } as const
 
 interface NotificationBellProps {

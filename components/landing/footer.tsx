@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { Section } from "@/components/landing/section";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -25,65 +25,63 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-primary py-12">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Logo */}
-          <div className="text-center md:text-left">
-            <Link
-              href="/"
-              className="text-xl font-bold text-primary-foreground"
-            >
-              OfficeBiz
-            </Link>
-            <p className="text-sm text-primary-foreground/60 mt-1">
-              CNPJ: XX.XXX.XXX/0001-XX
-            </p>
-          </div>
-
-          {/* Links */}
-          <nav className="flex flex-wrap justify-center gap-6">
-            {footerLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Social */}
-          <div className="flex items-center gap-4">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="w-5 h-5" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center">
-          <p className="text-sm text-primary-foreground/50">
-            &copy; 2026 OfficeBiz. Todos os direitos reservados.
+    <Section compact className="bg-primary" background="default">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        {/* Logo */}
+        <div className="text-center md:text-left">
+          <Link
+            href="/"
+            className="text-xl font-bold text-primary-foreground"
+          >
+            OfficeBiz
+          </Link>
+          <p className="text-sm text-primary-foreground/60 mt-1">
+            CNPJ: XX.XXX.XXX/0001-XX
           </p>
         </div>
+
+        {/* Links */}
+        <nav className="flex flex-wrap justify-center gap-6">
+          {footerLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Social */}
+        <div className="flex items-center gap-4">
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+            aria-label="Instagram"
+          >
+            <InstagramIcon className="w-5 h-5" />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+            aria-label="LinkedIn"
+          >
+            <LinkedinIcon className="w-5 h-5" />
+          </a>
+        </div>
       </div>
-    </footer>
+
+      {/* Copyright */}
+      <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center">
+        <p className="text-sm text-primary-foreground/50">
+          &copy; 2026 OfficeBiz. Todos os direitos reservados.
+        </p>
+      </div>
+    </Section>
   );
 }

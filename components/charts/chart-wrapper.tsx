@@ -18,23 +18,23 @@ import {
 import type { PieLabelRenderProps, PieLabel } from "recharts"
 import { formatCurrency } from "@/lib/financial"
 
-/* ── Paleta de cores para gráficos (SVG fills, não classes Tailwind) ── */
+/* ── Paleta de cores para gráficos (CSS vars definidas em globals.css) ── */
 const CHART_COLORS = {
-  primary: "#1E3A5F",
-  success: "#22C55E",
-  warning: "#EAB308",
-  danger: "#EF4444",
-  blue: "#3B82F6",
-  purple: "#8B5CF6",
+  primary: "var(--chart-1)",
+  success: "var(--chart-2)",
+  warning: "var(--chart-3)",
+  danger: "var(--chart-4)",
+  info: "var(--chart-5)",
+  muted: "var(--muted)",
 }
 
 const STATUS_COLORS: Record<string, string> = {
   AGUARDANDO_PAGAMENTO: CHART_COLORS.warning,
-  EM_ANDAMENTO: CHART_COLORS.blue,
+  EM_ANDAMENTO: CHART_COLORS.info,
   PAGO: CHART_COLORS.success,
   CONCLUIDO: CHART_COLORS.primary,
   CANCELADO: CHART_COLORS.danger,
-  RETORNO: CHART_COLORS.purple,
+  RETORNO: CHART_COLORS.info,
 }
 
 /* ── Tooltip customizado ── */
@@ -120,7 +120,7 @@ export function OrdersByStatusPieChart({ data }: OrdersByStatusPieChartProps) {
           {data.map((entry) => (
             <Cell
               key={entry.status}
-              fill={STATUS_COLORS[entry.status] || CHART_COLORS.blue}
+              fill={STATUS_COLORS[entry.status] || CHART_COLORS.info}
             />
           ))}
         </Pie>

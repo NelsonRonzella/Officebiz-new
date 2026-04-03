@@ -576,7 +576,7 @@ export function OrderDetail({
                       {idx < order.steps.length - 1 && (
                         <div
                           className={`absolute left-[15px] top-8 h-[calc(100%-16px)] w-0.5 ${
-                            isFinished ? "bg-green-500" : "bg-border"
+                            isFinished ? "bg-success" : "bg-border"
                           }`}
                         />
                       )}
@@ -584,11 +584,11 @@ export function OrderDetail({
                       {/* Circle */}
                       <div className="relative z-10 flex-shrink-0">
                         {isFinished ? (
-                          <div className="flex size-8 items-center justify-center rounded-full bg-green-500 text-white">
+                          <div className="flex size-8 items-center justify-center rounded-full bg-success text-success-foreground">
                             <Check className="size-4" />
                           </div>
                         ) : isCurrent ? (
-                          <div className="flex size-8 items-center justify-center rounded-full bg-blue-500 text-white ring-4 ring-blue-500/20">
+                          <div className="flex size-8 items-center justify-center rounded-full bg-info text-info-foreground ring-4 ring-info/20">
                             <span className="text-xs font-bold">{step.order}</span>
                           </div>
                         ) : (

@@ -1,24 +1,11 @@
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/require-auth"
 import { canAccessBuscadorLeads, getDashboardPath } from "@/lib/permissions"
 import { BuscadorLeads } from "@/components/leads/buscador-leads"
+import { PageHeader } from "@/components/dashboard/page-header"
 
 export default async function LeadsPage() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { role: true },
-  })
-
-  if (!user) {
-    redirect("/login")
-  }
+  const { user } = await requireAuth()
 
   if (!canAccessBuscadorLeads(user.role)) {
     redirect(getDashboardPath(user.role))
@@ -26,14 +13,10 @@ export default async function LeadsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Buscador de Leads
-        </h1>
-        <p className="text-muted-foreground">
-          Encontre empresas por segmento e localização.
-        </p>
-      </div>
+      <PageHeader
+        title="Buscador de Leads"
+        description="Encontre empresas por segmento e localização."
+      />
       <BuscadorLeads />
     </div>
   )

@@ -110,7 +110,7 @@ export const tokens: DesignTokens = {
     ring: "#a1a1a1",
   },
   radius: {
-    sm: "0.25rem",
+    sm: "0.375rem",
     md: "0.5rem",
     lg: "0.625rem",
     xl: "1rem",

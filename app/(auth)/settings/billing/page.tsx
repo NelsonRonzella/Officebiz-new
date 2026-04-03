@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/require-auth"
+import { PageHeader } from "@/components/dashboard/page-header"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -12,25 +11,12 @@ import {
 import { BillingActions } from "./billing-actions"
 
 export default async function BillingPage() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      plan: true,
-      trialEndsAt: true,
-      stripeCurrentPeriodEnd: true,
-      stripeCustomerId: true,
-    },
+  const { user } = await requireAuth({
+    plan: true,
+    trialEndsAt: true,
+    stripeCurrentPeriodEnd: true,
+    stripeCustomerId: true,
   })
-
-  if (!user) {
-    redirect("/login")
-  }
 
   const planLabels = {
     FREE: "Gratuito",
@@ -52,14 +38,10 @@ export default async function BillingPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Assinatura
-        </h1>
-        <p className="text-muted-foreground">
-          Gerencie seu plano e pagamentos.
-        </p>
-      </div>
+      <PageHeader
+        title="Assinatura"
+        description="Gerencie seu plano e pagamentos."
+      />
 
       <Card>
         <CardHeader>

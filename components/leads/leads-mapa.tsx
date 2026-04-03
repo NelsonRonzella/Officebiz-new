@@ -49,7 +49,7 @@ export default function LeadsMapa({ lat, lng, raioKm }: LeadsMapaProps) {
     <MapContainer
       center={[lat, lng]}
       zoom={12}
-      style={{ height: "160px", width: "100%", borderRadius: "8px" }}
+      className="h-40 w-full rounded-lg"
       zoomControl={false}
       attributionControl={false}
       scrollWheelZoom={false}
@@ -59,7 +59,7 @@ export default function LeadsMapa({ lat, lng, raioKm }: LeadsMapaProps) {
       <Circle
         center={[lat, lng]}
         radius={raioKm * 1000}
-        pathOptions={{ color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.1, weight: 2 }}
+        pathOptions={{ color: "var(--info)", fillColor: "var(--info)", fillOpacity: 0.1, weight: 2 }}
       />
       <Recenter lat={lat} lng={lng} raioKm={raioKm} />
     </MapContainer>

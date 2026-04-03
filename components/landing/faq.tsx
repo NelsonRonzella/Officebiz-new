@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SectionHeader } from "@/components/landing/section-header";
+import { Section } from "@/components/landing/section";
 
 const faqs = [
   {
@@ -50,33 +52,30 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-20 lg:py-28 bg-surface">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Perguntas Frequentes
-          </h2>
-        </div>
+    <Section id="faq" background="surface">
+      <SectionHeader
+        title="Perguntas Frequentes"
+        animated={false}
+      />
 
-        <div className="max-w-2xl mx-auto">
-          <Accordion className="space-y-3">
-            {faqs.map((faq, index) => (
-              <AccordionItem
-                key={index}
-                value={`item-${index}`}
-                className="border border-border rounded-lg bg-card px-4 sm:px-6"
-              >
-                <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
+      <div className="max-w-2xl mx-auto">
+        <Accordion className="space-y-3">
+          {faqs.map((faq, index) => (
+            <AccordionItem
+              key={index}
+              value={`item-${index}`}
+              className="border border-border rounded-lg bg-card px-4 sm:px-6"
+            >
+              <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
-    </section>
+    </Section>
   );
 }

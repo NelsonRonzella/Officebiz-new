@@ -1,32 +1,21 @@
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/require-auth"
 import { LicenciadoFinancial } from "@/components/financial/licenciado-financial"
+import { PageHeader } from "@/components/dashboard/page-header"
 
 export default async function LicenciadoFinanceiroPage() {
-  const session = await auth()
+  const { user } = await requireAuth()
 
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { role: true },
-  })
-
-  if (!user || user.role !== "LICENCIADO") {
+  if (user.role !== "LICENCIADO") {
     redirect("/dashboard")
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Financeiro</h1>
-        <p className="text-sm text-muted-foreground">
-          Acompanhe suas vendas e lucros
-        </p>
-      </div>
+      <PageHeader
+        title="Financeiro"
+        description="Acompanhe suas vendas e lucros"
+      />
 
       <LicenciadoFinancial />
     </div>

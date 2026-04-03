@@ -134,7 +134,7 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs bg-green-500 text-white px-2 py-0.5 rounded-full hover:bg-green-600 transition-colors"
+                    className="flex items-center gap-1 text-xs bg-whatsapp text-white px-2 py-0.5 rounded-full hover:bg-whatsapp/90 transition-colors"
                   >
                     <MessageCircle className="size-3" />
                     WhatsApp

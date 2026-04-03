@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { auth } from "@/lib/auth"
+import { requireAuth } from "@/lib/require-auth"
 import { db } from "@/lib/db"
 import { PlanCard } from "@/components/dashboard/plan-card"
+import { PageHeader } from "@/components/dashboard/page-header"
 import { TrialBanner } from "@/components/dashboard/trial-banner"
 import {
   Card,
@@ -13,27 +14,14 @@ import {
 import { CheckCircle2, Circle, Users } from "lucide-react"
 
 export default async function LicenciadoDashboardPage() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      name: true,
-      telefone: true,
-      plan: true,
-      trialEndsAt: true,
-      stripeCurrentPeriodEnd: true,
-      role: true,
-    },
+  const { session, user } = await requireAuth({
+    name: true,
+    telefone: true,
+    plan: true,
+    trialEndsAt: true,
+    stripeCurrentPeriodEnd: true,
+    role: true,
   })
-
-  if (!user) {
-    redirect("/login")
-  }
 
   if (user.role !== "LICENCIADO") {
     redirect("/dashboard")
@@ -67,14 +55,10 @@ export default async function LicenciadoDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Welcome */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Bem-vindo{user.name ? `, ${user.name}` : ""}!
-        </h1>
-        <p className="text-muted-foreground">
-          Aqui está o resumo da sua conta.
-        </p>
-      </div>
+      <PageHeader
+        title={`Bem-vindo${user.name ? `, ${user.name}` : ""}!`}
+        description="Aqui está o resumo da sua conta."
+      />
 
       {/* Trial banner */}
       {user.plan === "TRIAL" && (

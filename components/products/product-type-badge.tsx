@@ -6,7 +6,7 @@ interface ProductTypeBadgeProps {
 export function ProductTypeBadge({ type }: ProductTypeBadgeProps) {
   if (type === "PONTUAL") {
     return (
-      <Badge variant="outline" className="border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400">
+      <Badge variant="outline" className="border-info/30 bg-info/10 text-info dark:text-info">
         Pontual
       </Badge>
     )

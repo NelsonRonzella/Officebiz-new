@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { FloatingDots, Squiggle } from "@/components/illustrations/decorative-elements";
+import { Section } from "@/components/landing/section";
 
 const sourceOptions = [
   { value: "google", label: "Google" },
@@ -60,9 +61,9 @@ export function CtaFinal() {
   )}`;
 
   return (
-    <section
+    <Section
       id="contact"
-      className="relative py-20 lg:py-28 bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground overflow-hidden"
+      className="bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground"
     >
       {/* Decorative background elements */}
       <FloatingDots className="absolute top-10 left-10 w-48 h-48 text-primary-foreground/10 pointer-events-none" />
@@ -80,7 +81,7 @@ export function CtaFinal() {
         }}
       />
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="relative z-10">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -248,6 +249,6 @@ export function CtaFinal() {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

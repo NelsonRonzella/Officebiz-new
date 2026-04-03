@@ -1,46 +1,28 @@
-import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/require-auth"
+import { PageHeader } from "@/components/dashboard/page-header"
 import { ProfileForm } from "./profile-form"
 
 export default async function ProfilePage() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      name: true,
-      telefone: true,
-      companyName: true,
-      cpf: true,
-      cnpj: true,
-      cep: true,
-      endereco: true,
-      numero: true,
-      bairro: true,
-      cidade: true,
-      estado: true,
-    },
+  const { user } = await requireAuth({
+    name: true,
+    telefone: true,
+    companyName: true,
+    cpf: true,
+    cnpj: true,
+    cep: true,
+    endereco: true,
+    numero: true,
+    bairro: true,
+    cidade: true,
+    estado: true,
   })
-
-  if (!user) {
-    redirect("/login")
-  }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Perfil
-        </h1>
-        <p className="text-muted-foreground">
-          Atualize suas informações pessoais.
-        </p>
-      </div>
+      <PageHeader
+        title="Perfil"
+        description="Atualize suas informações pessoais."
+      />
 
       <ProfileForm
         initialData={{

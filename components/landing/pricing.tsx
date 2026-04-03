@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SparkleStars, FloatingDots } from "@/components/illustrations/decorative-elements";
-import { fadeInView } from "@/lib/motion";
+import { SectionHeader } from "@/components/landing/section-header";
+import { Section } from "@/components/landing/section";
 
 const freeItems = [
   "Taxa de Licença — R$ 0",
@@ -25,23 +26,16 @@ const includedItems = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="py-20 lg:py-28 bg-muted/30 relative overflow-hidden">
+    <Section id="pricing" background="muted">
       {/* Decorative elements */}
       <FloatingDots className="absolute top-10 left-10 w-40 h-40 text-primary pointer-events-none hidden lg:block" />
       <FloatingDots className="absolute bottom-10 right-10 w-32 h-32 text-primary pointer-events-none hidden lg:block" />
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        <motion.div
-          {...fadeInView}
-          className="max-w-3xl mx-auto text-center mb-16"
-        >
-          <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
-            Investimento acessível
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Quanto custa? Menos do que você imagina.
-          </h2>
-        </motion.div>
+      <div className="relative z-10">
+        <SectionHeader
+          subtitle="Investimento acessível"
+          title="Quanto custa? Menos do que você imagina."
+        />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -145,6 +139,6 @@ export function Pricing() {
           </p>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 }

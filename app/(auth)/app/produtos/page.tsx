@@ -1,24 +1,11 @@
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { requireAuth } from "@/lib/require-auth"
 import { canViewProducts, canViewProductPrice, getDashboardPath } from "@/lib/permissions"
 import { ProductsList } from "@/components/products/products-list"
+import { PageHeader } from "@/components/dashboard/page-header"
 
 export default async function ProdutosPage() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    redirect("/login")
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { role: true },
-  })
-
-  if (!user) {
-    redirect("/login")
-  }
+  const { user } = await requireAuth()
 
   if (!canViewProducts(user.role)) {
     redirect(getDashboardPath(user.role))
@@ -28,14 +15,10 @@ export default async function ProdutosPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Produtos Disponíveis
-        </h1>
-        <p className="text-muted-foreground">
-          Conheça os produtos e serviços oferecidos.
-        </p>
-      </div>
+      <PageHeader
+        title="Produtos Disponíveis"
+        description="Conheça os produtos e serviços oferecidos."
+      />
 
       <ProductsList showPrice={showPrice} />
     </div>

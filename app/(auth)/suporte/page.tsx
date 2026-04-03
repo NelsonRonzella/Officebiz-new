@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { PageHeader } from "@/components/dashboard/page-header"
 import { MessageCircle, Mail } from "lucide-react"
 import {
   Card,
@@ -48,10 +49,7 @@ export default function SuportePage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Suporte</h1>
-        <p className="text-muted-foreground">Como podemos ajudar?</p>
-      </div>
+      <PageHeader title="Suporte" description="Como podemos ajudar?" />
 
       {/* Contact Cards */}
       <div className="grid gap-6 sm:grid-cols-2">

@@ -82,7 +82,7 @@ export function BuscadorLeads() {
       </div>
 
       {/* Desktop sidebar — CSS responsive layout mounts both instances; desktop is hidden on mobile */}
-      <div className="hidden sm:flex gap-6" style={{ minHeight: "calc(100vh - 12rem)" }}>
+      <div className="hidden sm:flex gap-6 min-h-[calc(100vh-12rem)]">
         <aside className="w-72 shrink-0">
           <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
         </aside>

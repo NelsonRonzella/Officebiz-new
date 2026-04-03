@@ -10,7 +10,9 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { GrowthIllustration } from "@/components/illustrations/growth-illustration";
-import { fadeInView, staggerContainer, fadeInItem } from "@/lib/motion";
+import { staggerContainer, fadeInItem } from "@/lib/motion";
+import { SectionHeader } from "@/components/landing/section-header";
+import { Section } from "@/components/landing/section";
 
 const advantages = [
   {
@@ -56,62 +58,53 @@ const itemVariants = fadeInItem("x", 20, 0.4);
 
 export function Advantages() {
   return (
-    <section id="advantages" className="py-20 lg:py-28">
-      <div className="container mx-auto px-4 lg:px-8">
+    <Section id="advantages">
+      <SectionHeader
+        subtitle="Vantagens exclusivas"
+        title="Por que ser um licenciado OfficeBiz?"
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+        {/* Left — Benefits list */}
         <motion.div
-          {...fadeInView}
-          className="max-w-3xl mx-auto text-center mb-16"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-5"
         >
-          <p className="text-sm font-medium text-primary tracking-wider uppercase mb-3">
-            Vantagens exclusivas
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Por que ser um licenciado OfficeBiz?
-          </h2>
+          {advantages.map((item) => (
+            <motion.div
+              key={item.title}
+              variants={itemVariants}
+              className="group flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
+                <item.icon className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground mb-1 text-sm">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-          {/* Left — Benefits list */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-5"
-          >
-            {advantages.map((item) => (
-              <motion.div
-                key={item.title}
-                variants={itemVariants}
-                className="group flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 transition-all duration-300"
-              >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                  <item.icon className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1 text-sm">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Right — Growth illustration */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden lg:block"
-          >
-            <GrowthIllustration className="w-full max-w-md mx-auto" />
-          </motion.div>
-        </div>
+        {/* Right — Growth illustration */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="hidden lg:block"
+        >
+          <GrowthIllustration className="w-full max-w-md mx-auto" />
+        </motion.div>
       </div>
-    </section>
+    </Section>
   );
 }
