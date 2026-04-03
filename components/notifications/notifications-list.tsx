@@ -202,7 +202,7 @@ export function NotificationsList() {
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification)}
                 className={cn(
-                  "flex w-full items-start gap-4 rounded-lg border border-l-4 p-4 text-left transition-colors hover:bg-muted/50",
+                  "flex w-full items-start gap-3 rounded-lg border border-l-4 p-3 text-left transition-colors hover:bg-muted/50 sm:gap-4 sm:p-4",
                   !notification.read
                     ? cn(config.borderClass, "bg-muted/30")
                     : "border-l-transparent"
@@ -242,11 +242,11 @@ export function NotificationsList() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t pt-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground text-center sm:text-left">
             Página {page} de {totalPages} ({total} notificações)
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex justify-center gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -254,7 +254,7 @@ export function NotificationsList() {
               onClick={() => setPage((p) => p - 1)}
             >
               <ChevronLeft className="size-4" />
-              Anterior
+              <span className="hidden sm:inline ml-1">Anterior</span>
             </Button>
             <Button
               variant="outline"
@@ -262,7 +262,7 @@ export function NotificationsList() {
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Próxima
+              <span className="hidden sm:inline mr-1">Próxima</span>
               <ChevronRight className="size-4" />
             </Button>
           </div>

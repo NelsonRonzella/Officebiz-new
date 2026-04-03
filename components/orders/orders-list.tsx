@@ -219,8 +219,9 @@ export function OrdersList() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="relative overflow-x-auto">
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none sm:hidden" />
+              <table className="w-full min-w-[480px] text-sm">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="px-4 py-3 text-left font-medium text-muted-foreground">
@@ -307,14 +308,14 @@ export function OrdersList() {
             </div>
 
             {data.total > 0 && (
-              <div className="mt-4 flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground text-center sm:text-left">
                   Mostrando {Math.min((page - 1) * limit + 1, data.total)}–
                   {Math.min(page * limit, data.total)} de {data.total}{" "}
                   {data.total === 1 ? "pedido" : "pedidos"}
                 </p>
                 {totalPages > 1 && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2 sm:justify-end">
                     <Button
                       variant="outline"
                       size="sm"
