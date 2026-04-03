@@ -53,14 +53,16 @@ export function BuscadorLeads() {
     <div>
       {/* Mobile: Tabs */}
       <div className="sm:hidden">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "buscar" | "resultados")}>
+        <Tabs value={activeTab} onValueChange={(v) => {
+          if (v === "buscar" || v === "resultados") setActiveTab(v)
+        }}>
           <TabsList className="w-full mb-4">
             <TabsTrigger value="buscar" className="flex-1">Buscar</TabsTrigger>
             <TabsTrigger value="resultados" className="flex-1">
               Resultados{leads.length > 0 ? ` (${leads.length})` : ""}
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="buscar">
+          <TabsContent value="buscar" keepMounted>
             <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
           </TabsContent>
           <TabsContent value="resultados">
@@ -79,7 +81,7 @@ export function BuscadorLeads() {
         </Tabs>
       </div>
 
-      {/* Desktop: layout original side-by-side */}
+      {/* Desktop sidebar — CSS responsive layout mounts both instances; desktop is hidden on mobile */}
       <div className="hidden sm:flex gap-6" style={{ minHeight: "calc(100vh - 12rem)" }}>
         <aside className="w-72 shrink-0">
           <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
