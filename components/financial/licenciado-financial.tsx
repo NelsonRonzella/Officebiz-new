@@ -89,57 +89,57 @@ export function LicenciadoFinancial() {
       {/* KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardContent className="flex items-center gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <DollarSign className="size-6" />
+          <CardContent className="flex items-center gap-3 sm:gap-4">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <DollarSign className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">
+              <p className="text-xl sm:text-2xl font-bold text-foreground">
                 {formatCurrency(data.totalSales)}
               </p>
-              <p className="text-sm text-muted-foreground">Total Vendas</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Total Vendas</p>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="flex items-center gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success">
-              <TrendingUp className="size-6" />
+          <CardContent className="flex items-center gap-3 sm:gap-4">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success">
+              <TrendingUp className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">
+              <p className="text-xl sm:text-2xl font-bold text-foreground">
                 {formatCurrency(data.totalProfit)}
               </p>
-              <p className="text-sm text-muted-foreground">Lucro Total</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Lucro Total</p>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="flex items-center gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-              <Receipt className="size-6" />
+          <CardContent className="flex items-center gap-3 sm:gap-4">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+              <Receipt className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">
+              <p className="text-xl sm:text-2xl font-bold text-foreground">
                 {formatCurrency(avgTicket)}
               </p>
-              <p className="text-sm text-muted-foreground">Ticket Médio</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Ticket Médio</p>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="flex items-center gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning">
-              <Percent className="size-6" />
+          <CardContent className="flex items-center gap-3 sm:gap-4">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning">
+              <Percent className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">
+              <p className="text-xl sm:text-2xl font-bold text-foreground">
                 {avgMargin}%
               </p>
-              <p className="text-sm text-muted-foreground">Margem Média</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Margem Média</p>
             </div>
           </CardContent>
         </Card>

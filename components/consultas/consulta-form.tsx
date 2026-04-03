@@ -89,7 +89,7 @@ export function ConsultaForm<T>({
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="flex items-end gap-3">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="flex-1 space-y-2">
               <Label htmlFor="consulta-input">{inputLabel}</Label>
               <Input
@@ -101,7 +101,7 @@ export function ConsultaForm<T>({
                 required
               />
             </div>
-            <Button type="submit" disabled={isLoading || !query.trim()}>
+            <Button type="submit" disabled={isLoading || !query.trim()} className="w-full sm:w-auto">
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
