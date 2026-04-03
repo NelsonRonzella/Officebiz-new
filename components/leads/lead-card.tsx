@@ -50,25 +50,26 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
       className={cn(
         "transition-opacity border-l-4",
         lead.jaEncontrado
-          ? "opacity-50 border-l-border"
+          ? "opacity-50 border-l-muted-foreground"
           : lead.salvo
           ? "border-l-primary"
-          : "border-l-success",
+          : "border-l-green-500",
         lead.ignorado && "hidden"
       )}
     >
-      <CardContent className="p-4 flex flex-col gap-3">
+      <CardContent className="p-4 flex flex-col gap-2">
         {/* Header */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <div className="font-semibold text-sm text-foreground truncate">{lead.nome}</div>
-            <div className="text-xs text-muted-foreground truncate mt-0.5">{lead.endereco}</div>
+            <div className="font-semibold text-sm text-foreground leading-tight">{lead.nome}</div>
+            <div className="text-xs text-muted-foreground mt-0.5 leading-tight line-clamp-1">{lead.endereco}</div>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex flex-col items-end gap-1 shrink-0">
             {lead.avaliacao && (
-              <span className="flex items-center gap-0.5 text-xs text-amber-500">
+              <span className="flex items-center gap-0.5 text-xs text-amber-500 whitespace-nowrap">
                 <Star className="size-3 fill-amber-500" />
                 {lead.avaliacao.toFixed(1)}
+                {lead.avaliacoes && <span className="text-muted-foreground">({lead.avaliacoes})</span>}
               </span>
             )}
             {lead.jaEncontrado ? (
@@ -76,7 +77,7 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
             ) : lead.salvo ? (
               <Badge className="text-xs bg-primary/20 text-primary">Salvo</Badge>
             ) : (
-              <Badge variant="outline" className="text-xs text-success border-success">Novo</Badge>
+              <Badge variant="outline" className="text-xs text-green-600 border-green-500">Novo</Badge>
             )}
           </div>
         </div>
