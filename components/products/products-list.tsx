@@ -178,7 +178,7 @@ export function ProductsList({ showPrice }: ProductsListProps) {
                 <CardContent>
                   <div className="flex flex-col gap-2">
                     {showPrice && (
-                      <p className="text-lg font-semibold text-foreground">
+                      <p className="text-base sm:text-lg font-semibold text-foreground">
                         {formatPrice(product.price)}
                       </p>
                     )}
@@ -222,14 +222,14 @@ export function ProductsList({ showPrice }: ProductsListProps) {
 
           {/* Pagination */}
           {data.total > 0 && (
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-foreground text-center sm:text-left">
                 Mostrando {Math.min((page - 1) * limit + 1, data.total)}–
                 {Math.min(page * limit, data.total)} de {data.total} produto
                 {data.total !== 1 ? "s" : ""}
               </p>
               {totalPages > 1 && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2 sm:justify-end">
                   <Button
                     variant="outline"
                     size="sm"

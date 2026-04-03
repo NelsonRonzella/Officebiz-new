@@ -11,7 +11,7 @@ export function WhatsAppButton() {
   return (
     <div className="fixed bottom-6 right-6 z-50 group">
       {/* Tooltip */}
-      <span className="absolute bottom-full right-0 mb-2 px-3 py-1.5 text-xs font-medium text-white bg-foreground rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+      <span className="absolute bottom-full right-0 mb-2 px-3 py-1.5 text-xs font-medium text-primary-foreground bg-foreground rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden sm:block">
         Fale conosco
       </span>
 
@@ -20,7 +20,7 @@ export function WhatsAppButton() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Fale conosco pelo WhatsApp"
-        className="flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 animate-pulse hover:animate-none"
+        className="flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] text-primary-foreground shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 animate-pulse hover:animate-none"
       >
         <MessageCircle className="w-6 h-6" />
       </a>

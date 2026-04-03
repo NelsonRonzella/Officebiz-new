@@ -161,7 +161,7 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
                   href={lead.site}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-primary hover:underline truncate max-w-[200px]"
+                  className="text-xs text-primary hover:underline truncate min-w-0 flex-1 text-right"
                 >
                   {lead.site.replace(/^https?:\/\//, "")}
                 </a>
@@ -177,7 +177,7 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
                 {lead.razaoSocial && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-xs">Razão Social</span>
-                    <span className="text-xs truncate max-w-[200px]">{lead.razaoSocial}</span>
+                    <span className="text-xs truncate min-w-0 flex-1 text-right">{lead.razaoSocial}</span>
                   </div>
                 )}
                 {lead.socios.length > 0 && (
@@ -191,7 +191,7 @@ export function LeadCard({ lead, onSalvar, onIgnorar }: LeadCardProps) {
                 {lead.cnae && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-xs">CNAE</span>
-                    <span className="text-xs truncate max-w-[200px]">{lead.cnae}</span>
+                    <span className="text-xs truncate min-w-0 flex-1 text-right">{lead.cnae}</span>
                   </div>
                 )}
                 {lead.situacao && (

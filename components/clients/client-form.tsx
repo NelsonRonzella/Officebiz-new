@@ -208,21 +208,22 @@ export function ClientForm({ client }: ClientFormProps) {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <Button type="submit" disabled={isSubmitting}>
+          <div className="flex flex-col-reverse gap-3 sm:flex-row pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push("/app/clientes")}
+              className="w-full sm:w-auto"
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
               {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
               {isSubmitting
                 ? "Salvando..."
                 : isEditing
                   ? "Salvar alterações"
                   : "Cadastrar cliente"}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.push("/app/clientes")}
-            >
-              Cancelar
             </Button>
           </div>
         </form>
