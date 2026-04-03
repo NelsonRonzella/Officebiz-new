@@ -222,7 +222,7 @@ export function Sidebar({ role }: SidebarProps) {
             <Menu className="size-5" />
             <span className="sr-only">Abrir menu</span>
           </SheetTrigger>
-          <SheetContent side="left" showCloseButton={false} className="w-64 p-0">
+          <SheetContent side="left" showCloseButton={false} className="w-3/4 max-w-64 p-0">
             <SidebarNav role={role} />
           </SheetContent>
         </Sheet>
