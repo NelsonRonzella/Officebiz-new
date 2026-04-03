@@ -155,3 +155,15 @@ export const consultaInpiSchema = z
   .string()
   .transform((v) => v.replace(/\D/g, ""))
   .pipe(z.string().min(7, "Número do processo deve ter no mínimo 7 dígitos").max(12, "Número do processo deve ter no máximo 12 dígitos"))
+
+// ---------------------------------------------------------------------------
+// Buscador de Leads
+// ---------------------------------------------------------------------------
+export const buscadorLeadsSchema = z.object({
+  cidade: z.string().min(2, "Cidade obrigatória"),
+  estado: z.string().length(2, "Estado deve ter 2 letras"),
+  segmento: z.string().min(2, "Segmento obrigatório"),
+  raioKm: z.number().int().min(1).max(100),
+})
+
+export type BuscadorLeadsInput = z.infer<typeof buscadorLeadsSchema>

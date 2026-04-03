@@ -1,0 +1,70 @@
+"use client"
+
+import { useState, useCallback } from "react"
+import { BuscadorSidebar, type SearchParams } from "./buscador-sidebar"
+import { BuscadorResultados } from "./buscador-resultados"
+import type { LeadResultado } from "@/lib/leads-buscar"
+
+export function BuscadorLeads() {
+  const [leads, setLeads] = useState<LeadResultado[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSearch = useCallback(async (params: SearchParams) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await fetch("/api/leads/buscar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(params),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError((data as { error?: string }).error ?? "Erro ao buscar leads")
+        return
+      }
+      setLeads((data as { leads: LeadResultado[] }).leads)
+    } catch {
+      setError("Erro de conexão. Tente novamente.")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const handleSalvar = useCallback(async (id: string) => {
+    await fetch(`/api/leads/buscar/${id}/salvar`, { method: "PATCH" })
+    setLeads((prev) =>
+      prev.map((l) => (l.id === id ? { ...l, salvo: true, ignorado: false } : l))
+    )
+  }, [])
+
+  const handleIgnorar = useCallback(async (id: string) => {
+    await fetch(`/api/leads/buscar/${id}/ignorar`, { method: "PATCH" })
+    setLeads((prev) =>
+      prev.map((l) => (l.id === id ? { ...l, ignorado: true } : l))
+    )
+  }, [])
+
+  return (
+    <div className="flex gap-6" style={{ minHeight: "calc(100vh - 12rem)" }}>
+      <aside className="w-72 shrink-0">
+        <BuscadorSidebar onSearch={handleSearch} isLoading={isLoading} />
+      </aside>
+
+      <div className="flex-1 min-w-0">
+        {error && (
+          <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+        <BuscadorResultados
+          leads={leads}
+          isLoading={isLoading}
+          onSalvar={handleSalvar}
+          onIgnorar={handleIgnorar}
+        />
+      </div>
+    </div>
+  )
+}

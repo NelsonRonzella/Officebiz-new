@@ -61,6 +61,7 @@ model User {
   prestadorLogsOld       OrderPrestadorLog[] @relation("PrestadorLogOld")
   prestadorLogsNew       OrderPrestadorLog[] @relation("PrestadorLogNew")
   notifications          Notification[]
+  leadsBuscados          LeadBuscado[]
 }
 
 model Account {
@@ -293,4 +294,35 @@ model Lead {
   phone     String
   source    String?
   createdAt DateTime @default(now())
+}
+
+model LeadBuscado {
+  id           String   @id @default(cuid())
+  placeId      String
+  nome         String
+  nomeFantasia String?
+  endereco     String
+  cidade       String
+  estado       String
+  telefone     String?
+  site         String?
+  avaliacao    Float?
+  avaliacoes   Int?
+  email        String?
+  instagram    String?
+  whatsapp     String?
+  cnpj         String?
+  razaoSocial  String?
+  socios       String[]
+  cnae         String?
+  situacao     String?
+  segmento     String
+  raioKm       Int
+  ignorado     Boolean  @default(false)
+  salvo        Boolean  @default(false)
+  buscadoEm    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@unique([placeId, userId])
 }

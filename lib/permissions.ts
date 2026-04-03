@@ -64,6 +64,10 @@ export function canAccessConsultas(role: Role): boolean {
   return role === "ADMIN" || role === "LICENCIADO" || role === "PRESTADOR"
 }
 
+export function canAccessBuscadorLeads(role: Role): boolean {
+  return role === "ADMIN" || role === "LICENCIADO"
+}
+
 export function getDashboardPath(role: Role): string {
   switch (role) {
     case "ADMIN":

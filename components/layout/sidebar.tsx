@@ -19,6 +19,7 @@ import {
   Building2,
   Globe,
   ShieldCheck,
+  MapPin,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -50,6 +51,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Consultar CNPJ", href: "/admin/consultas/cnpj", icon: Building2 },
         { label: "Consultar Domínio", href: "/admin/consultas/dominio", icon: Globe },
         { label: "Consultar INPI", href: "/admin/consultas/inpi", icon: ShieldCheck },
+        { label: "Buscador de Leads", href: "/admin/leads", icon: MapPin },
       ]
     case "LICENCIADO":
       return [
@@ -62,6 +64,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Consultar CNPJ", href: "/app/consultas/cnpj", icon: Building2 },
         { label: "Consultar Domínio", href: "/app/consultas/dominio", icon: Globe },
         { label: "Consultar INPI", href: "/app/consultas/inpi", icon: ShieldCheck },
+        { label: "Buscador de Leads", href: "/app/leads", icon: MapPin },
       ]
     case "PRESTADOR":
       return [
