@@ -167,3 +167,16 @@ export const buscadorLeadsSchema = z.object({
 })
 
 export type BuscadorLeadsInput = z.infer<typeof buscadorLeadsSchema>
+
+// ---------------------------------------------------------------------------
+// WhatsApp
+// ---------------------------------------------------------------------------
+export const whatsappSendSchema = z.object({
+  phone: z
+    .string()
+    .transform((v) => v.replace(/\D/g, ""))
+    .pipe(z.string().min(10, "Telefone deve ter pelo menos 10 dígitos").max(15, "Telefone inválido")),
+  message: z.string().min(1, "Mensagem obrigatória").max(4096, "Mensagem muito longa"),
+})
+
+export type WhatsAppSendInput = z.infer<typeof whatsappSendSchema>

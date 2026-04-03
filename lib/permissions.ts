@@ -68,6 +68,10 @@ export function canAccessBuscadorLeads(role: Role): boolean {
   return role === "ADMIN" || role === "LICENCIADO"
 }
 
+export function canAccessWhatsApp(role: Role): boolean {
+  return role === "ADMIN"
+}
+
 export function getDashboardPath(role: Role): string {
   switch (role) {
     case "ADMIN":
