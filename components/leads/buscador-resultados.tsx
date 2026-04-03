@@ -36,7 +36,7 @@ export function BuscadorResultados({ leads, isLoading, onSalvar, onIgnorar }: Bu
   const jaEncontrados = leads.filter((l) => l.jaEncontrado)
 
   return (
-    <div className="overflow-y-auto pr-1 space-y-3" style={{ maxHeight: "calc(100vh - 14rem)" }}>
+    <div className="pr-1 space-y-3">
       <p className="text-xs text-muted-foreground">
         {novos.length} novo{novos.length !== 1 ? "s" : ""} · {jaEncontrados.length} já encontrado{jaEncontrados.length !== 1 ? "s" : ""}
       </p>
