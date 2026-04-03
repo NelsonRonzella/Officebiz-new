@@ -252,6 +252,7 @@ export function NotificationsList() {
               size="sm"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
+              aria-label="Página anterior"
             >
               <ChevronLeft className="size-4" />
               <span className="hidden sm:inline ml-1">Anterior</span>
@@ -261,6 +262,7 @@ export function NotificationsList() {
               size="sm"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
+              aria-label="Próxima página"
             >
               <span className="hidden sm:inline mr-1">Próxima</span>
               <ChevronRight className="size-4" />
