@@ -71,7 +71,7 @@ export function WhatIs() {
               className="flex flex-col md:flex-row items-center"
             >
               {/* Step card */}
-              <div className="flex flex-col items-center text-center w-48 group">
+              <div className="flex flex-col items-center text-center w-36 sm:w-44 md:w-48 group">
                 <div
                   className={`w-18 h-18 rounded-2xl ${step.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}
                   style={{ width: "4.5rem", height: "4.5rem" }}

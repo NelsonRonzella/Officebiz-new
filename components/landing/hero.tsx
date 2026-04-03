@@ -11,8 +11,8 @@ export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background decorative elements */}
-      <GradientBlob className="absolute -top-40 -right-40 w-[600px] h-[600px] pointer-events-none" />
-      <GradientBlobAlt className="absolute -bottom-40 -left-40 w-[500px] h-[500px] pointer-events-none" />
+      <GradientBlob className="absolute -top-40 -right-40 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px] pointer-events-none" />
+      <GradientBlobAlt className="absolute -bottom-40 -left-40 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] lg:w-[500px] lg:h-[500px] pointer-events-none" />
       <FloatingDots className="absolute top-20 left-10 w-40 h-40 text-primary pointer-events-none hidden lg:block" />
       <FloatingDots className="absolute bottom-20 right-10 w-32 h-32 text-primary pointer-events-none hidden lg:block" />
 
