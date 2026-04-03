@@ -3,15 +3,15 @@
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import {
-  Info,
-  CheckCircle,
-  AlertTriangle,
-  Package,
-  Settings,
-  Bell,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react"
+  IconInfoCircle,
+  IconCircleCheck,
+  IconAlertTriangle,
+  IconPackage,
+  IconSettings,
+  IconBell,
+  IconChevronLeft,
+  IconChevronRight,
+} from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
@@ -29,34 +29,34 @@ interface Notification {
 
 const typeConfig = {
   INFO: {
-    icon: Info,
-    iconClass: "text-blue-500",
-    borderClass: "border-l-blue-500",
-    bgClass: "bg-blue-500/10",
+    icon: IconInfoCircle,
+    iconClass: "text-primary",
+    borderClass: "border-l-primary",
+    bgClass: "bg-primary/5",
   },
   SUCCESS: {
-    icon: CheckCircle,
-    iconClass: "text-green-500",
-    borderClass: "border-l-green-500",
-    bgClass: "bg-green-500/10",
+    icon: IconCircleCheck,
+    iconClass: "text-success",
+    borderClass: "border-l-success",
+    bgClass: "bg-success/10",
   },
   WARNING: {
-    icon: AlertTriangle,
-    iconClass: "text-amber-500",
-    borderClass: "border-l-amber-500",
-    bgClass: "bg-amber-500/10",
+    icon: IconAlertTriangle,
+    iconClass: "text-warning",
+    borderClass: "border-l-warning",
+    bgClass: "bg-warning/10",
   },
   ORDER_UPDATE: {
-    icon: Package,
-    iconClass: "text-violet-500",
-    borderClass: "border-l-violet-500",
-    bgClass: "bg-violet-500/10",
+    icon: IconPackage,
+    iconClass: "text-muted-foreground",
+    borderClass: "border-l-border",
+    bgClass: "bg-muted",
   },
   SYSTEM: {
-    icon: Settings,
-    iconClass: "text-gray-500",
-    borderClass: "border-l-gray-500",
-    bgClass: "bg-gray-500/10",
+    icon: IconSettings,
+    iconClass: "text-muted-foreground",
+    borderClass: "border-l-muted",
+    bgClass: "bg-muted",
   },
 } as const
 
@@ -185,7 +185,7 @@ export function NotificationsList() {
         </div>
       ) : notifications.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
-          <Bell className="size-10 text-muted-foreground/50 mb-3" />
+          <IconBell className="size-10 text-muted-foreground/50 mb-3" />
           <p className="text-sm text-muted-foreground">
             {filter === "unread"
               ? "Nenhuma notificação não lida"
@@ -254,7 +254,7 @@ export function NotificationsList() {
               onClick={() => setPage((p) => p - 1)}
               aria-label="Página anterior"
             >
-              <ChevronLeft className="size-4" />
+              <IconChevronLeft className="size-4" />
               <span className="hidden sm:inline ml-1">Anterior</span>
             </Button>
             <Button
@@ -265,7 +265,7 @@ export function NotificationsList() {
               aria-label="Próxima página"
             >
               <span className="hidden sm:inline mr-1">Próxima</span>
-              <ChevronRight className="size-4" />
+              <IconChevronRight className="size-4" />
             </Button>
           </div>
         </div>

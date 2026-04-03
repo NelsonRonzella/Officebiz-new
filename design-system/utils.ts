@@ -12,6 +12,7 @@ export function tokenKeyToCssVar(key: string): string {
  * Example: "primary" → "--sidebar-primary"
  */
 export function sidebarKeyToCssVar(key: string): string {
+  if (key === "background") return "--sidebar"
   const kebab = key.replace(/([A-Z])/g, "-$1").toLowerCase()
   return `--sidebar-${kebab}`
 }

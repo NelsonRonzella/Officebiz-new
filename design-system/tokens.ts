@@ -72,47 +72,47 @@ export interface DesignTokens {
 
 export const tokens: DesignTokens = {
   colors: {
-    background: "0 0% 100%",           // #FFFFFF
-    foreground: "222 47% 11%",          // #0F172A
-    card: "0 0% 100%",                  // #FFFFFF
-    cardForeground: "222 47% 11%",      // #0F172A
-    popover: "0 0% 100%",              // #FFFFFF
-    popoverForeground: "222 47% 11%",   // #0F172A
-    primary: "213 52% 24%",             // #1E3A5F (Navy Blue)
-    primaryForeground: "0 0% 100%",     // #FFFFFF
-    secondary: "210 40% 96%",           // #F1F5F9
-    secondaryForeground: "222 47% 11%", // #0F172A
-    muted: "210 40% 96%",              // #F1F5F9
-    mutedForeground: "215 16% 47%",     // #64748B
-    accent: "142 71% 45%",             // #22C55E (Green)
-    accentForeground: "0 0% 100%",      // #FFFFFF
-    destructive: "0 84% 60%",          // #EF4444
-    destructiveForeground: "0 0% 100%", // #FFFFFF
-    border: "214 32% 91%",             // #E2E8F0
-    input: "214 32% 91%",              // #E2E8F0
-    ring: "213 52% 24%",               // #1E3A5F
+    background: "#ffffff",
+    foreground: "#0a0a0a",
+    card: "#ffffff",
+    cardForeground: "#0a0a0a",
+    popover: "#ffffff",
+    popoverForeground: "#0a0a0a",
+    primary: "#171717",
+    primaryForeground: "#fafafa",
+    secondary: "#f5f5f5",
+    secondaryForeground: "#171717",
+    muted: "#f5f5f5",
+    mutedForeground: "#737373",
+    accent: "#f5f5f5",
+    accentForeground: "#171717",
+    destructive: "#e40014",
+    destructiveForeground: "#fef2f2",
+    border: "#e5e5e5",
+    input: "#e5e5e5",
+    ring: "#a1a1a1",
     // Custom OfficeBiz
-    success: "142 71% 45%",            // #22C55E
-    successForeground: "0 0% 100%",     // #FFFFFF
-    warning: "38 92% 50%",             // #F59E0B
-    warningForeground: "0 0% 100%",     // #FFFFFF
-    surface: "210 40% 98%",            // #F8FAFC
-    surfaceForeground: "222 47% 11%",   // #0F172A
+    success: "#16a34a",
+    successForeground: "#ffffff",
+    warning: "#d97706",
+    warningForeground: "#ffffff",
+    surface: "#f8f8f8",
+    surfaceForeground: "#0a0a0a",
   },
   sidebar: {
-    background: "216 50% 16%",          // #0F2439 (Navy Dark)
-    foreground: "210 40% 96%",          // #F1F5F9
-    primary: "142 71% 45%",            // #22C55E
-    primaryForeground: "0 0% 100%",     // #FFFFFF
-    accent: "213 52% 30%",             // #1E4A7F
-    accentForeground: "210 40% 96%",    // #F1F5F9
-    border: "213 40% 25%",             // #1A3555
-    ring: "142 71% 45%",               // #22C55E
+    background: "#fafafa",
+    foreground: "#0a0a0a",
+    primary: "#171717",
+    primaryForeground: "#fafafa",
+    accent: "#f5f5f5",
+    accentForeground: "#171717",
+    border: "#e5e5e5",
+    ring: "#a1a1a1",
   },
   radius: {
     sm: "0.25rem",
     md: "0.5rem",
-    lg: "0.75rem",
+    lg: "0.625rem",
     xl: "1rem",
   },
   spacing: {

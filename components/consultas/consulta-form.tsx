@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, type ReactNode, type FormEvent } from "react"
-import type { LucideIcon } from "lucide-react"
-import { Loader2, AlertCircle } from "lucide-react"
+import { useState, type ReactNode, type FormEvent, type ComponentType, type SVGAttributes } from "react"
+import { IconLoader2, IconAlertCircle } from "@tabler/icons-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -11,7 +10,7 @@ import { Label } from "@/components/ui/label"
 interface ConsultaFormProps<T> {
   title: string
   description: string
-  icon: LucideIcon
+  icon: ComponentType<SVGAttributes<SVGSVGElement> & { className?: string }>
   inputLabel: string
   inputPlaceholder: string
   inputMask?: (value: string) => string
@@ -104,7 +103,7 @@ export function ConsultaForm<T>({
             <Button type="submit" disabled={isLoading || !query.trim()} className="w-full sm:w-auto">
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <IconLoader2 className="w-4 h-4 mr-2 animate-spin" />
                   Consultando...
                 </>
               ) : (
@@ -118,7 +117,7 @@ export function ConsultaForm<T>({
       {error && (
         <Card className="border-destructive/50">
           <CardContent className="flex items-center gap-3 py-4">
-            <AlertCircle className="w-5 h-5 text-destructive shrink-0" />
+            <IconAlertCircle className="w-5 h-5 text-destructive shrink-0" />
             <p className="text-sm text-destructive">{error}</p>
           </CardContent>
         </Card>

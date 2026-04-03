@@ -3,27 +3,27 @@ import { Badge } from "@/components/ui/badge"
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   AGUARDANDO_PAGAMENTO: {
     label: "Aguardando Pagamento",
-    color: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    color: "bg-warning/15 text-warning border-warning/30",
   },
   PAGO: {
     label: "Pago",
-    color: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    color: "bg-success/15 text-success border-success/30",
   },
   EM_ANDAMENTO: {
     label: "Em Andamento",
-    color: "bg-blue-100 text-blue-800 border-blue-300",
+    color: "bg-primary/10 text-primary border-primary/20",
   },
   RETORNO: {
     label: "Retorno",
-    color: "bg-cyan-100 text-cyan-800 border-cyan-300",
+    color: "bg-secondary text-secondary-foreground border-border",
   },
   CANCELADO: {
     label: "Cancelado",
-    color: "bg-red-100 text-red-800 border-red-300",
+    color: "bg-destructive/15 text-destructive border-destructive/30",
   },
   CONCLUIDO: {
     label: "Concluído",
-    color: "bg-green-100 text-green-800 border-green-300",
+    color: "bg-success/15 text-success border-success/30",
   },
 }
 

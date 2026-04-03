@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
-import { ShieldCheck, Loader2, AlertCircle, CheckCircle, XCircle, Info } from "lucide-react"
+import { IconShieldCheck, IconLoader2, IconAlertCircle, IconCircleCheck, IconCircleX, IconInfoCircle } from "@tabler/icons-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -139,7 +139,7 @@ function InpiNomeBusca() {
         <CardHeader className="pb-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-primary" />
+              <IconShieldCheck className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">Verificar Disponibilidade de Marca</h2>
@@ -196,7 +196,7 @@ function InpiNomeBusca() {
                 </button>
               </div>
               <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50 text-xs text-muted-foreground">
-                <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <IconInfoCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 {tipoBusca === "exata" ? (
                   <span>A busca <strong>exata</strong> retorna apenas marcas com o nome idêntico ao digitado. Use para verificar se o nome específico já existe.</span>
                 ) : (
@@ -221,7 +221,7 @@ function InpiNomeBusca() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground flex items-start gap-1.5">
-                <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <IconInfoCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>Pelo <strong>Princípio da Especialidade</strong>, uma mesma marca pode existir em classes diferentes. Ex: &ldquo;Apple&rdquo; existe na classe 09 (eletrônicos) e classe 31 (frutas). Selecione a classe do seu ramo para uma busca mais precisa.</span>
               </p>
             </div>
@@ -229,7 +229,7 @@ function InpiNomeBusca() {
             <Button type="submit" disabled={isLoading || query.trim().length < 2} className="w-full">
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <IconLoader2 className="w-4 h-4 mr-2 animate-spin" />
                   Consultando INPI...
                 </>
               ) : (
@@ -243,7 +243,7 @@ function InpiNomeBusca() {
       {error && (
         <Card className="border-destructive/50">
           <CardContent className="flex items-center gap-3 py-4">
-            <AlertCircle className="w-5 h-5 text-destructive shrink-0" />
+            <IconAlertCircle className="w-5 h-5 text-destructive shrink-0" />
             <p className="text-sm text-destructive">{error}</p>
           </CardContent>
         </Card>
@@ -253,17 +253,17 @@ function InpiNomeBusca() {
         <Card>
           <CardContent className="py-6 space-y-4">
             {/* Status banner */}
-            <div className={`flex items-center gap-3 p-4 rounded-lg ${data.disponivel ? "bg-green-50 border border-green-200" : "bg-amber-50 border border-amber-200"}`}>
+            <div className={`flex items-center gap-3 p-4 rounded-lg ${data.disponivel ? "bg-success/10 border border-success/30" : "bg-warning/10 border border-warning/30"}`}>
               {data.disponivel ? (
-                <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
+                <IconCircleCheck className="w-6 h-6 text-success shrink-0" />
               ) : (
-                <XCircle className="w-6 h-6 text-amber-600 shrink-0" />
+                <IconCircleX className="w-6 h-6 text-warning shrink-0" />
               )}
               <div>
-                <p className={`font-semibold ${data.disponivel ? "text-green-800" : "text-amber-800"}`}>
+                <p className={`font-semibold ${data.disponivel ? "text-success" : "text-warning"}`}>
                   {data.disponivel ? "Nome possivelmente disponível" : `${data.total} marca(s) encontrada(s)`}
                 </p>
-                <p className={`text-sm ${data.disponivel ? "text-green-700" : "text-amber-700"}`}>
+                <p className={`text-sm ${data.disponivel ? "text-success/80" : "text-warning/80"}`}>
                   {data.mensagem}
                 </p>
               </div>
@@ -389,7 +389,7 @@ export function ConsultaInpi() {
         <ConsultaForm<InpiMarcaResponse>
           title="Consultar Processo INPI"
           description="Pesquise pelo número do processo de registro de marca"
-          icon={ShieldCheck}
+          icon={IconShieldCheck}
           inputLabel="Número do Processo"
           inputPlaceholder="Ex: 123456789"
           maxLength={12}

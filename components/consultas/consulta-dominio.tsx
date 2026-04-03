@@ -1,6 +1,6 @@
 "use client"
 
-import { Globe } from "lucide-react"
+import { IconWorld } from "@tabler/icons-react"
 import { ConsultaForm } from "@/components/consultas/consulta-form"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -9,7 +9,7 @@ import type { BrasilApiDomainResponse } from "@/lib/consultas"
 function getStatusBadge(status: string) {
   const s = status?.toLowerCase() || ""
   if (s.includes("available") || s.includes("disponível") || s.includes("disponivel")) {
-    return <Badge className="bg-green-100 text-green-800 border-green-200">Disponível</Badge>
+    return <Badge className="bg-success/15 text-success border-success/30">Disponível</Badge>
   }
   if (s.includes("active") || s.includes("published") || s.includes("ativo")) {
     return <Badge variant="destructive">Registrado / Ativo</Badge>
@@ -75,7 +75,7 @@ function DomainResult({ data }: { data: BrasilApiDomainResponse }) {
               {data.suggestions
                 .filter((s) => s.available)
                 .map((s) => (
-                  <Badge key={s.fqdn} className="bg-green-100 text-green-800 border-green-200">
+                  <Badge key={s.fqdn} className="bg-success/15 text-success border-success/30">
                     {s.fqdn}
                   </Badge>
                 ))}
@@ -92,7 +92,7 @@ export function ConsultaDominio() {
     <ConsultaForm<BrasilApiDomainResponse>
       title="Consultar Domínio"
       description="Verifique se um domínio .BR está ativo ou disponível para registro"
-      icon={Globe}
+      icon={IconWorld}
       inputLabel="Domínio"
       inputPlaceholder="exemplo.com.br"
       apiEndpoint="/api/consultas/dominio"
