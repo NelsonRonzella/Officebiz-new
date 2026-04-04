@@ -13,6 +13,19 @@ export async function POST(req: Request) {
       )
     }
 
+    // Check if user exists before sending OTP
+    const userExists = await db.user.findUnique({
+      where: { email },
+      select: { id: true },
+    })
+
+    if (!userExists) {
+      return NextResponse.json(
+        { error: "Este e-mail não está cadastrado." },
+        { status: 404 }
+      )
+    }
+
     // Rate limiting: max 5 attempts per email per hour
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
     const recentTokens = await db.verificationToken.count({

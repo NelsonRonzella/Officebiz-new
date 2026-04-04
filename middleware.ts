@@ -27,7 +27,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  return NextResponse.next()
+  // Pass pathname to server components via header
+  const response = NextResponse.next()
+  response.headers.set("x-next-pathname", pathname)
+  return response
 }
 
 export const config = {

@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { NextAuthConfig } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "./db"
-import { sendWelcomeEmail } from "./email"
+
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(db),
@@ -48,22 +48,12 @@ export const authConfig: NextAuthConfig = {
           },
         })
 
-        // Find or create user
-        let user = await db.user.findUnique({ where: { email } })
+        // Find existing user (user must already be registered)
+        const user = await db.user.findUnique({ where: { email } })
 
-        if (!user) {
-          user = await db.user.create({
-            data: {
-              email,
-              emailVerified: new Date(),
-              plan: "TRIAL",
-              trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
-            },
-          })
+        if (!user) return null
 
-          // Send welcome email (fire-and-forget)
-          sendWelcomeEmail(email, user.name || "").catch(console.error)
-        } else if (!user.emailVerified) {
+        if (!user.emailVerified) {
           await db.user.update({
             where: { id: user.id },
             data: { emailVerified: new Date() },
