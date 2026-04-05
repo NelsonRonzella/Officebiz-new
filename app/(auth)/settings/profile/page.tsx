@@ -7,6 +7,10 @@ export default async function ProfilePage() {
     name: true,
     telefone: true,
     companyName: true,
+    companyLogo: true,
+    companyFavicon: true,
+    brandPrimaryColor: true,
+    brandAccentColor: true,
     cpf: true,
     cnpj: true,
     cep: true,
@@ -15,6 +19,7 @@ export default async function ProfilePage() {
     bairro: true,
     cidade: true,
     estado: true,
+    role: true,
   })
 
   return (
@@ -29,6 +34,10 @@ export default async function ProfilePage() {
           name: user.name ?? "",
           phone: user.telefone ?? "",
           companyName: user.companyName ?? "",
+          companyLogo: user.companyLogo ?? "",
+          companyFavicon: user.companyFavicon ?? "",
+          brandPrimaryColor: user.brandPrimaryColor ?? "",
+          brandAccentColor: user.brandAccentColor ?? "",
           cpf: user.cpf ?? "",
           cnpj: user.cnpj ?? "",
           telefone: user.telefone ?? "",
@@ -39,6 +48,7 @@ export default async function ProfilePage() {
           cidade: user.cidade ?? "",
           estado: user.estado ?? "",
         }}
+        role={user.role}
       />
     </div>
   )

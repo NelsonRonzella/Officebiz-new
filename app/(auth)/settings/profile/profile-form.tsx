@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { fetchCep } from "@/lib/viacep"
+import { maskPhone } from "@/lib/masks"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,15 +12,20 @@ import { Separator } from "@/components/ui/separator"
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Loader2, Upload, X } from "lucide-react"
 
 interface ProfileFormData {
   name: string
   phone: string
   companyName: string
+  companyLogo: string
+  companyFavicon: string
+  brandPrimaryColor: string
+  brandAccentColor: string
   cpf: string
   cnpj: string
   telefone: string
@@ -33,14 +39,7 @@ interface ProfileFormData {
 
 interface ProfileFormProps {
   initialData: ProfileFormData
-}
-
-function maskTelefone(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 11)
-  if (digits.length <= 2) return digits.length ? `(${digits}` : ""
-  if (digits.length <= 7)
-    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+  role: string
 }
 
 function maskCpf(value: string): string {
@@ -71,24 +70,64 @@ function maskCep(value: string): string {
   return `${digits.slice(0, 5)}-${digits.slice(5)}`
 }
 
-export function ProfileForm({ initialData }: ProfileFormProps) {
+export function ProfileForm({ initialData, role }: ProfileFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isFetchingCep, setIsFetchingCep] = useState(false)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [uploadingFavicon, setUploadingFavicon] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const [name, setName] = useState(initialData.name)
-  const [phone, setPhone] = useState(initialData.phone)
+  const [phone, setPhone] = useState(maskPhone(initialData.phone))
   const [companyName, setCompanyName] = useState(initialData.companyName)
-  const [cpf, setCpf] = useState(initialData.cpf)
-  const [cnpj, setCnpj] = useState(initialData.cnpj)
-  const [telefone, setTelefone] = useState(initialData.telefone)
-  const [cep, setCep] = useState(initialData.cep)
+  const [companyLogo, setCompanyLogo] = useState(initialData.companyLogo)
+  const [companyFavicon, setCompanyFavicon] = useState(initialData.companyFavicon)
+  const [brandPrimaryColor, setBrandPrimaryColor] = useState(initialData.brandPrimaryColor)
+  const [brandAccentColor, setBrandAccentColor] = useState(initialData.brandAccentColor)
+  const [cpf, setCpf] = useState(initialData.cpf ? maskCpf(initialData.cpf) : "")
+  const [cnpj, setCnpj] = useState(initialData.cnpj ? maskCnpj(initialData.cnpj) : "")
+  const [telefone, setTelefone] = useState(initialData.telefone ? maskPhone(initialData.telefone) : "")
+  const [cep, setCep] = useState(initialData.cep ? maskCep(initialData.cep) : "")
   const [endereco, setEndereco] = useState(initialData.endereco)
   const [numero, setNumero] = useState(initialData.numero)
   const [bairro, setBairro] = useState(initialData.bairro)
   const [cidade, setCidade] = useState(initialData.cidade)
   const [estado, setEstado] = useState(initialData.estado)
+
+  const isLicenciado = role === "LICENCIADO"
+
+  async function handleImageUpload(
+    file: File,
+    setter: (url: string) => void,
+    setUploading: (v: boolean) => void,
+  ) {
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Máximo 2MB.")
+      return
+    }
+    if (!["image/jpeg", "image/png", "image/webp", "image/svg+xml", "image/x-icon"].includes(file.type)) {
+      toast.error("Formato inválido. Use JPG, PNG, WebP, SVG ou ICO.")
+      return
+    }
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body: formData })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || "Erro ao fazer upload")
+      }
+      const data = await res.json()
+      setter(data.url)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao fazer upload")
+    } finally {
+      setUploading(false)
+    }
+  }
 
   async function handleCepChange(value: string) {
     const masked = maskCep(value)
@@ -114,13 +153,9 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    // Basic validation for required fields
     const fieldErrors: Record<string, string> = {}
     if (!name || name.length < 2) {
       fieldErrors.name = "Nome deve ter pelo menos 2 caracteres"
-    }
-    if (!phone || phone.length < 10) {
-      fieldErrors.phone = "WhatsApp deve ter pelo menos 10 dígitos"
     }
     if (!companyName || companyName.length < 2) {
       fieldErrors.companyName = "Nome da empresa deve ter pelo menos 2 caracteres"
@@ -140,12 +175,15 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          phone,
           companyName,
-          cpf: cpf || undefined,
-          cnpj: cnpj || undefined,
-          telefone: telefone || undefined,
-          cep: cep || undefined,
+          companyLogo: companyLogo || undefined,
+          companyFavicon: companyFavicon || undefined,
+          brandPrimaryColor: brandPrimaryColor || "",
+          brandAccentColor: brandAccentColor || "",
+          cpf: cpf ? cpf.replace(/\D/g, "") : undefined,
+          cnpj: cnpj ? cnpj.replace(/\D/g, "") : undefined,
+          telefone: telefone ? telefone.replace(/\D/g, "") : undefined,
+          cep: cep ? cep.replace(/\D/g, "") : undefined,
           endereco: endereco || undefined,
           numero: numero || undefined,
           bairro: bairro || undefined,
@@ -194,11 +232,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               id="phone"
               placeholder="(11) 99999-9999"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(maskPhone(e.target.value))}
             />
-            {errors.phone && (
-              <p className="text-sm text-destructive">{errors.phone}</p>
-            )}
           </div>
 
           <div className="space-y-2">
@@ -216,6 +251,189 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         </CardContent>
       </Card>
 
+      {/* Branding — only for LICENCIADO */}
+      {isLicenciado && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Marca</CardTitle>
+            <CardDescription>
+              Personalize a aparência da plataforma para seus clientes.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Logo */}
+            <div className="space-y-2">
+              <Label>Logo da empresa</Label>
+              {companyLogo ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative size-16 overflow-hidden rounded-lg border">
+                    <img
+                      src={companyLogo}
+                      alt="Logo"
+                      className="size-full object-contain"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCompanyLogo("")}
+                  >
+                    <X className="mr-1 size-4" />
+                    Remover
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50">
+                  {uploadingLogo ? (
+                    <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                  ) : (
+                    <Upload className="size-6 text-muted-foreground" />
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {uploadingLogo ? "Enviando..." : "Clique para enviar (JPG, PNG, WebP, SVG — máx 2MB)"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    className="hidden"
+                    disabled={uploadingLogo}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file, setCompanyLogo, setUploadingLogo)
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Favicon */}
+            <div className="space-y-2">
+              <Label>Favicon</Label>
+              <p className="text-xs text-muted-foreground">
+                Ícone que aparece na aba do navegador. Recomendado: 32x32 ou 64x64 pixels.
+              </p>
+              {companyFavicon ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative size-10 overflow-hidden rounded border">
+                    <img
+                      src={companyFavicon}
+                      alt="Favicon"
+                      className="size-full object-contain"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCompanyFavicon("")}
+                  >
+                    <X className="mr-1 size-4" />
+                    Remover
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
+                  {uploadingFavicon ? (
+                    <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                  ) : (
+                    <Upload className="size-5 text-muted-foreground" />
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    {uploadingFavicon ? "Enviando..." : "PNG, ICO ou SVG — máx 2MB"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/png,image/x-icon,image/svg+xml"
+                    className="hidden"
+                    disabled={uploadingFavicon}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file, setCompanyFavicon, setUploadingFavicon)
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Colors */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="brandPrimaryColor">Cor primária</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    id="brandPrimaryColor"
+                    value={brandPrimaryColor || "#1E3A5F"}
+                    onChange={(e) => setBrandPrimaryColor(e.target.value)}
+                    className="size-10 cursor-pointer rounded border border-border bg-transparent p-0.5"
+                  />
+                  <Input
+                    value={brandPrimaryColor}
+                    onChange={(e) => setBrandPrimaryColor(e.target.value)}
+                    placeholder="#1E3A5F"
+                    className="font-mono text-sm"
+                    maxLength={7}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="brandAccentColor">Cor de destaque</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    id="brandAccentColor"
+                    value={brandAccentColor || "#6366f1"}
+                    onChange={(e) => setBrandAccentColor(e.target.value)}
+                    className="size-10 cursor-pointer rounded border border-border bg-transparent p-0.5"
+                  />
+                  <Input
+                    value={brandAccentColor}
+                    onChange={(e) => setBrandAccentColor(e.target.value)}
+                    placeholder="#6366f1"
+                    className="font-mono text-sm"
+                    maxLength={7}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Preview */}
+            {(brandPrimaryColor || brandAccentColor) && (
+              <div className="rounded-lg border p-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">Preview</p>
+                <div className="flex items-center gap-3">
+                  {companyLogo && (
+                    <img src={companyLogo} alt="Logo" className="size-8 object-contain" />
+                  )}
+                  <span
+                    className="text-lg font-bold"
+                    style={{ color: brandPrimaryColor || "#1E3A5F" }}
+                  >
+                    {companyName || "Sua Empresa"}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <div
+                    className="rounded px-3 py-1.5 text-sm font-medium text-white"
+                    style={{ backgroundColor: brandPrimaryColor || "#1E3A5F" }}
+                  >
+                    Botão primário
+                  </div>
+                  <div
+                    className="rounded px-3 py-1.5 text-sm font-medium text-white"
+                    style={{ backgroundColor: brandAccentColor || "#6366f1" }}
+                  >
+                    Botão destaque
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Documents */}
       <Card>
         <CardHeader>
@@ -228,7 +446,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               id="telefone"
               placeholder="(00) 00000-0000"
               value={telefone}
-              onChange={(e) => setTelefone(maskTelefone(e.target.value))}
+              onChange={(e) => setTelefone(maskPhone(e.target.value))}
             />
           </div>
 

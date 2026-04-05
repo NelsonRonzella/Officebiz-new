@@ -20,6 +20,10 @@ export const onboardingStep2Schema = z.object({
 export const profileSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   companyName: z.string().min(2, "Nome da empresa deve ter pelo menos 2 caracteres"),
+  companyLogo: z.string().optional(),
+  companyFavicon: z.string().optional(),
+  brandPrimaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Cor inválida").optional().or(z.literal("")),
+  brandAccentColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Cor inválida").optional().or(z.literal("")),
   cpf: z.string().optional(),
   cnpj: z.string().optional(),
   telefone: z.string().min(10, "WhatsApp deve ter pelo menos 10 dígitos").optional(),

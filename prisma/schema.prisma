@@ -38,6 +38,9 @@ model User {
   estado                 String?
   companyName            String?
   companyLogo            String?
+  companyFavicon         String?
+  brandPrimaryColor      String?
+  brandAccentColor       String?
   onboardingCompleted    Boolean   @default(false)
   plan                   Plan      @default(FREE)
   trialEndsAt            DateTime?
