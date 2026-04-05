@@ -22,6 +22,7 @@ import {
   Smartphone,
 } from "lucide-react"
 import { toast } from "sonner"
+import { maskPhone, unmaskPhone } from "@/lib/masks"
 
 interface InstanceStatus {
   connected: boolean
@@ -74,10 +75,16 @@ export function WhatsAppPanel() {
       if (res.ok) {
         const data = await res.json()
         setQrcode(data.qrcode ?? null)
-        if (!data.qrcode) toast.error("Não foi possível gerar QR Code")
+        if (!data.qrcode) {
+          toast.error("Não foi possível gerar QR Code. Verifique se a Evolution API está rodando.")
+        } else {
+          toast.info("QR Code gerado. Escaneie em até 45 segundos.")
+        }
+      } else {
+        toast.error("Erro ao conectar com a Evolution API")
       }
     } catch {
-      toast.error("Erro ao gerar QR Code")
+      toast.error("Erro de conexão com o servidor")
     } finally {
       setQrLoading(false)
     }
@@ -91,17 +98,23 @@ export function WhatsAppPanel() {
       const res = await fetch("/api/whatsapp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phone.trim(), message: message.trim() }),
+        body: JSON.stringify({ phone: "55" + unmaskPhone(phone), message: message.trim() }),
       })
-      const data = await res.json()
       if (res.ok) {
         toast.success("Mensagem enviada com sucesso!")
         setMessage("")
       } else {
-        toast.error((data as { error?: string }).error ?? "Erro ao enviar")
+        const data = await res.json().catch(() => null)
+        const errorMsg = (data as { error?: string } | null)?.error
+        if (res.status === 502) {
+          toast.error("WhatsApp não conectado. Escaneie o QR Code primeiro.")
+          await fetchStatus()
+        } else {
+          toast.error(errorMsg ?? "Erro ao enviar mensagem")
+        }
       }
     } catch {
-      toast.error("Erro de conexão")
+      toast.error("Erro de conexão com o servidor")
     } finally {
       setSending(false)
     }
@@ -206,9 +219,9 @@ export function WhatsAppPanel() {
               </Label>
               <Input
                 id="wpp-phone"
-                placeholder="5511999999999"
+                placeholder="(11) 99999-9999"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => setPhone(maskPhone(e.target.value))}
                 required
               />
             </div>

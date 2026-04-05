@@ -11,6 +11,7 @@ import { db } from "@/lib/db"
 import { StatCard } from "@/components/admin/stat-card"
 import { RoleBadge } from "@/components/admin/role-badge"
 import { AdminDashboardCharts } from "@/components/admin/admin-dashboard-charts"
+import { ConnectionStatus } from "@/components/admin/connection-status"
 import type { Role, Prisma } from "@prisma/client"
 import { formatCurrency, getStatusLabel, toNumber } from "@/lib/financial"
 import {
@@ -119,13 +120,16 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Dashboard Administrativo
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Visão geral da plataforma
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Dashboard Administrativo
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Visão geral da plataforma
+          </p>
+        </div>
+        <ConnectionStatus />
       </div>
 
       {loadError && (

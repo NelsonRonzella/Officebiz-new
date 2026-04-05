@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { maskPhone } from "@/lib/masks"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -201,7 +202,7 @@ export function PrestadoresList() {
                         {prestador.email}
                       </td>
                       <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
-                        {prestador.telefone || "—"}
+                        {prestador.telefone ? maskPhone(prestador.telefone) : "—"}
                       </td>
                       <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                         {formatDate(prestador.createdAt)}

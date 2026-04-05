@@ -8,6 +8,7 @@ import {
   type OnboardingStep1Input,
   type OnboardingStep2Input,
 } from "@/lib/validations"
+import { maskPhone, unmaskPhone } from "@/lib/masks"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -37,7 +38,7 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
 
   // Step 1 fields
   const [name, setName] = useState(initialData?.name ?? "")
-  const [phone, setPhone] = useState(initialData?.phone ?? "")
+  const [phone, setPhone] = useState(maskPhone(initialData?.phone ?? ""))
 
   // Step 2 fields
   const [companyName, setCompanyName] = useState(initialData?.companyName ?? "")
@@ -124,7 +125,7 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          phone,
+          phone: unmaskPhone(phone),
           companyName,
           companyLogo: companyLogo || undefined,
         }),
@@ -190,7 +191,7 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
                 id="phone"
                 placeholder="(11) 99999-9999"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => setPhone(maskPhone(e.target.value))}
               />
               {errors.phone && (
                 <p className="text-sm text-destructive">{errors.phone}</p>

@@ -67,9 +67,9 @@ export function ClientForm({ client }: ClientFormProps) {
 
   const [name, setName] = useState(client?.name ?? "")
   const [email, setEmail] = useState(client?.email ?? "")
-  const [telefone, setTelefone] = useState(client?.telefone ?? "")
-  const [cpf, setCpf] = useState(client?.cpf ?? "")
-  const [cnpj, setCnpj] = useState(client?.cnpj ?? "")
+  const [telefone, setTelefone] = useState(client?.telefone ? maskTelefone(client.telefone) : "")
+  const [cpf, setCpf] = useState(client?.cpf ? maskCpf(client.cpf) : "")
+  const [cnpj, setCnpj] = useState(client?.cnpj ? maskCnpj(client.cnpj) : "")
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -77,9 +77,9 @@ export function ClientForm({ client }: ClientFormProps) {
     const data = {
       name,
       email,
-      telefone: telefone || undefined,
-      cpf: cpf || undefined,
-      cnpj: cnpj || undefined,
+      telefone: telefone ? telefone.replace(/\D/g, "") : undefined,
+      cpf: cpf ? cpf.replace(/\D/g, "") : undefined,
+      cnpj: cnpj ? cnpj.replace(/\D/g, "") : undefined,
     }
 
     const result = createClientSchema.safeParse(data)
