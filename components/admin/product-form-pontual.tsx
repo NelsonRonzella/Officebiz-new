@@ -9,6 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -23,11 +30,18 @@ interface TutorialOption {
   title: string
 }
 
+interface PrestadorOption {
+  id: string
+  name: string | null
+  email: string
+}
+
 interface ProductData {
   id: string
   name: string
   description: string
   price: number
+  prestadorId: string | null
   steps: Array<{
     title: string
     description: string
@@ -40,6 +54,7 @@ interface ProductData {
 interface ProductFormPontualProps {
   product?: ProductData
   tutorials: TutorialOption[]
+  prestadores?: PrestadorOption[]
 }
 
 function formatPriceInput(value: string): string {
@@ -53,7 +68,7 @@ function parsePriceInput(formatted: string): number {
   return parseFloat(cleaned) || 0
 }
 
-export function ProductFormPontual({ product, tutorials }: ProductFormPontualProps) {
+export function ProductFormPontual({ product, tutorials, prestadores = [] }: ProductFormPontualProps) {
   const router = useRouter()
   const isEdit = !!product
 
@@ -69,6 +84,7 @@ export function ProductFormPontual({ product, tutorials }: ProductFormPontualPro
       durationDays: s.durationDays,
     })) || [{ title: "", description: "", durationDays: 1 }]
   )
+  const [prestadorId, setPrestadorId] = useState<string>(product?.prestadorId || "")
   const [selectedTutorials, setSelectedTutorials] = useState<string[]>(
     product?.tutorials.map((t) => t.id) || []
   )
@@ -119,6 +135,7 @@ export function ProductFormPontual({ product, tutorials }: ProductFormPontualPro
         description,
         price,
         type: "PONTUAL" as const,
+        prestadorId: prestadorId || null,
         steps: steps.map((s, index) => ({
           title: s.title,
           description: s.description,
@@ -193,6 +210,34 @@ export function ProductFormPontual({ product, tutorials }: ProductFormPontualPro
               required
             />
           </div>
+          {prestadores.length > 0 && (
+            <div className="space-y-2">
+              <Label>Prestador vinculado</Label>
+              <Select
+                value={prestadorId}
+                onValueChange={(val) => setPrestadorId(val === "none" || !val ? "" : val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um prestador">
+                    {prestadorId
+                      ? (() => {
+                          const p = prestadores.find((p) => p.id === prestadorId)
+                          return p ? (p.name || p.email) : prestadorId
+                        })()
+                      : undefined}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {prestadores.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name || p.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </CardContent>
       </Card>
 

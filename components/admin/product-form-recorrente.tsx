@@ -9,6 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -22,11 +29,18 @@ interface TutorialOption {
   title: string
 }
 
+interface PrestadorOption {
+  id: string
+  name: string | null
+  email: string
+}
+
 interface ProductData {
   id: string
   name: string
   description: string
   price: number
+  prestadorId: string | null
   documentCategories: Array<{
     title: string
     description: string
@@ -38,6 +52,7 @@ interface ProductData {
 interface ProductFormRecorrenteProps {
   product?: ProductData
   tutorials: TutorialOption[]
+  prestadores?: PrestadorOption[]
 }
 
 function formatPriceInput(value: string): string {
@@ -51,7 +66,7 @@ function parsePriceInput(formatted: string): number {
   return parseFloat(cleaned) || 0
 }
 
-export function ProductFormRecorrente({ product, tutorials }: ProductFormRecorrenteProps) {
+export function ProductFormRecorrente({ product, tutorials, prestadores = [] }: ProductFormRecorrenteProps) {
   const router = useRouter()
   const isEdit = !!product
 
@@ -66,6 +81,7 @@ export function ProductFormRecorrente({ product, tutorials }: ProductFormRecorre
       description: c.description,
     })) || [{ title: "", description: "" }]
   )
+  const [prestadorId, setPrestadorId] = useState<string>(product?.prestadorId || "")
   const [selectedTutorials, setSelectedTutorials] = useState<string[]>(
     product?.tutorials.map((t) => t.id) || []
   )
@@ -116,6 +132,7 @@ export function ProductFormRecorrente({ product, tutorials }: ProductFormRecorre
         description,
         price,
         type: "RECORRENTE" as const,
+        prestadorId: prestadorId || null,
         categories: categories.map((c, index) => ({
           title: c.title,
           description: c.description,
@@ -189,6 +206,34 @@ export function ProductFormRecorrente({ product, tutorials }: ProductFormRecorre
               required
             />
           </div>
+          {prestadores.length > 0 && (
+            <div className="space-y-2">
+              <Label>Prestador vinculado</Label>
+              <Select
+                value={prestadorId}
+                onValueChange={(val) => setPrestadorId(val === "none" || !val ? "" : val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um prestador">
+                    {prestadorId
+                      ? (() => {
+                          const p = prestadores.find((p) => p.id === prestadorId)
+                          return p ? (p.name || p.email) : prestadorId
+                        })()
+                      : undefined}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {prestadores.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name || p.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </CardContent>
       </Card>
 

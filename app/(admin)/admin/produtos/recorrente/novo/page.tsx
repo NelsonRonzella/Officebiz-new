@@ -2,10 +2,17 @@ import { db } from "@/lib/db"
 import { ProductFormRecorrente } from "@/components/admin/product-form-recorrente"
 
 export default async function NovoProdutoRecorrentePage() {
-  const tutorials = await db.tutorial.findMany({
-    select: { id: true, title: true },
-    orderBy: { title: "asc" },
-  })
+  const [tutorials, prestadores] = await Promise.all([
+    db.tutorial.findMany({
+      select: { id: true, title: true },
+      orderBy: { title: "asc" },
+    }),
+    db.user.findMany({
+      where: { role: "PRESTADOR", active: true },
+      select: { id: true, name: true, email: true },
+      orderBy: { name: "asc" },
+    }),
+  ])
 
   return (
     <div className="space-y-6">
@@ -18,7 +25,7 @@ export default async function NovoProdutoRecorrentePage() {
         </p>
       </div>
 
-      <ProductFormRecorrente tutorials={tutorials} />
+      <ProductFormRecorrente tutorials={tutorials} prestadores={prestadores} />
     </div>
   )
 }

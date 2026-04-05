@@ -115,6 +115,7 @@ export async function POST(req: NextRequest) {
       }
 
       const { steps, tutorialIds, ...productData } = parsed.data
+      const prestadorId = typeof body.prestadorId === "string" ? body.prestadorId : null
 
       const product = await db.$transaction(async (tx) => {
         const created = await tx.product.create({
@@ -123,6 +124,7 @@ export async function POST(req: NextRequest) {
             description: productData.description,
             price: productData.price,
             type: "PONTUAL",
+            prestadorId,
             steps: {
               create: steps.map((step, index) => ({
                 title: step.title,
@@ -159,6 +161,7 @@ export async function POST(req: NextRequest) {
       }
 
       const { categories, tutorialIds, ...productData } = parsed.data
+      const prestadorId = typeof body.prestadorId === "string" ? body.prestadorId : null
 
       const product = await db.$transaction(async (tx) => {
         const created = await tx.product.create({
@@ -167,6 +170,7 @@ export async function POST(req: NextRequest) {
             description: productData.description,
             price: productData.price,
             type: "RECORRENTE",
+            prestadorId,
             documentCategories: {
               create: categories.map((cat, index) => ({
                 title: cat.title,

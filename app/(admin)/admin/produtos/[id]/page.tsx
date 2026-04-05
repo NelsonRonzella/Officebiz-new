@@ -10,7 +10,7 @@ export default async function EditarProdutoPage({
 }) {
   const { id } = await params
 
-  const [product, tutorials] = await Promise.all([
+  const [product, tutorials, prestadores] = await Promise.all([
     db.product.findUnique({
       where: { id },
       include: {
@@ -29,6 +29,11 @@ export default async function EditarProdutoPage({
       select: { id: true, title: true },
       orderBy: { title: "asc" },
     }),
+    db.user.findMany({
+      where: { role: "PRESTADOR", active: true },
+      select: { id: true, name: true, email: true },
+      orderBy: { name: "asc" },
+    }),
   ])
 
   if (!product) {
@@ -41,6 +46,7 @@ export default async function EditarProdutoPage({
     description: product.description,
     price: Number(product.price),
     type: product.type,
+    prestadorId: product.prestadorId,
     steps: product.steps.map((s) => ({
       title: s.title,
       description: s.description,
@@ -70,9 +76,9 @@ export default async function EditarProdutoPage({
       </div>
 
       {product.type === "PONTUAL" ? (
-        <ProductFormPontual product={serializedProduct} tutorials={tutorials} />
+        <ProductFormPontual product={serializedProduct} tutorials={tutorials} prestadores={prestadores} />
       ) : (
-        <ProductFormRecorrente product={serializedProduct} tutorials={tutorials} />
+        <ProductFormRecorrente product={serializedProduct} tutorials={tutorials} prestadores={prestadores} />
       )}
     </div>
   )

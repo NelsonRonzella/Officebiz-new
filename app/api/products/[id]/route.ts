@@ -115,6 +115,7 @@ export async function PUT(
     }
 
     const body = await req.json()
+    const prestadorId = typeof body.prestadorId === "string" ? body.prestadorId : null
 
     if (existingProduct.type === "PONTUAL") {
       const parsed = pontualProductSchema.safeParse(body)
@@ -135,6 +136,7 @@ export async function PUT(
             name: productData.name,
             description: productData.description,
             price: productData.price,
+            prestadorId,
           },
         })
 
@@ -185,6 +187,7 @@ export async function PUT(
             name: productData.name,
             description: productData.description,
             price: productData.price,
+            prestadorId,
           },
         })
 

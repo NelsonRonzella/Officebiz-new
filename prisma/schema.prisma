@@ -66,6 +66,7 @@ model User {
   prestadorLogsNew       OrderPrestadorLog[] @relation("PrestadorLogNew")
   notifications          Notification[]
   leadsBuscados          LeadBuscado[]
+  productsPrestador      Product[]     @relation("ProductPrestador")
 }
 
 model Account {
@@ -116,8 +117,10 @@ model Product {
   price              Decimal                   @db.Decimal(10, 2)
   type               ProductType
   active             Boolean                   @default(true)
+  prestadorId        String?
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
+  prestador          User?                     @relation("ProductPrestador", fields: [prestadorId], references: [id])
   steps              ProductStep[]
   documentCategories ProductDocumentCategory[]
   tutorials          TutorialProduct[]
