@@ -61,7 +61,10 @@ export async function sendText(phone: string, message: string): Promise<SendResu
   const { instance } = getConfig()
   const res = await evolutionFetch(`/message/sendText/${instance}`, {
     method: "POST",
-    body: JSON.stringify({ number: phone, text: message }),
+    body: JSON.stringify({
+      number: phone,
+      textMessage: { text: message },
+    }),
   })
 
   if (!res) return { success: false, error: "Falha na conexão com Evolution API" }
