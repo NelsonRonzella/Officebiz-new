@@ -106,11 +106,9 @@ export function WhatsAppPanel() {
       } else {
         const data = await res.json().catch(() => null)
         const errorMsg = (data as { error?: string } | null)?.error
-        if (res.status === 502) {
-          toast.error("WhatsApp não conectado. Escaneie o QR Code primeiro.")
+        toast.error(errorMsg ?? "Erro ao enviar mensagem")
+        if (res.status === 502 && !errorMsg) {
           await fetchStatus()
-        } else {
-          toast.error(errorMsg ?? "Erro ao enviar mensagem")
         }
       }
     } catch {
