@@ -30,7 +30,7 @@ export default async function AdminProdutosPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Produtos</h1>
           <p className="text-sm text-muted-foreground">
@@ -38,14 +38,14 @@ export default async function AdminProdutosPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/admin/produtos/pontual/novo">
-            <Button variant="outline">
+          <Link href="/admin/produtos/pontual/novo" className="flex-1 sm:flex-initial">
+            <Button variant="outline" className="w-full sm:w-auto">
               <Plus className="mr-2 size-4" />
               Novo Pontual
             </Button>
           </Link>
-          <Link href="/admin/produtos/recorrente/novo">
-            <Button>
+          <Link href="/admin/produtos/recorrente/novo" className="flex-1 sm:flex-initial">
+            <Button className="w-full sm:w-auto">
               <Plus className="mr-2 size-4" />
               Novo Recorrente
             </Button>
