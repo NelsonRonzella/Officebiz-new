@@ -27,8 +27,7 @@ export async function createCheckoutSession(
   email: string,
   stripeCustomerId?: string | null
 ) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
-  if (!appUrl) throw new Error("NEXT_PUBLIC_APP_URL is not set")
+  const appUrl = resolveAppUrl()
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
@@ -51,6 +50,14 @@ export async function createCheckoutSession(
   return session
 }
 
+function resolveAppUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_APP_URL
+  if (!raw) throw new Error("NEXT_PUBLIC_APP_URL is not set")
+  // Ensure protocol is present
+  if (raw.startsWith("http://") || raw.startsWith("https://")) return raw.replace(/\/$/, "")
+  return `https://${raw}`.replace(/\/$/, "")
+}
+
 export async function createOrderCheckoutSession({
   orderId,
   productName,
@@ -62,8 +69,7 @@ export async function createOrderCheckoutSession({
   priceInCents: number
   customerEmail: string
 }) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
-  if (!appUrl) throw new Error("NEXT_PUBLIC_APP_URL is not set")
+  const appUrl = resolveAppUrl()
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
@@ -92,8 +98,7 @@ export async function createOrderCheckoutSession({
 }
 
 export async function createCustomerPortalSession(stripeCustomerId: string) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
-  if (!appUrl) throw new Error("NEXT_PUBLIC_APP_URL is not set")
+  const appUrl = resolveAppUrl()
 
   const session = await stripe.billingPortal.sessions.create({
     customer: stripeCustomerId,
