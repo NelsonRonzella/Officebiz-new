@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Upload, Loader2, X } from "lucide-react"
 
 interface OnboardingWizardProps {
   initialData?: {
@@ -42,6 +42,36 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
   // Step 2 fields
   const [companyName, setCompanyName] = useState(initialData?.companyName ?? "")
   const [companyLogo, setCompanyLogo] = useState(initialData?.companyLogo ?? "")
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+
+  async function handleLogoUpload(file: File) {
+    if (file.size > 2 * 1024 * 1024) {
+      setErrors({ companyLogo: "Arquivo muito grande. Máximo 2MB." })
+      return
+    }
+    if (!["image/jpeg", "image/png", "image/webp", "image/svg+xml"].includes(file.type)) {
+      setErrors({ companyLogo: "Formato inválido. Use JPG, PNG, WebP ou SVG." })
+      return
+    }
+
+    setUploadingLogo(true)
+    setErrors({})
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body: formData })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || "Erro ao fazer upload")
+      }
+      const data = await res.json()
+      setCompanyLogo(data.url)
+    } catch (err) {
+      setErrors({ companyLogo: err instanceof Error ? err.message : "Erro ao fazer upload" })
+    } finally {
+      setUploadingLogo(false)
+    }
+  }
 
   function validateStep1(): boolean {
     const result = onboardingStep1Schema.safeParse({ name, phone })
@@ -185,14 +215,48 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="companyLogo">Logo da empresa (opcional)</Label>
-              <Input
-                id="companyLogo"
-                type="url"
-                placeholder="https://exemplo.com/logo.png"
-                value={companyLogo}
-                onChange={(e) => setCompanyLogo(e.target.value)}
-              />
+              <Label>Logo da empresa (opcional)</Label>
+              {companyLogo ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative size-16 overflow-hidden rounded-lg border">
+                    <img
+                      src={companyLogo}
+                      alt="Logo"
+                      className="size-full object-contain"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCompanyLogo("")}
+                  >
+                    <X className="mr-1 size-4" />
+                    Remover
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50">
+                  {uploadingLogo ? (
+                    <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                  ) : (
+                    <Upload className="size-6 text-muted-foreground" />
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {uploadingLogo ? "Enviando..." : "Clique para enviar (JPG, PNG, WebP — máx 2MB)"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    className="hidden"
+                    disabled={uploadingLogo}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleLogoUpload(file)
+                    }}
+                  />
+                </label>
+              )}
               {errors.companyLogo && (
                 <p className="text-sm text-destructive">{errors.companyLogo}</p>
               )}
@@ -222,7 +286,10 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
               {companyLogo && (
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="size-4 text-accent" />
-                  <span className="font-medium">Logo:</span> Definida
+                  <span className="font-medium">Logo:</span>
+                  <div className="relative size-8 overflow-hidden rounded border">
+                    <img src={companyLogo} alt="Logo" className="size-full object-contain" />
+                  </div>
                 </li>
               )}
             </ul>
