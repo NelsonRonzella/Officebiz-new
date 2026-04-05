@@ -89,8 +89,9 @@ function getNavItems(role?: Role): NavItem[] {
 }
 
 function getSecondaryItems(role?: Role): NavItem[] {
+  const profileHref = role === "ADMIN" ? "/admin/profile" : "/settings/profile"
   const items: NavItem[] = [
-    { label: "Perfil", href: "/settings/profile", icon: User },
+    { label: "Perfil", href: profileHref, icon: User },
   ]
 
   if (role === "LICENCIADO") {
