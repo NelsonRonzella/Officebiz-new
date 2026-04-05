@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { canManageUsers, canManageClients } from "@/lib/permissions"
 import { createUserSchema, createClientSchema } from "@/lib/validations"
 import { sendInviteEmail } from "@/lib/email"
+import { sendText } from "@/lib/whatsapp"
 import { hasAccess } from "@/lib/subscription"
 
 export async function GET(req: NextRequest) {
@@ -167,6 +168,22 @@ export async function POST(req: NextRequest) {
 
       await sendInviteEmail(user.email, user.name || "")
 
+      // Send WhatsApp welcome message if phone is available
+      if (parsed.data.telefone) {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"
+        const msg = [
+          `Olá${user.name ? `, ${user.name}` : ""}! 👋`,
+          "",
+          "Você foi cadastrado na plataforma *OfficeBiz*.",
+          "",
+          `📧 Seu email de acesso: *${user.email}*`,
+          `🔗 Acesse: ${appUrl}/login`,
+          "",
+          "Para entrar, basta informar seu email e você receberá um código de acesso.",
+        ].join("\n")
+        sendText("55" + parsed.data.telefone.replace(/\D/g, ""), msg).catch(() => {})
+      }
+
       return NextResponse.json(user, { status: 201 })
     }
 
@@ -209,6 +226,22 @@ export async function POST(req: NextRequest) {
     })
 
     await sendInviteEmail(user.email, user.name || "")
+
+    // Send WhatsApp welcome message if phone is available
+    if (parsed.data.telefone) {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"
+      const msg = [
+        `Olá${user.name ? `, ${user.name}` : ""}! 👋`,
+        "",
+        "Você foi cadastrado na plataforma *OfficeBiz*.",
+        "",
+        `📧 Seu email de acesso: *${user.email}*`,
+        `🔗 Acesse: ${appUrl}/login`,
+        "",
+        "Para entrar, basta informar seu email e você receberá um código de acesso.",
+      ].join("\n")
+      sendText("55" + parsed.data.telefone.replace(/\D/g, ""), msg).catch(() => {})
+    }
 
     return NextResponse.json(user, { status: 201 })
   } catch (error) {
