@@ -47,7 +47,15 @@ export async function POST(
       )
     }
 
-    const priceValue = Number(order.salePrice ?? order.product.price)
+    const rawPrice = order.salePrice ?? order.product.price
+    const priceValue = Number(String(rawPrice))
+
+    if (!priceValue || priceValue <= 0 || isNaN(priceValue)) {
+      return NextResponse.json(
+        { error: "Preço do produto inválido" },
+        { status: 400 }
+      )
+    }
 
     const checkoutSession = await createOrderCheckoutSession({
       orderId: order.id,
