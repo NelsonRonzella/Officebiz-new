@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { formatRelativeTime } from "@/lib/format-time"
 
@@ -63,7 +64,7 @@ export function NotificationBell({ notificationsHref = "/app/notificacoes" }: No
         setUnreadCount(data.unreadCount)
       }
     } catch {
-      // Silently fail
+      toast.error("Erro ao carregar notificações")
     } finally {
       setLoading(false)
     }

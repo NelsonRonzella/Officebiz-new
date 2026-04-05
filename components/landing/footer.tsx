@@ -56,7 +56,7 @@ export function Footer() {
         {/* Social */}
         <div className="flex items-center gap-4">
           <a
-            href="https://instagram.com"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
@@ -65,7 +65,7 @@ export function Footer() {
             <InstagramIcon className="w-5 h-5" />
           </a>
           <a
-            href="https://linkedin.com"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"

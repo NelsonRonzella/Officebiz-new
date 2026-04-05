@@ -73,7 +73,7 @@ export default function SuportePage() {
               className="w-full"
               render={
                 <Link
-                  href="https://wa.me/5500000000000"
+                  href="https://wa.me/5517997014926"
                   target="_blank"
                   rel="noopener noreferrer"
                 />

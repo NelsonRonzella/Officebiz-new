@@ -19,11 +19,11 @@ export async function GET() {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
 
-    // Get all completed orders by this licenciado
+    // Get all completed and paid orders by this licenciado
     const orders = await db.order.findMany({
       where: {
         criadoPor: currentUser.id,
-        status: "CONCLUIDO",
+        status: { in: ["CONCLUIDO", "PAGO"] },
       },
       select: {
         id: true,
