@@ -40,7 +40,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Usuários", href: "/admin/users", icon: Users },
         { label: "Produtos", href: "/admin/produtos", icon: Package },
         { label: "Tutoriais", href: "/admin/tutoriais", icon: Video },
-        { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+        { label: "Pedidos", href: "/admin/pedidos", icon: ClipboardList },
         { label: "Financeiro", href: "/admin/financeiro", icon: DollarSign },
         { label: "Consultar CNPJ", href: "/admin/consultas/cnpj", icon: Building2 },
         { label: "Consultar Domínio", href: "/admin/consultas/dominio", icon: Globe },

@@ -42,7 +42,7 @@ function getBottomBarConfig(role?: Role): BottomBarConfig {
       return {
         fixed: [
           { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-          { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+          { label: "Pedidos", href: "/admin/pedidos", icon: ClipboardList },
           { label: "Usuarios", href: "/admin/users", icon: Users },
           { label: "Produtos", href: "/admin/produtos", icon: Package },
         ],

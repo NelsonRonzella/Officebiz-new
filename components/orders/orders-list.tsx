@@ -43,7 +43,11 @@ interface OrdersResponse {
   limit: number
 }
 
-export function OrdersList() {
+interface OrdersListProps {
+  basePath?: string
+}
+
+export function OrdersList({ basePath = "/app/pedidos" }: OrdersListProps) {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
@@ -227,7 +231,7 @@ export function OrdersList() {
                     return (
                       <tr
                         key={order.id}
-                        onClick={() => router.push(`/app/pedidos/${order.id}`)}
+                        onClick={() => router.push(`${basePath}/${order.id}`)}
                         className="cursor-pointer border-b border-border transition-colors hover:bg-muted/50"
                       >
                         <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
