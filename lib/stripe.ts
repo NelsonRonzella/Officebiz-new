@@ -63,13 +63,15 @@ export async function createOrderCheckoutSession({
   productName,
   priceInCents,
   customerEmail,
+  appUrl: appUrlOverride,
 }: {
   orderId: string
   productName: string
   priceInCents: number
   customerEmail: string
+  appUrl?: string
 }) {
-  const appUrl = resolveAppUrl()
+  const appUrl = appUrlOverride || resolveAppUrl()
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",

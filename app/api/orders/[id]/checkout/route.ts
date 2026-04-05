@@ -4,7 +4,7 @@ import { db } from "@/lib/db"
 import { createOrderCheckoutSession } from "@/lib/stripe"
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -57,11 +57,17 @@ export async function POST(
       )
     }
 
+    // Derive appUrl from request headers (more reliable than NEXT_PUBLIC_ env vars which are build-time)
+    const host = req.headers.get("host") || "officebiz.com.br"
+    const proto = req.headers.get("x-forwarded-proto") || "https"
+    const appUrl = `${proto}://${host}`
+
     const checkoutSession = await createOrderCheckoutSession({
       orderId: order.id,
       productName: order.product.name,
       priceInCents: Math.round(priceValue * 100),
       customerEmail: order.user.email,
+      appUrl,
     })
 
     await db.order.update({
