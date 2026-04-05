@@ -11,7 +11,6 @@ import {
   User,
   Headphones,
   LogOut,
-  Menu,
   Package,
   Video,
   ClipboardList,
@@ -23,13 +22,7 @@ import {
   MessageCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-} from "@/components/ui/sheet"
 import { NotificationBell } from "@/components/notifications/notification-bell"
 import type { Role } from "@prisma/client"
 
@@ -213,21 +206,8 @@ export function Sidebar({ role, brandLogo, brandName }: SidebarProps) {
         <SidebarNav role={role} brandLogo={brandLogo} brandName={brandName} />
       </aside>
 
-      {/* Mobile hamburger + Sheet */}
+      {/* Mobile top header */}
       <div className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 md:hidden">
-        <Sheet>
-          <SheetTrigger
-            render={
-              <Button variant="ghost" size="icon-sm" />
-            }
-          >
-            <Menu className="size-5" />
-            <span className="sr-only">Abrir menu</span>
-          </SheetTrigger>
-          <SheetContent side="left" showCloseButton={false} className="w-3/4 max-w-64 p-0">
-            <SidebarNav role={role} brandLogo={brandLogo} brandName={brandName} />
-          </SheetContent>
-        </Sheet>
         {brandLogo ? (
           <img src={brandLogo} alt={brandName || "Logo"} className="h-7 max-w-[120px] object-contain" />
         ) : (
@@ -235,6 +215,7 @@ export function Sidebar({ role, brandLogo, brandName }: SidebarProps) {
             {brandName || "OfficeBiz"}
           </span>
         )}
+        <div className="flex-1" />
         <NotificationBell
           notificationsHref={role === "ADMIN" ? "/admin/notificacoes" : "/app/notificacoes"}
         />

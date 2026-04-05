@@ -3,6 +3,7 @@ import { auth, signOut } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { canAccessAdmin } from "@/lib/permissions"
 import { Sidebar } from "@/components/layout/sidebar"
+import { BottomBar } from "@/components/layout/bottom-bar"
 
 export default async function AdminLayout({
   children,
@@ -31,8 +32,9 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-background">
       <Sidebar role="ADMIN" />
+      <BottomBar role="ADMIN" />
       <main className="md:ml-64">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-4 py-8 pb-20 sm:px-6 md:pb-8 lg:px-8">
           {children}
         </div>
       </main>

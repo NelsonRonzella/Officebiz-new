@@ -3,6 +3,7 @@ import { headers } from "next/headers"
 import { auth, signOut } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { Sidebar } from "@/components/layout/sidebar"
+import { BottomBar } from "@/components/layout/bottom-bar"
 
 export default async function AuthLayout({
   children,
@@ -99,8 +100,9 @@ export default async function AuthLayout({
         brandLogo={branding.logo ?? undefined}
         brandName={branding.name ?? undefined}
       />
+      <BottomBar role={user.role} />
       <main className="md:ml-64">
-        <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 py-8 pb-20 sm:px-6 md:pb-8 lg:px-8">
           {children}
         </div>
       </main>
