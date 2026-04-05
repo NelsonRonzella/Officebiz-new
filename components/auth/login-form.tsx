@@ -7,17 +7,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Mail, MessageCircle } from "lucide-react"
 import { OtpForm } from "./otp-form"
+
+type Channel = "email" | "whatsapp"
 
 export function LoginForm() {
   const [email, setEmail] = useState("")
   const [step, setStep] = useState<"email" | "otp">("email")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [hasPhone, setHasPhone] = useState(false)
+  const [sentVia, setSentVia] = useState<Channel>("email")
   const router = useRouter()
 
-  async function handleSendOtp(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSendOtp(channel: Channel) {
+    if (!email.trim()) {
+      setError("Informe seu email")
+      return
+    }
     setLoading(true)
     setError("")
 
@@ -25,7 +33,7 @@ export function LoginForm() {
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, channel }),
       })
 
       const data = await res.json()
@@ -35,6 +43,8 @@ export function LoginForm() {
         return
       }
 
+      setHasPhone(data.hasPhone ?? false)
+      setSentVia(channel)
       setStep("otp")
     } catch {
       setError("Erro de conexão. Tente novamente.")
@@ -77,12 +87,14 @@ export function LoginForm() {
         <CardDescription>
           {step === "email"
             ? "Acesse sua conta"
-            : `Código enviado para ${email}`}
+            : sentVia === "whatsapp"
+              ? `Código enviado por WhatsApp`
+              : `Código enviado para ${email}`}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {step === "email" ? (
-          <form onSubmit={handleSendOtp} className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -91,6 +103,12 @@ export function LoginForm() {
                 placeholder="seu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    handleSendOtp("email")
+                  }
+                }}
                 required
                 disabled={loading}
               />
@@ -98,9 +116,29 @@ export function LoginForm() {
             {error && (
               <p className="text-sm text-destructive">{error}</p>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Enviando..." : "Enviar código"}
-            </Button>
+            <p className="text-sm text-muted-foreground text-center">
+              Enviar código por:
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => handleSendOtp("email")}
+                disabled={loading}
+                variant="default"
+                className="w-full"
+              >
+                <Mail className="mr-2 size-4" />
+                {loading ? "Enviando..." : "E-mail"}
+              </Button>
+              <Button
+                onClick={() => handleSendOtp("whatsapp")}
+                disabled={loading}
+                variant="outline"
+                className="w-full"
+              >
+                <MessageCircle className="mr-2 size-4" />
+                {loading ? "Enviando..." : "WhatsApp"}
+              </Button>
+            </div>
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
                 Ainda não é licenciado?{" "}
@@ -109,13 +147,12 @@ export function LoginForm() {
                 </a>
               </p>
             </div>
-          </form>
+          </div>
         ) : (
           <OtpForm
             onSubmit={handleVerifyOtp}
             onResend={() => {
               setStep("email")
-              handleSendOtp(new Event("submit") as unknown as React.FormEvent)
             }}
             loading={loading}
             error={error}
