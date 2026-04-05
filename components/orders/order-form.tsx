@@ -103,7 +103,14 @@ export function OrderForm({ clients, products }: OrderFormProps) {
               onValueChange={(val) => setClientId(val as string)}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione o cliente" />
+                <SelectValue placeholder="Selecione o cliente">
+                  {clientId
+                    ? (() => {
+                        const c = clients.find((c) => c.id === clientId)
+                        return c ? (c.name || c.email) : clientId
+                      })()
+                    : undefined}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {clients.map((client) => (
@@ -128,7 +135,14 @@ export function OrderForm({ clients, products }: OrderFormProps) {
               onValueChange={(val) => setProductId(val as string)}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione o produto" />
+                <SelectValue placeholder="Selecione o produto">
+                  {productId
+                    ? (() => {
+                        const p = products.find((p) => p.id === productId)
+                        return p ? p.name : productId
+                      })()
+                    : undefined}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {products.map((product) => (
