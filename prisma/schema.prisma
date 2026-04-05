@@ -36,6 +36,7 @@ model User {
   bairro                 String?
   cidade                 String?
   estado                 String?
+  slug                   String?   @unique
   companyName            String?
   companyLogo            String?
   companyFavicon         String?

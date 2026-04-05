@@ -22,6 +22,7 @@ interface UserData {
   name: string | null
   email: string
   role: string
+  slug: string | null
   cpf: string | null
   cnpj: string | null
   telefone: string | null
@@ -79,6 +80,7 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
   const [name, setName] = useState(user?.name || "")
   const [email, setEmail] = useState(user?.email || "")
   const [role, setRole] = useState(user?.role || availableRoles[0] || "LICENCIADO")
+  const [slug, setSlug] = useState(user?.slug || "")
   const [cpf, setCpf] = useState(user?.cpf ? maskCpf(user.cpf) : "")
   const [cnpj, setCnpj] = useState(user?.cnpj ? maskCnpj(user.cnpj) : "")
   const [telefone, setTelefone] = useState(user?.telefone ? maskTelefone(user.telefone) : "")
@@ -122,6 +124,7 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
       const body: Record<string, string> = {
         name,
         email,
+        slug: slug || "",
         cpf: cpf.replace(/\D/g, ""),
         cnpj: cnpj.replace(/\D/g, ""),
         telefone: telefone.replace(/\D/g, ""),
@@ -217,6 +220,20 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          )}
+          {(role === "LICENCIADO" || user?.role === "LICENCIADO") && (
+            <div className="space-y-2">
+              <Label htmlFor="slug">Slug (URL pública)</Label>
+              <div className="flex items-center gap-1">
+                <span className="text-sm text-muted-foreground whitespace-nowrap">officebiz.com.br/lic/</span>
+                <Input
+                  id="slug"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
+                  placeholder="nome-da-empresa"
+                />
+              </div>
             </div>
           )}
           <div className="space-y-2">

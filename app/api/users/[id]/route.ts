@@ -33,6 +33,7 @@ export async function GET(
         email: true,
         role: true,
         active: true,
+        slug: true,
         cpf: true,
         cnpj: true,
         telefone: true,

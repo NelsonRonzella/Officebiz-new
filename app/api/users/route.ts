@@ -163,6 +163,7 @@ export async function POST(req: NextRequest) {
           role: requestedRole,
           emailVerified: null,
           createdBy: currentUser.id,
+          onboardingCompleted: true,
         },
       })
 
@@ -222,6 +223,7 @@ export async function POST(req: NextRequest) {
         ...planData,
         emailVerified: null,
         createdBy: currentUser.id,
+        onboardingCompleted: parsed.data.role !== "LICENCIADO",
       },
     })
 

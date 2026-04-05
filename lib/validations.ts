@@ -42,6 +42,7 @@ export const createUserSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   email: z.email("Email inválido"),
   role: z.enum(["ADMIN", "LICENCIADO", "PRESTADOR", "CLIENTE"]),
+  slug: z.string().regex(/^[a-z0-9-]*$/, "Slug deve conter apenas letras minúsculas, números e hífens").optional().or(z.literal("")),
   cpf: z.string().optional(),
   cnpj: z.string().optional(),
   telefone: z.string().optional(),

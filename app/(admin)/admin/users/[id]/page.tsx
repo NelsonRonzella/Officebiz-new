@@ -16,6 +16,7 @@ export default async function AdminEditUserPage({
       name: true,
       email: true,
       role: true,
+      slug: true,
       cpf: true,
       cnpj: true,
       telefone: true,
