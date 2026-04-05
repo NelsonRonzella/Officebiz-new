@@ -143,9 +143,11 @@ function SidebarNavLink({ item, pathname }: SidebarNavLinkProps) {
 
 interface SidebarNavProps {
   role?: Role
+  brandLogo?: string
+  brandName?: string
 }
 
-function SidebarNav({ role }: SidebarNavProps) {
+function SidebarNav({ role, brandLogo, brandName }: SidebarNavProps) {
   const pathname = usePathname()
   const navItems = getNavItems(role)
   const secondaryItems = getSecondaryItems(role)
@@ -154,8 +156,14 @@ function SidebarNav({ role }: SidebarNavProps) {
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       {/* Logo + Notification Bell */}
       <div className="flex h-16 items-center justify-between px-6">
-        <Link href={getDashboardHref(role)} className="text-xl font-bold tracking-tight text-sidebar-foreground">
-          OfficeBiz
+        <Link href={getDashboardHref(role)} className="flex items-center gap-2">
+          {brandLogo ? (
+            <img src={brandLogo} alt={brandName || "Logo"} className="h-8 max-w-[140px] object-contain" />
+          ) : (
+            <span className="text-xl font-bold tracking-tight text-sidebar-foreground">
+              {brandName || "OfficeBiz"}
+            </span>
+          )}
         </Link>
         <NotificationBell
           notificationsHref={role === "ADMIN" ? "/admin/notificacoes" : "/app/notificacoes"}
@@ -192,14 +200,16 @@ function SidebarNav({ role }: SidebarNavProps) {
 
 interface SidebarProps {
   role?: Role
+  brandLogo?: string
+  brandName?: string
 }
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, brandLogo, brandName }: SidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:w-64 md:flex-col">
-        <SidebarNav role={role} />
+        <SidebarNav role={role} brandLogo={brandLogo} brandName={brandName} />
       </aside>
 
       {/* Mobile hamburger + Sheet */}
@@ -214,12 +224,16 @@ export function Sidebar({ role }: SidebarProps) {
             <span className="sr-only">Abrir menu</span>
           </SheetTrigger>
           <SheetContent side="left" showCloseButton={false} className="w-3/4 max-w-64 p-0">
-            <SidebarNav role={role} />
+            <SidebarNav role={role} brandLogo={brandLogo} brandName={brandName} />
           </SheetContent>
         </Sheet>
-        <span className="flex-1 text-lg font-bold tracking-tight text-foreground">
-          OfficeBiz
-        </span>
+        {brandLogo ? (
+          <img src={brandLogo} alt={brandName || "Logo"} className="h-7 max-w-[120px] object-contain" />
+        ) : (
+          <span className="flex-1 text-lg font-bold tracking-tight text-foreground">
+            {brandName || "OfficeBiz"}
+          </span>
+        )}
         <NotificationBell
           notificationsHref={role === "ADMIN" ? "/admin/notificacoes" : "/app/notificacoes"}
         />

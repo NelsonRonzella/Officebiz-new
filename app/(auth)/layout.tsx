@@ -17,7 +17,16 @@ export default async function AuthLayout({
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { onboardingCompleted: true, role: true, active: true },
+    select: {
+      onboardingCompleted: true,
+      role: true,
+      active: true,
+      companyLogo: true,
+      companyName: true,
+      brandPrimaryColor: true,
+      brandAccentColor: true,
+      createdBy: true,
+    },
   })
 
   if (!user) {
@@ -45,9 +54,51 @@ export default async function AuthLayout({
     redirect("/dashboard/onboarding")
   }
 
+  // Resolve branding: for licenciado use their own, for clients use their licenciado's
+  let branding = {
+    logo: user.companyLogo,
+    name: user.companyName,
+    primaryColor: user.brandPrimaryColor,
+    accentColor: user.brandAccentColor,
+  }
+
+  if (user.role !== "LICENCIADO" && user.createdBy) {
+    const creator = await db.user.findUnique({
+      where: { id: user.createdBy },
+      select: {
+        role: true,
+        companyLogo: true,
+        companyName: true,
+        brandPrimaryColor: true,
+        brandAccentColor: true,
+      },
+    })
+    if (creator?.role === "LICENCIADO") {
+      branding = {
+        logo: creator.companyLogo,
+        name: creator.companyName,
+        primaryColor: creator.brandPrimaryColor,
+        accentColor: creator.brandAccentColor,
+      }
+    }
+  }
+
+  // Build CSS custom properties for branding colors
+  const brandStyles: Record<string, string> = {}
+  if (branding.primaryColor) {
+    brandStyles["--brand-primary"] = branding.primaryColor
+  }
+  if (branding.accentColor) {
+    brandStyles["--brand-accent"] = branding.accentColor
+  }
+
   return (
-    <div className="min-h-screen bg-background">
-      <Sidebar role={user.role} />
+    <div className="min-h-screen bg-background" style={brandStyles as React.CSSProperties}>
+      <Sidebar
+        role={user.role}
+        brandLogo={branding.logo ?? undefined}
+        brandName={branding.name ?? undefined}
+      />
       <main className="md:ml-64">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
           {children}
