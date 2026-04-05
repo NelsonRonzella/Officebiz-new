@@ -104,7 +104,14 @@ export function OnboardingWizard({ initialData }: OnboardingWizardProps) {
         throw new Error("Erro ao salvar dados")
       }
 
-      router.push("/dashboard")
+      const data = await res.json()
+      const roleRedirects: Record<string, string> = {
+        ADMIN: "/admin",
+        LICENCIADO: "/dashboard/licenciado",
+        PRESTADOR: "/dashboard/prestador",
+        CLIENTE: "/dashboard/cliente",
+      }
+      router.push(roleRedirects[data.role] || "/dashboard")
       router.refresh()
     } catch {
       setErrors({ submit: "Ocorreu um erro. Tente novamente." })

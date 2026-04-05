@@ -53,8 +53,8 @@ export function LicenciadoFinancial() {
         if (res.ok) {
           setData(await res.json())
         }
-      } catch (err) {
-        console.error("Erro ao carregar dados financeiros:", err)
+      } catch {
+        setData(null)
       } finally {
         setLoading(false)
       }

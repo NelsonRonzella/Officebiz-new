@@ -11,6 +11,7 @@ import { db } from "@/lib/db"
 import { StatCard } from "@/components/admin/stat-card"
 import { RoleBadge } from "@/components/admin/role-badge"
 import { AdminDashboardCharts } from "@/components/admin/admin-dashboard-charts"
+import type { Role, Prisma } from "@prisma/client"
 import { formatCurrency, getStatusLabel, toNumber } from "@/lib/financial"
 import {
   Card,
@@ -23,52 +24,68 @@ export default async function AdminDashboardPage() {
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  const [
-    licenciados,
-    prestadores,
-    clientes,
-    recentUsers,
-    completedOrders,
-    pendingOrdersCount,
-    newUsersThisMonth,
-    allOrders,
-    ordersByStatusRaw,
-  ] = await Promise.all([
-    db.user.count({ where: { role: "LICENCIADO" } }),
-    db.user.count({ where: { role: "PRESTADOR" } }),
-    db.user.count({ where: { role: "CLIENTE" } }),
-    db.user.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 10,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        active: true,
-        createdAt: true,
-      },
-    }),
-    db.order.findMany({
-      where: { status: "CONCLUIDO" },
-      select: { salePrice: true },
-    }),
-    db.order.count({
-      where: {
-        status: { notIn: ["CONCLUIDO", "CANCELADO"] },
-      },
-    }),
-    db.user.count({
-      where: { createdAt: { gte: startOfMonth } },
-    }),
-    db.order.findMany({
-      select: { createdAt: true, status: true },
-    }),
-    db.order.groupBy({
-      by: ["status"],
-      _count: { id: true },
-    }),
-  ])
+  let licenciados = 0
+  let prestadores = 0
+  let clientes = 0
+  let recentUsers: Array<{ id: string; name: string | null; email: string; role: Role; active: boolean; createdAt: Date }> = []
+  let completedOrders: Array<{ salePrice: Prisma.Decimal | null }> = []
+  let pendingOrdersCount = 0
+  let newUsersThisMonth = 0
+  let allOrders: Array<{ createdAt: Date; status: string }> = []
+  let ordersByStatusRaw: Array<{ status: string; _count: { id: number } }> = []
+  let loadError = false
+
+  try {
+    ;[
+      licenciados,
+      prestadores,
+      clientes,
+      recentUsers,
+      completedOrders,
+      pendingOrdersCount,
+      newUsersThisMonth,
+      allOrders,
+      ordersByStatusRaw,
+    ] = await Promise.all([
+      db.user.count({ where: { role: "LICENCIADO" } }),
+      db.user.count({ where: { role: "PRESTADOR" } }),
+      db.user.count({ where: { role: "CLIENTE" } }),
+      db.user.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 10,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          active: true,
+          createdAt: true,
+        },
+      }),
+      db.order.findMany({
+        where: { status: "CONCLUIDO" },
+        select: { salePrice: true },
+      }),
+      db.order.count({
+        where: {
+          status: { notIn: ["CONCLUIDO", "CANCELADO"] },
+        },
+      }),
+      db.user.count({
+        where: { createdAt: { gte: startOfMonth } },
+      }),
+      db.order.findMany({
+        select: { createdAt: true, status: true },
+      }),
+      db.order.groupBy({
+        by: ["status"],
+        _count: { id: true },
+      }),
+    ])
+  } catch (err) {
+    console.error("Admin dashboard data error:", err)
+    loadError = true
+  }
 
   // Calculate total revenue
   const totalRevenue = completedOrders.reduce(
@@ -110,6 +127,12 @@ export default async function AdminDashboardPage() {
           Visão geral da plataforma
         </p>
       </div>
+
+      {loadError && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+          Erro ao carregar alguns dados. Os valores podem estar incompletos.
+        </div>
+      )}
 
       {/* Stats - Row 1: Users */}
       <div className="grid gap-4 sm:grid-cols-3">

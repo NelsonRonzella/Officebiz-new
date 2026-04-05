@@ -65,8 +65,8 @@ export function FinancialDashboard({ initialPeriod }: FinancialDashboardProps) {
           const json = await res.json()
           setData(json)
         }
-      } catch (err) {
-        console.error("Erro ao carregar dados financeiros:", err)
+      } catch {
+        setData(null)
       } finally {
         setLoading(false)
       }

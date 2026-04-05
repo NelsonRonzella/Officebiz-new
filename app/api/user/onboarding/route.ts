@@ -13,7 +13,7 @@ export async function PUT(req: Request) {
     const body = await req.json()
     const { name, phone, companyName, companyLogo } = body
 
-    await db.user.update({
+    const updatedUser = await db.user.update({
       where: { id: session.user.id },
       data: {
         name,
@@ -22,9 +22,10 @@ export async function PUT(req: Request) {
         companyLogo,
         onboardingCompleted: true,
       },
+      select: { role: true },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, role: updatedUser.role })
   } catch (error) {
     console.error("Onboarding update error:", error)
     return NextResponse.json(

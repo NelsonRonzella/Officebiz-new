@@ -18,6 +18,7 @@ export default async function OnboardingPage() {
       companyName: true,
       companyLogo: true,
       onboardingCompleted: true,
+      role: true,
     },
   })
 
@@ -25,9 +26,15 @@ export default async function OnboardingPage() {
     redirect("/login")
   }
 
-  // Already completed onboarding — go to dashboard
+  // Already completed onboarding — go to role-based dashboard
   if (user.onboardingCompleted) {
-    redirect("/dashboard")
+    const roleRedirects: Record<string, string> = {
+      ADMIN: "/admin",
+      LICENCIADO: "/dashboard/licenciado",
+      PRESTADOR: "/dashboard/prestador",
+      CLIENTE: "/dashboard/cliente",
+    }
+    redirect(roleRedirects[user.role] || "/dashboard")
   }
 
   return (

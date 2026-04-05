@@ -36,6 +36,17 @@ import {
   CheckCircle2,
 } from "lucide-react"
 import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { STATUS_CONFIG } from "@/lib/order-status"
 
 /* ─── TYPES ─── */
@@ -179,7 +190,7 @@ export function OrderDetail({
         setOrder(data)
       }
     } catch {
-      /* silent */
+      toast.error("Erro ao atualizar pedido")
     }
   }
 
@@ -218,6 +229,10 @@ export function OrderDetail({
   async function handleSendMessage(e: React.FormEvent) {
     e.preventDefault()
     if (!messageText.trim() && !messageFile) return
+    if (messageFile && messageFile.size > MAX_FILE_SIZE) {
+      toast.error("Arquivo muito grande. O tamanho máximo é 10MB.")
+      return
+    }
 
     setSendingMessage(true)
     try {
@@ -248,7 +263,13 @@ export function OrderDetail({
     }
   }
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+
   async function handleUploadDocument(categoryId: string, file: File) {
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("Arquivo muito grande. O tamanho máximo é 10MB.")
+      return
+    }
     setUploadingCategory(categoryId)
     try {
       const formData = new FormData()
@@ -450,36 +471,74 @@ export function OrderDetail({
 
             {/* Admin + EM_ANDAMENTO: Retorno */}
             {isAdmin && order.status === "EM_ANDAMENTO" && (
-              <Button
-                variant="outline"
-                onClick={() => handleAction("retorno")}
-                disabled={actionLoading !== null}
-              >
-                {actionLoading === "retorno" ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <RotateCcw className="mr-2 size-4" />
-                )}
-                Retorno
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger
+                  render={
+                    <Button
+                      variant="outline"
+                      disabled={actionLoading !== null}
+                    />
+                  }
+                >
+                  {actionLoading === "retorno" ? (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  ) : (
+                    <RotateCcw className="mr-2 size-4" />
+                  )}
+                  Retorno
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar Retorno</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza que deseja enviar este pedido para retorno? O status será alterado para &quot;Retorno&quot;.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Não</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleAction("retorno")}>
+                      Sim, enviar para retorno
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
 
             {/* Admin + not CANCELADO/CONCLUIDO: Cancelar */}
             {isAdmin &&
               order.status !== "CANCELADO" &&
               order.status !== "CONCLUIDO" && (
-                <Button
-                  variant="destructive"
-                  onClick={() => handleAction("cancelar")}
-                  disabled={actionLoading !== null}
-                >
-                  {actionLoading === "cancelar" ? (
-                    <Loader2 className="mr-2 size-4 animate-spin" />
-                  ) : (
-                    <Ban className="mr-2 size-4" />
-                  )}
-                  Cancelar
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    render={
+                      <Button
+                        variant="destructive"
+                        disabled={actionLoading !== null}
+                      />
+                    }
+                  >
+                    {actionLoading === "cancelar" ? (
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                    ) : (
+                      <Ban className="mr-2 size-4" />
+                    )}
+                    Cancelar
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirmar Cancelamento</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Não</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleAction("cancelar")}>
+                        Sim, cancelar pedido
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
           </div>
 

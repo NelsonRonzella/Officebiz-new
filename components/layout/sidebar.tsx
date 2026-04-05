@@ -98,9 +98,7 @@ function getSecondaryItems(role?: Role): NavItem[] {
     items.unshift({ label: "Assinatura", href: "/settings/billing", icon: CreditCard })
   }
 
-  if (role !== "ADMIN") {
-    items.push({ label: "Suporte", href: "/suporte", icon: Headphones })
-  }
+  items.push({ label: "Suporte", href: "/suporte", icon: Headphones })
 
   return items
 }

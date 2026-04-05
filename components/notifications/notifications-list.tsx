@@ -90,7 +90,7 @@ export function NotificationsList() {
         setUnreadCount(data.unreadCount)
       }
     } catch {
-      // Silently fail
+      setNotifications([])
     } finally {
       setLoading(false)
     }
