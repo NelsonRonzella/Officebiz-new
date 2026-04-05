@@ -18,6 +18,8 @@ interface ConsultaFormProps<T> {
   apiEndpoint: string
   renderResult: (data: T) => ReactNode
   validateInput?: (value: string) => string | null
+  /** If true, sends query as-is without stripping dots/dashes. Default: false */
+  rawQuery?: boolean
 }
 
 export function ConsultaForm<T>({
@@ -31,6 +33,7 @@ export function ConsultaForm<T>({
   apiEndpoint,
   renderResult,
   validateInput,
+  rawQuery,
 }: ConsultaFormProps<T>) {
   const [query, setQuery] = useState("")
   const [data, setData] = useState<T | null>(null)
@@ -56,7 +59,7 @@ export function ConsultaForm<T>({
 
     setIsLoading(true)
     try {
-      const cleanQuery = query.replace(/[.\-\/]/g, "").trim()
+      const cleanQuery = rawQuery ? query.trim() : query.replace(/[.\-\/]/g, "").trim()
       const res = await fetch(`${apiEndpoint}?q=${encodeURIComponent(cleanQuery)}`)
       const json = await res.json()
 

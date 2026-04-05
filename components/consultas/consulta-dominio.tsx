@@ -96,6 +96,7 @@ export function ConsultaDominio() {
       inputLabel="Domínio"
       inputPlaceholder="exemplo.com.br"
       apiEndpoint="/api/consultas/dominio"
+      rawQuery
       renderResult={(data) => <DomainResult data={data} />}
     />
   )
