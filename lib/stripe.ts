@@ -51,6 +51,46 @@ export async function createCheckoutSession(
   return session
 }
 
+export async function createOrderCheckoutSession({
+  orderId,
+  productName,
+  priceInCents,
+  customerEmail,
+}: {
+  orderId: string
+  productName: string
+  priceInCents: number
+  customerEmail: string
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+  if (!appUrl) throw new Error("NEXT_PUBLIC_APP_URL is not set")
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    payment_method_types: ["card"],
+    customer_email: customerEmail,
+    line_items: [
+      {
+        price_data: {
+          currency: "brl",
+          product_data: {
+            name: productName,
+          },
+          unit_amount: priceInCents,
+        },
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      orderId,
+    },
+    success_url: `${appUrl}/app/pedidos/${orderId}?payment=success`,
+    cancel_url: `${appUrl}/app/pedidos/${orderId}?payment=cancelled`,
+  })
+
+  return session
+}
+
 export async function createCustomerPortalSession(stripeCustomerId: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL
   if (!appUrl) throw new Error("NEXT_PUBLIC_APP_URL is not set")

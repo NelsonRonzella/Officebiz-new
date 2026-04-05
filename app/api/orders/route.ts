@@ -7,6 +7,7 @@ import { createOrderSteps, createOrderCategories } from "@/lib/order-service"
 import { createBulkNotifications } from "@/lib/notifications"
 import { sendOrderCreatedEmail } from "@/lib/email"
 import { createOrderSchema } from "@/lib/validations"
+import { createOrderCheckoutSession } from "@/lib/stripe"
 
 function canViewOrder(
   order: { userId: string; criadoPor: string; prestadorId: string | null; status: string },
@@ -194,7 +195,7 @@ export async function POST(req: NextRequest) {
     // Validate product exists and is active
     const product = await db.product.findUnique({
       where: { id: productId },
-      select: { id: true, type: true, active: true, name: true },
+      select: { id: true, type: true, active: true, name: true, price: true },
     })
 
     if (!product) {
@@ -205,15 +206,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Produto inativo" }, { status: 400 })
     }
 
-    // Create order
+    // Create order with product price
+    const priceValue = Number(product.price)
     const order = await db.order.create({
       data: {
         userId,
         productId,
         status: "AGUARDANDO_PAGAMENTO",
         criadoPor: currentUser.id,
+        salePrice: priceValue,
       },
     })
+
+    // Generate Stripe Checkout Session
+    let checkoutUrl: string | null = null
+    try {
+      const checkoutSession = await createOrderCheckoutSession({
+        orderId: order.id,
+        productName: product.name,
+        priceInCents: Math.round(priceValue * 100),
+        customerEmail: client.email,
+      })
+
+      await db.order.update({
+        where: { id: order.id },
+        data: { stripeCheckoutSessionId: checkoutSession.id },
+      })
+
+      checkoutUrl = checkoutSession.url
+    } catch (err) {
+      console.error("Stripe checkout creation failed:", err)
+      // Order is created but without payment link — admin can handle manually
+    }
 
     // Create steps or categories based on product type
     if (product.type === "PONTUAL") {
@@ -258,7 +282,7 @@ export async function POST(req: NextRequest) {
       orderId: order.id,
     }).catch(console.error)
 
-    // Return created order with includes
+    // Return created order with includes + checkout URL
     const createdOrder = await db.order.findUnique({
       where: { id: order.id },
       include: {
@@ -271,7 +295,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    return NextResponse.json(createdOrder, { status: 201 })
+    return NextResponse.json({ ...createdOrder, checkoutUrl }, { status: 201 })
   } catch (error) {
     console.error("POST /api/orders error:", error)
     return NextResponse.json(

@@ -34,6 +34,7 @@ import {
   Paperclip,
   CreditCard,
   CheckCircle2,
+  ExternalLink,
 } from "lucide-react"
 import { toast } from "sonner"
 import {
@@ -173,7 +174,7 @@ export function OrderDetail({
       .then((data) => {
         setPrestadores(data.users || [])
       })
-      .catch(() => { /* silent */ })
+      .catch(() => { toast.error("Erro ao carregar prestadores") })
       .finally(() => setLoadingPrestadores(false))
   }, [isAdmin])
 
@@ -291,6 +292,27 @@ export function OrderDetail({
       toast.error(err instanceof Error ? err.message : "Erro ao enviar documento")
     } finally {
       setUploadingCategory(null)
+    }
+  }
+
+  async function handleGenerateCheckout() {
+    setActionLoading("checkout")
+    try {
+      const res = await fetch(`/api/orders/${order.id}/checkout`, {
+        method: "POST",
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || "Erro ao gerar link de pagamento")
+      }
+      const data = await res.json()
+      if (data.url) {
+        window.open(data.url, "_blank")
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao gerar link de pagamento")
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -416,6 +438,22 @@ export function OrderDetail({
                   <CreditCard className="mr-2 size-4" />
                 )}
                 Marcar como Pago
+              </Button>
+            )}
+
+            {/* Licenciado/Admin + AGUARDANDO_PAGAMENTO: Pagar com Stripe */}
+            {(isLicenciado || isAdmin) && order.status === "AGUARDANDO_PAGAMENTO" && (
+              <Button
+                variant="default"
+                onClick={handleGenerateCheckout}
+                disabled={actionLoading !== null}
+              >
+                {actionLoading === "checkout" ? (
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                ) : (
+                  <ExternalLink className="mr-2 size-4" />
+                )}
+                Pagar Agora
               </Button>
             )}
 

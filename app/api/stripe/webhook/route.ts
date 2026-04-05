@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { db } from "@/lib/db"
+import { createBulkNotifications } from "@/lib/notifications"
 import type Stripe from "stripe"
 
 export async function POST(req: Request) {
@@ -28,35 +29,75 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session
+        const orderId = session.metadata?.orderId
         const userId = session.metadata?.userId
 
-        if (!userId) break
+        if (orderId) {
+          // Order payment flow
+          await db.order.update({
+            where: { id: orderId },
+            data: {
+              status: "PAGO",
+              stripePaymentIntentId: session.payment_intent as string | null,
+            },
+          })
 
-        const subscription = await stripe.subscriptions.retrieve(
-          session.subscription as string
-        )
-
-        // Get period end from latest invoice
-        let periodEnd: Date | null = null
-        if (subscription.latest_invoice) {
-          const invoice = await stripe.invoices.retrieve(
-            subscription.latest_invoice as string
-          )
-          if (invoice.period_end) {
-            periodEnd = new Date(invoice.period_end * 1000)
+          // Notify prestadores that a new paid order is available
+          const prestadores = await db.user.findMany({
+            where: { role: "PRESTADOR", active: true },
+            select: { id: true },
+          })
+          if (prestadores.length > 0) {
+            createBulkNotifications(
+              prestadores.map((p) => p.id),
+              "Novo pedido disponível",
+              "Um novo pedido foi pago e está disponível para execução.",
+              "ORDER_UPDATE",
+              `/app/pedidos/${orderId}`
+            ).catch(console.error)
           }
-        }
 
-        await db.user.update({
-          where: { id: userId },
-          data: {
-            plan: "PRO",
-            stripeCustomerId: session.customer as string,
-            stripeSubscriptionId: subscription.id,
-            stripePriceId: subscription.items.data[0]?.price.id,
-            stripeCurrentPeriodEnd: periodEnd,
-          },
-        })
+          // Notify admins
+          const admins = await db.user.findMany({
+            where: { role: "ADMIN" },
+            select: { id: true },
+          })
+          if (admins.length > 0) {
+            createBulkNotifications(
+              admins.map((a) => a.id),
+              "Pagamento confirmado",
+              "Um pedido foi pago e está pronto para execução.",
+              "SUCCESS",
+              `/app/pedidos/${orderId}`
+            ).catch(console.error)
+          }
+        } else if (userId) {
+          // Subscription payment flow
+          const subscription = await stripe.subscriptions.retrieve(
+            session.subscription as string
+          )
+
+          let periodEnd: Date | null = null
+          if (subscription.latest_invoice) {
+            const invoice = await stripe.invoices.retrieve(
+              subscription.latest_invoice as string
+            )
+            if (invoice.period_end) {
+              periodEnd = new Date(invoice.period_end * 1000)
+            }
+          }
+
+          await db.user.update({
+            where: { id: userId },
+            data: {
+              plan: "PRO",
+              stripeCustomerId: session.customer as string,
+              stripeSubscriptionId: subscription.id,
+              stripePriceId: subscription.items.data[0]?.price.id,
+              stripeCurrentPeriodEnd: periodEnd,
+            },
+          })
+        }
         break
       }
 

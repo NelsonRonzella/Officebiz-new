@@ -183,6 +183,8 @@ model Order {
   currentStepId   String?
   costPrice       Decimal?      @db.Decimal(10, 2)
   salePrice       Decimal?      @db.Decimal(10, 2)
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
