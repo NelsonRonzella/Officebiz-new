@@ -31,7 +31,82 @@ export async function POST(req: Request) {
       case "checkout.session.completed": {
         const checkoutSession = event.data.object as Stripe.Checkout.Session
 
-        if (checkoutSession.metadata?.type === "license") {
+        if (checkoutSession.metadata?.type === "license-lead") {
+          // Lead vindo do chat de vendas — cria o User SOMENTE agora
+          const conversationId = checkoutSession.metadata.conversationId
+          const leadName = checkoutSession.metadata.leadName ?? ""
+          const leadEmail = checkoutSession.metadata.leadEmail ?? ""
+          const leadPhone = checkoutSession.metadata.leadPhone ?? ""
+          const contractDurationMonths = parseInt(
+            checkoutSession.metadata.contractDurationMonths ?? "0",
+            10
+          )
+
+          // Idempotência: se a conversa já foi convertida, ignora
+          const convo = await db.salesConversation.findUnique({
+            where: { id: conversationId },
+          })
+          if (!convo) {
+            console.error("license-lead webhook: conversation not found", conversationId)
+            break
+          }
+
+          let userId = convo.convertedUserId
+          if (!userId) {
+            // Caso raro: durante o checkout outro fluxo criou o User com esse email
+            const existing = await db.user.findUnique({ where: { email: leadEmail } })
+            if (existing) {
+              userId = existing.id
+            } else {
+              const contractEndsAt = new Date()
+              contractEndsAt.setMonth(contractEndsAt.getMonth() + contractDurationMonths)
+              const created = await db.user.create({
+                data: {
+                  name: leadName,
+                  email: leadEmail,
+                  telefone: leadPhone,
+                  role: "LICENCIADO",
+                  plan: "PRO",
+                  contractDurationMonths,
+                  contractEndsAt,
+                  contractExpiryNotified: {},
+                  stripeCustomerId: checkoutSession.customer as string | null,
+                  stripePaymentIntentId: checkoutSession.payment_intent as string | null,
+                },
+              })
+              userId = created.id
+            }
+          }
+
+          // Garante dados de pagamento/contrato no User (cobre fluxo idempotente)
+          const contractEndsAt = new Date()
+          contractEndsAt.setMonth(contractEndsAt.getMonth() + contractDurationMonths)
+          await db.user.update({
+            where: { id: userId },
+            data: {
+              plan: "PRO",
+              contractDurationMonths,
+              contractEndsAt,
+              stripeCustomerId: checkoutSession.customer as string | null,
+              stripePaymentIntentId: checkoutSession.payment_intent as string | null,
+            },
+          })
+
+          await db.salesConversation.update({
+            where: { id: conversationId },
+            data: {
+              convertedUserId: userId,
+              stage: "PAGO",
+            },
+          })
+
+          sendText(
+            convo.phone,
+            `✅ *OfficeBiz* — Pagamento confirmado! Bem-vindo. Acesse: ${
+              process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"
+            }/login`
+          ).catch((err) => console.error("welcome WhatsApp failed:", err))
+        } else if (checkoutSession.metadata?.type === "license") {
           // One-time license payment flow
           const userId = checkoutSession.metadata.userId
           const contractDurationMonths = parseInt(

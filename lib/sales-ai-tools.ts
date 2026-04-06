@@ -1,5 +1,9 @@
 import { db } from "@/lib/db"
-import { createLicenseCheckoutSession } from "@/lib/stripe"
+import {
+  createLicenseCheckoutSession,
+  createLicenseCheckoutSessionForLead,
+  expireCheckoutSessionSafe,
+} from "@/lib/stripe"
 import type { ContractDurationMonths } from "@/lib/pricing"
 
 export const SALES_TOOLS = [
@@ -98,6 +102,7 @@ export async function toolGeneratePaymentLink(
   })
   if (!convo) return { ok: false, error: "conversa não encontrada" }
 
+  // Caso 1: lead já virou User num pagamento anterior (ex: renovação)
   if (convo.convertedUserId) {
     const existing = await db.user.findUnique({
       where: { id: convo.convertedUserId },
@@ -109,10 +114,15 @@ export async function toolGeneratePaymentLink(
         userEmail: existing.email,
         contractDurationMonths: months,
       })
+      await db.salesConversation.update({
+        where: { id: conversationId },
+        data: { stripeCheckoutSessionId: checkout.id },
+      })
       return { ok: true, url: checkout.url }
     }
   }
 
+  // Caso 2: email já pertence a um User existente — handoff
   const existingByEmail = await db.user.findUnique({
     where: { email: args.leadEmail },
   })
@@ -123,27 +133,21 @@ export async function toolGeneratePaymentLink(
     }
   }
 
-  const user = await db.user.create({
-    data: {
-      name: args.leadName,
-      email: args.leadEmail,
-      telefone: convo.phone,
-      role: "LICENCIADO",
-      plan: "PRO",
-      contractDurationMonths: months,
-    },
-  })
+  // Caso 3: lead novo. Expira checkout anterior (se houver) e cria novo.
+  // O User só será criado pelo webhook após confirmação do pagamento.
+  await expireCheckoutSessionSafe(convo.stripeCheckoutSessionId)
 
-  const checkout = await createLicenseCheckoutSession({
-    userId: user.id,
-    userEmail: user.email,
+  const checkout = await createLicenseCheckoutSessionForLead({
+    conversationId,
+    leadName: args.leadName,
+    leadEmail: args.leadEmail,
+    leadPhone: convo.phone,
     contractDurationMonths: months,
   })
 
   await db.salesConversation.update({
     where: { id: conversationId },
     data: {
-      convertedUserId: user.id,
       stripeCheckoutSessionId: checkout.id,
       stage: "AGUARDANDO_PAGAMENTO",
       leadName: args.leadName,

@@ -149,3 +149,59 @@ export async function createLicenseCheckoutSession({
 
   return session
 }
+
+export async function createLicenseCheckoutSessionForLead({
+  conversationId,
+  leadName,
+  leadEmail,
+  leadPhone,
+  contractDurationMonths,
+}: {
+  conversationId: string
+  leadName: string
+  leadEmail: string
+  leadPhone: string
+  contractDurationMonths: ContractDurationMonths
+}) {
+  const appUrl = resolveAppUrl()
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    payment_method_types: ["card"],
+    customer_email: leadEmail,
+    line_items: [
+      {
+        price_data: {
+          currency: "brl",
+          product_data: {
+            name: `OfficeBiz — Licença ${contractDurationMonths} meses`,
+          },
+          unit_amount: LICENSE_PRICE_CENTS,
+        },
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      type: "license-lead",
+      conversationId,
+      leadName,
+      leadEmail,
+      leadPhone,
+      contractDurationMonths: String(contractDurationMonths),
+    },
+    success_url: `${appUrl}/login?checkout=success`,
+    cancel_url: `${appUrl}/?checkout=cancelled`,
+  })
+
+  return session
+}
+
+export async function expireCheckoutSessionSafe(sessionId: string | null | undefined) {
+  if (!sessionId) return
+  try {
+    await stripe.checkout.sessions.expire(sessionId)
+  } catch (err) {
+    // Sessão pode já estar expirada/completed/inválida — não bloquear
+    console.warn("expireCheckoutSessionSafe failed:", (err as Error).message)
+  }
+}
