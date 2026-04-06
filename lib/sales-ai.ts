@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { sendText } from "@/lib/whatsapp"
-import { SALES_SYSTEM_PROMPT } from "@/lib/sales-ai-prompt"
+import { getSalesSystemPrompt } from "@/lib/app-settings"
 import { SALES_TOOLS, executeTool } from "@/lib/sales-ai-tools"
 
 const MAX_TOOL_ROUNDS = 3
@@ -33,8 +33,9 @@ export async function handleAiReply(conversationId: string): Promise<void> {
     return
   }
 
+  const systemPrompt = await getSalesSystemPrompt()
   const messages: ChatMessage[] = [
-    { role: "system", content: SALES_SYSTEM_PROMPT },
+    { role: "system", content: systemPrompt },
     ...convo.messages.map((m): ChatMessage => ({
       role: m.sender === "LEAD" ? "user" : "assistant",
       content: m.content,
