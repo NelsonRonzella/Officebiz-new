@@ -4,7 +4,11 @@ import { normalizePhone } from "@/lib/sales-phone"
 import { handleAiReply } from "@/lib/sales-ai"
 
 export async function POST(req: Request) {
-  if (req.headers.get("apikey") !== process.env.EVOLUTION_WEBHOOK_SECRET) {
+  const secret = process.env.EVOLUTION_WEBHOOK_SECRET
+  const url = new URL(req.url)
+  const providedSecret =
+    url.searchParams.get("secret") || req.headers.get("apikey")
+  if (!secret || providedSecret !== secret) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 })
   }
 
