@@ -5,6 +5,7 @@
 interface SendResult {
   success: boolean
   error?: string
+  messageId?: string
 }
 
 interface InstanceStatus {
@@ -63,7 +64,7 @@ export async function sendText(phone: string, message: string): Promise<SendResu
     method: "POST",
     body: JSON.stringify({
       number: phone,
-      textMessage: { text: message },
+      text: message,
     }),
   })
 
@@ -73,7 +74,15 @@ export async function sendText(phone: string, message: string): Promise<SendResu
     return { success: false, error: `Evolution API: ${res.status} ${body}`.trim() }
   }
 
-  return { success: true }
+  let messageId: string | undefined
+  try {
+    const data = (await res.json()) as { key?: { id?: string } }
+    messageId = data?.key?.id ?? undefined
+  } catch {
+    // ignore — sucesso sem id ainda é sucesso
+  }
+
+  return { success: true, messageId }
 }
 
 export async function sendMedia(

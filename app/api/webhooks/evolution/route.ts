@@ -1,7 +1,24 @@
-import { NextResponse } from "next/server"
+import { NextResponse, after } from "next/server"
 import { db } from "@/lib/db"
 import { normalizePhone } from "@/lib/sales-phone"
 import { handleAiReply } from "@/lib/sales-ai"
+
+// Ignora JIDs que não são conversas 1:1 (grupos, status, broadcast).
+function isDirectChat(remoteJid: string): boolean {
+  return (
+    !remoteJid.endsWith("@g.us") &&
+    !remoteJid.endsWith("@broadcast") &&
+    remoteJid !== "status@broadcast"
+  )
+}
+
+// Conjunto ampliado de tipos de mensagem de texto que a Evolution emite.
+const TEXT_MESSAGE_TYPES = new Set([
+  "conversation",
+  "extendedTextMessage",
+  "textMessage",
+  "ephemeralMessage",
+])
 
 export async function POST(req: Request) {
   const secret = process.env.EVOLUTION_WEBHOOK_SECRET
@@ -39,6 +56,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
+  if (!isDirectChat(data.key.remoteJid)) {
+    return NextResponse.json({ ok: true, skipped: "non-direct" })
+  }
+
   const phone = normalizePhone(data.key.remoteJid)
   if (!phone) return NextResponse.json({ ok: true })
 
@@ -53,8 +74,7 @@ export async function POST(req: Request) {
   }
 
   const messageType = data.messageType ?? ""
-  const isText =
-    messageType === "conversation" || messageType === "extendedTextMessage"
+  const isText = TEXT_MESSAGE_TYPES.has(messageType)
   const content = isText
     ? data.message?.conversation ??
       data.message?.extendedTextMessage?.text ??
@@ -75,6 +95,23 @@ export async function POST(req: Request) {
   })
 
   if (fromMe) {
+    // Echo da própria IA: a Evolution reenvia toda mensagem enviada via API
+    // como webhook fromMe=true. Se a última mensagem OUT recente for da IA com
+    // o mesmo conteúdo, ignoramos para não duplicar nem desligar aiEnabled.
+    const recentAiEcho = await db.salesMessage.findFirst({
+      where: {
+        conversationId: convo.id,
+        direction: "OUT",
+        sender: "AI",
+        content,
+        createdAt: { gte: new Date(Date.now() - 2 * 60 * 1000) },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+    if (recentAiEcho) {
+      return NextResponse.json({ ok: true, echo: true })
+    }
+
     await db.salesMessage.create({
       data: {
         conversationId: convo.id,
@@ -112,11 +149,13 @@ export async function POST(req: Request) {
     select: { aiEnabled: true },
   })
   if (fresh?.aiEnabled) {
-    try {
-      await handleAiReply(convo.id)
-    } catch (err) {
-      console.error("AI reply failed:", err)
-    }
+    // Responde 200 imediatamente para a Evolution não dar timeout/retry,
+    // mas garante a execução no Vercel via after() (waitUntil).
+    after(
+      handleAiReply(convo.id).catch((err) => {
+        console.error("AI reply failed:", err)
+      })
+    )
   }
 
   return NextResponse.json({ ok: true })

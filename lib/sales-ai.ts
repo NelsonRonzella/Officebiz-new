@@ -45,13 +45,18 @@ export async function handleAiReply(conversationId: string): Promise<void> {
   try {
     const finalText = await runToolLoop(apiKey, messages, conversationId)
     if (!finalText) return
-    await sendText(convo.phone, finalText)
+    const sendResult = await sendText(convo.phone, finalText)
+    if (!sendResult.success) {
+      console.error("sendText failed, not persisting AI message:", sendResult.error)
+      return
+    }
     await db.salesMessage.create({
       data: {
         conversationId,
         direction: "OUT",
         sender: "AI",
         content: finalText,
+        evolutionMsgId: sendResult.messageId ?? null,
       },
     })
   } catch (err) {
@@ -115,7 +120,7 @@ async function callOpenRouter(
         "X-Title": "OfficeBiz Sales AI",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-exp:free",
+        model: "meta-llama/llama-3.3-70b-instruct:free",
         messages,
         tools: SALES_TOOLS,
         temperature: 0.4,
