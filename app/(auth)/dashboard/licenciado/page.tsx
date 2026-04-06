@@ -5,6 +5,7 @@ import { db } from "@/lib/db"
 import { PlanCard } from "@/components/dashboard/plan-card"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { TrialBanner } from "@/components/dashboard/trial-banner"
+import { CLOSER_WHATSAPP_URL } from "@/lib/pricing"
 import {
   Card,
   CardContent,
@@ -19,6 +20,7 @@ export default async function LicenciadoDashboardPage() {
     telefone: true,
     plan: true,
     trialEndsAt: true,
+    contractEndsAt: true,
     stripeCurrentPeriodEnd: true,
     role: true,
   })
@@ -63,6 +65,21 @@ export default async function LicenciadoDashboardPage() {
       {/* Trial banner */}
       {user.plan === "TRIAL" && (
         <TrialBanner trialEndsAt={user.trialEndsAt} />
+      )}
+
+      {/* Expired contract banner */}
+      {user.plan === "PRO" && user.contractEndsAt && new Date(user.contractEndsAt) < new Date() && (
+        <div className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm">
+          <strong>Contrato expirado.</strong> Fale com um especialista para renovar:{" "}
+          <a
+            href={CLOSER_WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            WhatsApp
+          </a>
+        </div>
       )}
 
       {/* Plan card */}
