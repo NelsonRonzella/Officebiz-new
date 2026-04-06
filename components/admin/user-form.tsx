@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { fetchCep } from "@/lib/viacep"
+import {
+  CONTRACT_DURATION_OPTIONS,
+  DEFAULT_CONTRACT_MONTHS,
+  TRIAL_DURATION_DAYS,
+} from "@/lib/pricing"
 
 interface UserData {
   id: string
@@ -90,6 +95,8 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
   const [bairro, setBairro] = useState(user?.bairro || "")
   const [cidade, setCidade] = useState(user?.cidade || "")
   const [estado, setEstado] = useState(user?.estado || "")
+  const [initialPlan, setInitialPlan] = useState<"TRIAL" | "PRO">("PRO")
+  const [contractMonths, setContractMonths] = useState<number>(DEFAULT_CONTRACT_MONTHS)
   const [loading, setLoading] = useState(false)
   const [loadingCep, setLoadingCep] = useState(false)
 
@@ -138,6 +145,12 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
 
       if (!isEdit) {
         body.role = role
+        if (role === "LICENCIADO") {
+          body.initialPlan = initialPlan
+          if (initialPlan === "PRO") {
+            body.contractDurationMonths = String(contractMonths)
+          }
+        }
       }
 
       const url = isEdit ? `/api/users/${user.id}` : "/api/users"
@@ -234,6 +247,41 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
                   placeholder="nome-da-empresa"
                 />
               </div>
+            </div>
+          )}
+          {!isEdit && role === "LICENCIADO" && (
+            <div className="space-y-2">
+              <Label htmlFor="initialPlan">Plano inicial</Label>
+              <Select value={initialPlan} onValueChange={(v) => v && setInitialPlan(v as "TRIAL" | "PRO")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione o plano" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="TRIAL" label={`Trial (${TRIAL_DURATION_DAYS} dias)`}>
+                    Trial ({TRIAL_DURATION_DAYS} dias)
+                  </SelectItem>
+                  <SelectItem value="PRO" label="PRO (pagamento único)">
+                    PRO (pagamento único)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          {!isEdit && role === "LICENCIADO" && initialPlan === "PRO" && (
+            <div className="space-y-2">
+              <Label htmlFor="contractMonths">Duração do contrato</Label>
+              <Select value={String(contractMonths)} onValueChange={(v) => v && setContractMonths(Number(v))}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione a duração" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CONTRACT_DURATION_OPTIONS.map((m) => (
+                    <SelectItem key={m} value={String(m)} label={`${m} meses${m === 36 ? " (promo)" : ""}`}>
+                      {m} meses{m === 36 ? " (promo)" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
           <div className="space-y-2">
