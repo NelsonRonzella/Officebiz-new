@@ -62,6 +62,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
+  // [TEMP DEBUG @lid] — remover depois de capturar payload
+  if (data.key.remoteJid.endsWith("@lid")) {
+    await logError({
+      source: "WEBHOOK",
+      severity: "WARN",
+      message: "[DEBUG @lid] payload bruto messages.upsert",
+      context: { rawData: data as unknown as Record<string, unknown> },
+    })
+  }
+
   if (!isDirectChat(data.key.remoteJid)) {
     return NextResponse.json({ ok: true, skipped: "non-direct" })
   }
