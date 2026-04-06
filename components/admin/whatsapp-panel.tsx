@@ -20,6 +20,9 @@ import {
   QrCode,
   Loader2,
   Smartphone,
+  Shield,
+  Save,
+  RotateCcw,
 } from "lucide-react"
 import { toast } from "sonner"
 import { maskPhone, unmaskPhone } from "@/lib/masks"
@@ -37,6 +40,10 @@ export function WhatsAppPanel() {
   const [phone, setPhone] = useState("")
   const [message, setMessage] = useState("")
   const [sending, setSending] = useState(false)
+  const [promptValue, setPromptValue] = useState("")
+  const [promptIsDefault, setPromptIsDefault] = useState(false)
+  const [promptLoading, setPromptLoading] = useState(true)
+  const [promptSaving, setPromptSaving] = useState(false)
 
   const fetchStatus = useCallback(async () => {
     setStatusLoading(true)
@@ -59,6 +66,51 @@ export function WhatsAppPanel() {
     const interval = setInterval(fetchStatus, 30_000)
     return () => clearInterval(interval)
   }, [fetchStatus])
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch("/api/admin/settings/sales-prompt")
+        if (!res.ok) return
+        const data: { prompt: string; isDefault: boolean } = await res.json()
+        if (cancelled) return
+        setPromptValue(data.prompt)
+        setPromptIsDefault(data.isDefault)
+      } catch {
+        // noop
+      } finally {
+        if (!cancelled) setPromptLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function savePrompt(value: string | null) {
+    setPromptSaving(true)
+    try {
+      const res = await fetch("/api/admin/settings/sales-prompt", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: value }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        toast.error((data as { error?: string } | null)?.error ?? "Erro ao salvar")
+        return
+      }
+      const data: { prompt: string; isDefault: boolean } = await res.json()
+      setPromptValue(data.prompt)
+      setPromptIsDefault(data.isDefault)
+      toast.success(value === null ? "Padrão restaurado" : "Guardrails salvos")
+    } catch {
+      toast.error("Erro de conexão com o servidor")
+    } finally {
+      setPromptSaving(false)
+    }
+  }
 
   useEffect(() => {
     if (status?.connected !== false || !qrcode) return
@@ -121,6 +173,7 @@ export function WhatsAppPanel() {
   const isConnected = status?.connected === true
 
   return (
+    <div className="flex flex-col gap-6">
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
@@ -249,6 +302,52 @@ export function WhatsAppPanel() {
                 : "Enviar mensagem de teste"}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+    </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Shield className="size-4" />
+            Guardrails da IA de Vendas
+            {promptIsDefault && (
+              <Badge variant="outline" className="text-xs">Padrão</Badge>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <p className="text-xs text-muted-foreground">
+            Este texto define as regras da IA que responde no WhatsApp. Use Markdown livremente. Deixe vazio para usar o padrão.
+          </p>
+          <Textarea
+            value={promptValue}
+            onChange={(e) => setPromptValue(e.target.value)}
+            disabled={promptLoading || promptSaving}
+            className="min-h-[400px] font-mono text-sm"
+            placeholder="Carregando..."
+          />
+          <div className="flex gap-2">
+            <Button
+              onClick={() => savePrompt(promptValue)}
+              disabled={promptLoading || promptSaving}
+            >
+              {promptSaving ? (
+                <Loader2 className="size-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="size-4 mr-2" />
+              )}
+              Salvar
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => savePrompt(null)}
+              disabled={promptLoading || promptSaving}
+            >
+              <RotateCcw className="size-4 mr-2" />
+              Restaurar padrão
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
