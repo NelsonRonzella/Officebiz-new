@@ -1,27 +1,21 @@
 "use client";
 
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { SparkleStars, FloatingDots } from "@/components/illustrations/decorative-elements";
 import { SectionHeader } from "@/components/landing/section-header";
 import { Section } from "@/components/landing/section";
-
-const freeItems = [
-  "Taxa de Licença — R$ 0",
-  "Taxa de Setup — R$ 0",
-  "Taxa de Treinamento — R$ 0",
-];
+import { CLOSER_WHATSAPP_URL, LICENSE_PRICE_LABEL } from "@/lib/pricing";
 
 const includedItems = [
   "Plataforma completa de gestão",
   "Equipe de especialistas",
   "Suporte dedicado via WhatsApp",
   "Marca própria (white-label)",
-  "Sem fidelidade ou multa",
+  "Treinamento incluso",
 ];
 
 export function Pricing() {
@@ -33,7 +27,7 @@ export function Pricing() {
 
       <div className="relative z-10">
         <SectionHeader
-          subtitle="Investimento acessível"
+          subtitle="Investimento único"
           title="Quanto custa? Menos do que você imagina."
         />
 
@@ -53,54 +47,39 @@ export function Pricing() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-accent/[0.02] pointer-events-none" />
 
             <CardContent className="p-8 md:p-10 relative">
-              {/* Free items */}
-              <div className="space-y-3 mb-6">
-                {freeItems.map((item, i) => (
-                  <motion.div
-                    key={item}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex items-center gap-3"
-                  >
-                    <CheckCircle className="w-5 h-5 text-primary shrink-0" />
-                    <span className="text-foreground font-medium">{item}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <Separator className="my-6" />
+              {/* Label */}
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center mb-6">
+                Licença OfficeBiz
+              </p>
 
               {/* Price */}
               <div className="text-center space-y-2 mb-6">
-                <p className="text-sm text-muted-foreground uppercase tracking-wide font-medium">
-                  Manutenção mensal
-                </p>
                 <motion.p
                   initial={{ scale: 0.9, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
-                  className="text-5xl md:text-6xl font-bold text-primary"
+                  transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
+                  className="text-6xl md:text-7xl font-bold text-primary"
                 >
-                  R$ 390
-                  <span className="text-lg font-normal text-muted-foreground">
-                    /mês
-                  </span>
+                  {LICENSE_PRICE_LABEL}
                 </motion.p>
                 <p className="text-sm text-muted-foreground">
-                  Único custo. Sem surpresas. Sem fidelidade.
+                  pagamento único
                 </p>
-                <Badge
-                  variant="secondary"
-                  className="mt-2 bg-primary/10 text-primary border-primary/20"
-                >
-                  Cancele quando quiser
-                </Badge>
               </div>
 
-              <Separator className="my-6" />
+              {/* Main feature + promo */}
+              <div className="flex flex-col items-center gap-3 mb-8">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-primary shrink-0" />
+                  <span className="text-foreground font-semibold text-lg">
+                    2 anos de acesso
+                  </span>
+                </div>
+                <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-1.5">
+                  Promoção: 3 anos pelo mesmo preço
+                </Badge>
+              </div>
 
               {/* Included items */}
               <div className="space-y-2.5 mb-8">
@@ -113,30 +92,14 @@ export function Pricing() {
               </div>
 
               {/* CTA */}
-              <a href="#contact">
+              <a href={CLOSER_WHATSAPP_URL} target="_blank" rel="noreferrer">
                 <Button size="lg" className="w-full shadow-lg shadow-primary/20">
-                  Começar agora — R$ 0 de entrada
+                  <Phone className="w-4 h-4 mr-2" />
+                  Falar com especialista
                 </Button>
               </a>
             </CardContent>
           </Card>
-        </motion.div>
-
-        {/* Comparison text */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="max-w-2xl mx-auto mt-12 text-center"
-        >
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Montar sozinho</strong> custa de
-            R$ 5.000 a R$ 15.000 em equipe, ferramentas e infraestrutura.{" "}
-            <strong className="text-foreground">Com a OfficeBiz</strong>, você
-            começa com R$ 0 de entrada e paga apenas R$ 390/mês — com tudo
-            incluso.
-          </p>
         </motion.div>
       </div>
     </Section>
