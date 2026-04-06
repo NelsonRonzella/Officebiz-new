@@ -71,6 +71,7 @@ model User {
   notifications          Notification[]
   leadsBuscados          LeadBuscado[]
   productsPrestador      Product[]     @relation("ProductPrestador")
+  salesConversion        SalesConversation? @relation("SalesConversion")
 }
 
 model Account {
@@ -344,4 +345,45 @@ model LeadBuscado {
   user         User     @relation(fields: [userId], references: [id])
 
   @@unique([placeId, userId])
+}
+
+enum SalesStage {
+  NOVO
+  QUALIFICANDO
+  APRESENTADO
+  AGUARDANDO_PAGAMENTO
+  PAGO
+  PERDIDO
+}
+
+model SalesConversation {
+  id                      String         @id @default(cuid())
+  phone                   String         @unique
+  leadName                String?
+  leadEmail               String?
+  leadCity                String?
+  stage                   SalesStage     @default(NOVO)
+  aiEnabled               Boolean        @default(true)
+  lastMessageAt           DateTime       @default(now())
+  convertedUserId         String?        @unique
+  convertedUser           User?          @relation("SalesConversion", fields: [convertedUserId], references: [id])
+  stripeCheckoutSessionId String?
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  messages                SalesMessage[]
+
+  @@index([stage, lastMessageAt])
+}
+
+model SalesMessage {
+  id             String            @id @default(cuid())
+  conversationId String
+  conversation   SalesConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  direction      String
+  sender         String
+  content        String            @db.Text
+  evolutionMsgId String?           @unique
+  createdAt      DateTime          @default(now())
+
+  @@index([conversationId, createdAt])
 }
