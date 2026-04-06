@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { db } from "@/lib/db"
 import { notifyOrderParticipants } from "@/lib/order-notifications"
+import { sendText } from "@/lib/whatsapp"
 import type Stripe from "stripe"
 
 export async function POST(req: Request) {
@@ -52,6 +53,22 @@ export async function POST(req: Request) {
               stripePaymentIntentId: checkoutSession.payment_intent as string | null,
             },
           })
+
+          const salesConvo = await db.salesConversation.findUnique({
+            where: { convertedUserId: userId },
+          })
+          if (salesConvo) {
+            await db.salesConversation.update({
+              where: { id: salesConvo.id },
+              data: { stage: "PAGO" },
+            })
+            sendText(
+              salesConvo.phone,
+              `✅ *OfficeBiz* — Pagamento confirmado! Bem-vindo. Acesse: ${
+                process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"
+              }/login`
+            ).catch((err) => console.error("welcome WhatsApp failed:", err))
+          }
         } else {
           const orderId = checkoutSession.metadata?.orderId
           const userId = checkoutSession.metadata?.userId
