@@ -52,6 +52,8 @@ export const createUserSchema = z.object({
   bairro: z.string().optional(),
   cidade: z.string().optional(),
   estado: z.string().optional(),
+  initialPlan: z.enum(["TRIAL", "PRO"]).optional(),
+  contractDurationMonths: z.number().int().refine((v) => v === 24 || v === 36).optional(),
 })
 
 export const updateUserSchema = createUserSchema.partial().omit({ role: true })

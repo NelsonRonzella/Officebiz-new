@@ -6,6 +6,7 @@ import { createUserSchema, createClientSchema } from "@/lib/validations"
 import { sendInviteEmail } from "@/lib/email"
 import { sendText } from "@/lib/whatsapp"
 import { hasAccess } from "@/lib/subscription"
+import { TRIAL_DURATION_DAYS } from "@/lib/pricing"
 
 export async function GET(req: NextRequest) {
   try {
@@ -208,18 +209,32 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Auto-assign TRIAL plan when creating a LICENCIADO
-    const planData =
-      parsed.data.role === "LICENCIADO"
-        ? {
-            plan: "TRIAL" as const,
-            trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-          }
-        : {}
+    // Compute plan state for LICENCIADO based on form-selected initialPlan
+    let planData: {
+      plan: "TRIAL" | "PRO" | "FREE"
+      trialEndsAt?: Date | null
+      contractDurationMonths?: number | null
+    } = { plan: "FREE" }
+
+    if (parsed.data.role === "LICENCIADO") {
+      if (parsed.data.initialPlan === "TRIAL") {
+        const trialEndsAt = new Date()
+        trialEndsAt.setDate(trialEndsAt.getDate() + TRIAL_DURATION_DAYS)
+        planData = { plan: "TRIAL", trialEndsAt }
+      } else {
+        planData = {
+          plan: "PRO",
+          contractDurationMonths: parsed.data.contractDurationMonths ?? 24,
+        }
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { initialPlan: _initialPlan, contractDurationMonths: _contractDurationMonths, ...userFields } = parsed.data
 
     const user = await db.user.create({
       data: {
-        ...parsed.data,
+        ...userFields,
         ...planData,
         emailVerified: null,
         createdBy: currentUser.id,
