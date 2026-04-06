@@ -86,9 +86,9 @@ export async function getConnectedWhatsappNumber(): Promise<string> {
     return cache.number
   }
 
-  const url = process.env.EVOLUTION_API_URL ?? ""
-  const key = process.env.EVOLUTION_API_KEY ?? ""
-  const instance = process.env.EVOLUTION_API_INSTANCE ?? "officebiz"
+  const url = (process.env.EVOLUTION_API_URL ?? "").trim().replace(/\/$/, "")
+  const key = (process.env.EVOLUTION_API_KEY ?? "").trim()
+  const instance = (process.env.EVOLUTION_API_INSTANCE ?? "officebiz").trim()
 
   let resolved = CLOSER_WHATSAPP
 
