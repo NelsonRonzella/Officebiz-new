@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { advanceStep } from "@/lib/order-service"
-import { createNotification } from "@/lib/notifications"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -74,17 +74,20 @@ export async function PATCH(
       },
     })
 
-    // Notify order creator about step advancement
+    // Notify all participants about step advancement
     const stepTitle = updated?.currentStep?.title || "próxima etapa"
-    createNotification(
-      order.criadoPor,
-      "Pedido avançou de etapa",
-      nextStep
-        ? `O pedido avançou para: ${stepTitle}.`
-        : "Todas as etapas foram concluídas.",
-      "ORDER_UPDATE",
-      `/app/pedidos/${id}`
-    ).catch(console.error)
+    const stepMessage = nextStep
+      ? `O pedido avançou para: ${stepTitle}.`
+      : "Todas as etapas foram concluídas."
+    notifyOrderParticipants({
+      orderId: id,
+      excludeUserIds: [currentUser.id],
+      title: "Pedido avançou de etapa",
+      message: stepMessage,
+      emailSubject: "Pedido avançou de etapa — OfficeBiz",
+      emailBody: stepMessage,
+      whatsappMessage: `📋 *OfficeBiz* — ${stepMessage} Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${id}`,
+    }).catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

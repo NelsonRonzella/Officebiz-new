@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { createNotification, createBulkNotifications } from "@/lib/notifications"
-import { sendOrderPaidEmail } from "@/lib/email"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -53,37 +52,15 @@ export async function PATCH(
       data: { status: "PAGO" },
     })
 
-    // Notify order creator (licenciado): payment confirmed
-    createNotification(
-      order.criadoPor,
-      "Pagamento confirmado",
-      "O pagamento do pedido foi confirmado. Aguardando um prestador aceitar.",
-      "SUCCESS",
-      `/app/pedidos/${id}`
-    ).catch(console.error)
-
-    // Notify all prestadores: new order available
-    db.user
-      .findMany({ where: { role: "PRESTADOR", active: true }, select: { id: true } })
-      .then((prestadores) => {
-        const ids = prestadores.map((p) => p.id)
-        if (ids.length > 0) {
-          createBulkNotifications(
-            ids,
-            "Novo pedido disponível",
-            "Um novo pedido pago está disponível para aceitar.",
-            "ORDER_UPDATE",
-            `/app/pedidos/${id}`
-          )
-        }
-      })
-      .catch(console.error)
-
-    // Send email to client about payment confirmation
-    sendOrderPaidEmail(order.user.email, {
-      clientName: order.user.name || "Cliente",
-      productName: order.product.name,
+    // Notify all participants except the admin who marked as paid
+    notifyOrderParticipants({
       orderId: id,
+      excludeUserIds: [currentUser.id],
+      title: "Pagamento confirmado",
+      message: `O pagamento do pedido para ${order.product.name} foi confirmado.`,
+      emailSubject: `Pagamento confirmado — ${order.product.name}`,
+      emailBody: `O pagamento do pedido para <strong>${order.product.name}</strong> foi confirmado. O serviço será iniciado em breve.`,
+      whatsappMessage: `💰 *OfficeBiz* — Pagamento confirmado para o pedido "${order.product.name}". Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${id}`,
     }).catch(console.error)
 
     return NextResponse.json(updated)

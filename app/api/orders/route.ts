@@ -4,8 +4,7 @@ import { db } from "@/lib/db"
 import { canCreateOrders } from "@/lib/permissions"
 import { hasAccess } from "@/lib/subscription"
 import { createOrderSteps, createOrderCategories } from "@/lib/order-service"
-import { createBulkNotifications } from "@/lib/notifications"
-import { sendOrderCreatedEmail } from "@/lib/email"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 import { createOrderSchema } from "@/lib/validations"
 import { createOrderCheckoutSession } from "@/lib/stripe"
 
@@ -258,28 +257,15 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Notify admin users about new order
-    db.user
-      .findMany({ where: { role: "ADMIN" }, select: { id: true } })
-      .then((admins) => {
-        const adminIds = admins.map((a) => a.id)
-        if (adminIds.length > 0) {
-          createBulkNotifications(
-            adminIds,
-            "Novo pedido criado",
-            `Um novo pedido foi criado e está aguardando pagamento.`,
-            "ORDER_UPDATE",
-            `/app/pedidos/${order.id}`
-          )
-        }
-      })
-      .catch(console.error)
-
-    // Send email to client about new order
-    sendOrderCreatedEmail(client.email, {
-      clientName: client.name || "Cliente",
-      productName: product.name,
+    // Notify all participants about new order
+    notifyOrderParticipants({
       orderId: order.id,
+      excludeUserIds: [currentUser.id],
+      title: "Novo pedido criado",
+      message: `Um novo pedido para ${product.name} foi criado e está aguardando pagamento.`,
+      emailSubject: `Novo pedido criado — ${product.name}`,
+      emailBody: `Um novo pedido para <strong>${product.name}</strong> foi criado e está aguardando pagamento.`,
+      whatsappMessage: `📦 *OfficeBiz* — Novo pedido criado para "${product.name}". Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${order.id}`,
     }).catch(console.error)
 
     // Return created order with includes + checkout URL

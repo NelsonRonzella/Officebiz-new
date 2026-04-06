@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { createBulkNotifications } from "@/lib/notifications"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 import { orderMessageSchema } from "@/lib/validations"
 
 export async function POST(
@@ -92,21 +92,16 @@ export async function POST(
     })
 
     // Notify other participants (not the sender)
-    const participantIds = new Set<string>()
-    if (order.userId) participantIds.add(order.userId)
-    if (order.criadoPor) participantIds.add(order.criadoPor)
-    if (order.prestadorId) participantIds.add(order.prestadorId)
-    participantIds.delete(currentUser.id) // Don't notify the sender
-
-    if (participantIds.size > 0) {
-      createBulkNotifications(
-        Array.from(participantIds),
-        "Nova mensagem no pedido",
-        "Você recebeu uma nova mensagem em um dos seus pedidos.",
-        "INFO",
-        `/app/pedidos/${id}`
-      ).catch(console.error)
-    }
+    const senderName = orderMessage.user.name || "Alguém"
+    notifyOrderParticipants({
+      orderId: id,
+      excludeUserIds: [currentUser.id],
+      title: "Nova mensagem no pedido",
+      message: `${senderName} enviou uma nova mensagem no pedido.`,
+      emailSubject: "Nova mensagem no seu pedido — OfficeBiz",
+      emailBody: `${senderName} enviou uma nova mensagem em um dos seus pedidos. Acesse a plataforma para visualizar.`,
+      whatsappMessage: `📩 *OfficeBiz* — ${senderName} enviou uma nova mensagem no seu pedido. Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${id}`,
+    }).catch(console.error)
 
     return NextResponse.json(orderMessage, { status: 201 })
   } catch (error) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { startFirstStep } from "@/lib/order-service"
-import { createNotification, createBulkNotifications } from "@/lib/notifications"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -64,35 +64,16 @@ export async function PATCH(
       await startFirstStep(order.id)
     }
 
-    // Notify order creator: prestador accepted
-    createNotification(
-      order.criadoPor,
-      "Prestador aceitou o pedido",
-      "Um prestador aceitou o seu pedido e o trabalho está em andamento.",
-      "SUCCESS",
-      `/app/pedidos/${id}`
-    ).catch(console.error)
-
-    // Notify admins
-    db.user
-      .findMany({ where: { role: "ADMIN" }, select: { id: true } })
-      .then(async (admins) => {
-        const prestador = await db.user.findUnique({
-          where: { id: currentUser.id },
-          select: { name: true },
-        })
-        const adminIds = admins.map((a) => a.id)
-        if (adminIds.length > 0) {
-          createBulkNotifications(
-            adminIds,
-            "Pedido aceito",
-            `Pedido aceito por ${prestador?.name || "prestador"}.`,
-            "ORDER_UPDATE",
-            `/app/pedidos/${id}`
-          )
-        }
-      })
-      .catch(console.error)
+    // Notify all participants except the prestador who accepted
+    notifyOrderParticipants({
+      orderId: id,
+      excludeUserIds: [currentUser.id],
+      title: "Prestador aceitou o pedido",
+      message: "Um prestador aceitou o pedido e o trabalho está em andamento.",
+      emailSubject: "Pedido aceito — OfficeBiz",
+      emailBody: "Um prestador aceitou o seu pedido e o trabalho está em andamento.",
+      whatsappMessage: `✅ *OfficeBiz* — Um prestador aceitou o seu pedido e o trabalho está em andamento. Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${id}`,
+    }).catch(console.error)
 
     return NextResponse.json(updated)
   } catch (error) {

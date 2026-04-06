@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { createNotification } from "@/lib/notifications"
-import { sendOrderCompletedEmail } from "@/lib/email"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 
 export async function PATCH(
   _req: NextRequest,
@@ -56,31 +55,15 @@ export async function PATCH(
       },
     })
 
-    // Notify order creator (licenciado)
-    createNotification(
-      order.criadoPor,
-      "Pedido concluído!",
-      "O pedido foi marcado como concluído.",
-      "SUCCESS",
-      `/app/pedidos/${id}`
-    ).catch(console.error)
-
-    // Notify client (order.userId) if different from creator
-    if (order.userId !== order.criadoPor) {
-      createNotification(
-        order.userId,
-        "Serviço concluído",
-        "O serviço do seu pedido foi concluído com sucesso.",
-        "SUCCESS",
-        `/app/pedidos/${id}`
-      ).catch(console.error)
-    }
-
-    // Send email to client about order completion
-    sendOrderCompletedEmail(order.user.email, {
-      clientName: order.user.name || "Cliente",
-      productName: order.product.name,
+    // Notify all participants except the admin who concluded
+    notifyOrderParticipants({
       orderId: id,
+      excludeUserIds: [currentUser.id],
+      title: "Pedido concluído!",
+      message: `O pedido para ${order.product.name} foi concluído com sucesso.`,
+      emailSubject: `Pedido concluído — ${order.product.name}`,
+      emailBody: `O serviço para <strong>${order.product.name}</strong> foi concluído com sucesso. Obrigado por utilizar a OfficeBiz!`,
+      whatsappMessage: `🎉 *OfficeBiz* — O pedido "${order.product.name}" foi concluído com sucesso! Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${id}`,
     }).catch(console.error)
 
     return NextResponse.json(updated)

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { db } from "@/lib/db"
-import { createBulkNotifications } from "@/lib/notifications"
+import { notifyOrderParticipants } from "@/lib/order-notifications"
 import type Stripe from "stripe"
 
 export async function POST(req: Request) {
@@ -42,35 +42,15 @@ export async function POST(req: Request) {
             },
           })
 
-          // Notify prestadores that a new paid order is available
-          const prestadores = await db.user.findMany({
-            where: { role: "PRESTADOR", active: true },
-            select: { id: true },
-          })
-          if (prestadores.length > 0) {
-            createBulkNotifications(
-              prestadores.map((p) => p.id),
-              "Novo pedido disponível",
-              "Um novo pedido foi pago e está disponível para execução.",
-              "ORDER_UPDATE",
-              `/app/pedidos/${orderId}`
-            ).catch(console.error)
-          }
-
-          // Notify admins
-          const admins = await db.user.findMany({
-            where: { role: "ADMIN" },
-            select: { id: true },
-          })
-          if (admins.length > 0) {
-            createBulkNotifications(
-              admins.map((a) => a.id),
-              "Pagamento confirmado",
-              "Um pedido foi pago e está pronto para execução.",
-              "SUCCESS",
-              `/app/pedidos/${orderId}`
-            ).catch(console.error)
-          }
+          // Notify all order participants about payment
+          notifyOrderParticipants({
+            orderId,
+            title: "Pagamento confirmado",
+            message: "O pagamento do pedido foi confirmado via Stripe.",
+            emailSubject: "Pagamento confirmado — OfficeBiz",
+            emailBody: "O pagamento do seu pedido foi confirmado. O serviço será iniciado em breve.",
+            whatsappMessage: `💰 *OfficeBiz* — Pagamento confirmado para o seu pedido. Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${orderId}`,
+          }).catch(console.error)
         } else if (userId) {
           // Subscription payment flow
           const subscription = await stripe.subscriptions.retrieve(
