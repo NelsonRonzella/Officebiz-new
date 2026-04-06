@@ -49,6 +49,9 @@ model User {
   stripePriceId          String?
   stripeSubscriptionId   String?   @unique
   stripeCurrentPeriodEnd DateTime?
+  contractDurationMonths  Int?
+  contractEndsAt          DateTime?
+  contractExpiryNotified  Json?
   createdBy              String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
