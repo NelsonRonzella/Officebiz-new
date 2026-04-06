@@ -375,6 +375,12 @@ model SalesConversation {
   @@index([stage, lastMessageAt])
 }
 
+model AppSettings {
+  id                String   @id @default("singleton")
+  salesSystemPrompt String?  @db.Text
+  updatedAt         DateTime @updatedAt
+}
+
 model SalesMessage {
   id             String            @id @default(cuid())
   conversationId String
