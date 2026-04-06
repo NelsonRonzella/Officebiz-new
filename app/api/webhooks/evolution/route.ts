@@ -2,6 +2,7 @@ import { NextResponse, after } from "next/server"
 import { db } from "@/lib/db"
 import { normalizePhone } from "@/lib/sales-phone"
 import { handleAiReply } from "@/lib/sales-ai"
+import { logError } from "@/lib/error-log"
 
 // Ignora JIDs que não são conversas 1:1 (grupos, status, broadcast).
 function isDirectChat(remoteJid: string): boolean {
@@ -44,6 +45,11 @@ export async function POST(req: Request) {
   try {
     event = await req.json()
   } catch {
+    await logError({
+      source: "WEBHOOK",
+      message: "Webhook recebeu JSON inválido",
+      severity: "WARN",
+    })
     return NextResponse.json({ error: "invalid json" }, { status: 400 })
   }
 
@@ -152,8 +158,12 @@ export async function POST(req: Request) {
     // Responde 200 imediatamente para a Evolution não dar timeout/retry,
     // mas garante a execução no Vercel via after() (waitUntil).
     after(
-      handleAiReply(convo.id).catch((err) => {
-        console.error("AI reply failed:", err)
+      handleAiReply(convo.id).catch(async (err) => {
+        await logError({
+          source: "AI_REPLY",
+          message: `handleAiReply (after) falhou: ${(err as Error).message}`,
+          context: { conversationId: convo.id, phone },
+        })
       })
     )
   }

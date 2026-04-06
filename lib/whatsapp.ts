@@ -2,6 +2,8 @@
 // Evolution API client — central WhatsApp integration
 // ---------------------------------------------------------------------------
 
+import { logError } from "@/lib/error-log"
+
 interface SendResult {
   success: boolean
   error?: string
@@ -36,7 +38,11 @@ async function evolutionFetch(
 ): Promise<Response | null> {
   const { url, key } = getConfig()
   if (!url || !key) {
-    console.error("[evolution] missing config", { hasUrl: !!url, hasKey: !!key })
+    await logError({
+      source: "EVOLUTION_CONNECTION",
+      message: "Evolution API não configurada (URL/KEY ausente)",
+      context: { hasUrl: !!url, hasKey: !!key, path },
+    })
     return null
   }
 
@@ -55,7 +61,11 @@ async function evolutionFetch(
     clearTimeout(timeout)
     return res
   } catch (err) {
-    console.error("[evolution] fetch failed", path, err)
+    await logError({
+      source: "EVOLUTION_CONNECTION",
+      message: `Falha de conexão com Evolution API: ${(err as Error).message}`,
+      context: { path },
+    })
     return null
   }
 }
@@ -75,7 +85,11 @@ export async function sendText(phone: string, message: string): Promise<SendResu
   if (!res) return { success: false, error: "Falha na conexão com Evolution API" }
   if (!res.ok) {
     const body = await res.text().catch(() => "")
-    console.error("[evolution] sendText non-ok", res.status, body)
+    await logError({
+      source: "WHATSAPP_SEND",
+      message: `sendText falhou: ${res.status}`,
+      context: { phone, status: res.status, body: body.slice(0, 1000), messagePreview: message.slice(0, 200) },
+    })
     return { success: false, error: `Evolution API: ${res.status} ${body}`.trim() }
   }
 
@@ -105,7 +119,15 @@ export async function sendMedia(
   })
 
   if (!res) return { success: false, error: "Falha na conexão com Evolution API" }
-  if (!res.ok) return { success: false, error: `Evolution API: ${res.status}` }
+  if (!res.ok) {
+    const body = await res.text().catch(() => "")
+    await logError({
+      source: "WHATSAPP_SEND",
+      message: `sendMedia falhou: ${res.status}`,
+      context: { phone, status: res.status, body: body.slice(0, 1000), mediaUrl, mediatype },
+    })
+    return { success: false, error: `Evolution API: ${res.status}` }
+  }
 
   return { success: true }
 }

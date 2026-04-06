@@ -23,6 +23,7 @@ import {
   MessageCircle,
   MessageSquare,
   GraduationCap,
+  AlertTriangle,
 } from "lucide-react"
 import {
   AlertDialog,
@@ -61,6 +62,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Buscador de Leads", href: "/admin/leads", icon: MapPin },
         { label: "WhatsApp", href: "/admin/whatsapp", icon: MessageCircle },
         { label: "Vendas", href: "/admin/vendas", icon: MessageSquare },
+        { label: "Erros do Sistema", href: "/admin/erros", icon: AlertTriangle },
       ]
     case "LICENCIADO":
       return [

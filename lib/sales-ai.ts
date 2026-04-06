@@ -2,6 +2,7 @@ import { db } from "@/lib/db"
 import { sendText } from "@/lib/whatsapp"
 import { getSalesSystemPrompt } from "@/lib/app-settings"
 import { SALES_TOOLS, executeTool } from "@/lib/sales-ai-tools"
+import { logError } from "@/lib/error-log"
 
 const MAX_TOOL_ROUNDS = 3
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -29,7 +30,11 @@ export async function handleAiReply(conversationId: string): Promise<void> {
 
   const apiKey = process.env.OPENROUTER_API_KEY?.trim()
   if (!apiKey) {
-    console.error("OPENROUTER_API_KEY not set")
+    await logError({
+      source: "AI_REPLY",
+      message: "OPENROUTER_API_KEY não configurada",
+      context: { conversationId },
+    })
     return
   }
 
@@ -47,7 +52,11 @@ export async function handleAiReply(conversationId: string): Promise<void> {
     if (!finalText) return
     const sendResult = await sendText(convo.phone, finalText)
     if (!sendResult.success) {
-      console.error("sendText failed, not persisting AI message:", sendResult.error)
+      await logError({
+        source: "AI_REPLY",
+        message: `IA gerou resposta mas o envio falhou: ${sendResult.error}`,
+        context: { conversationId, phone: convo.phone, replyPreview: finalText.slice(0, 200) },
+      })
       return
     }
     await db.salesMessage.create({
@@ -60,7 +69,11 @@ export async function handleAiReply(conversationId: string): Promise<void> {
       },
     })
   } catch (err) {
-    console.error("handleAiReply failed:", err)
+    await logError({
+      source: "AI_REPLY",
+      message: `handleAiReply falhou: ${(err as Error).message}`,
+      context: { conversationId, stack: (err as Error).stack?.slice(0, 1000) },
+    })
   }
 }
 
@@ -136,7 +149,13 @@ async function callOpenRouter(
       signal: controller.signal,
     })
     if (!res.ok) {
-      throw new Error(`OpenRouter ${res.status}: ${await res.text()}`)
+      const body = await res.text()
+      await logError({
+        source: "OPENROUTER",
+        message: `OpenRouter respondeu ${res.status}`,
+        context: { status: res.status, body: body.slice(0, 1000) },
+      })
+      throw new Error(`OpenRouter ${res.status}: ${body}`)
     }
     return await res.json()
   } finally {

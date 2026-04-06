@@ -375,6 +375,34 @@ model SalesConversation {
   @@index([stage, lastMessageAt])
 }
 
+enum SystemErrorSource {
+  WEBHOOK
+  AI_REPLY
+  WHATSAPP_SEND
+  OPENROUTER
+  EVOLUTION_CONNECTION
+  ADMIN_SEND
+  OTHER
+}
+
+enum SystemErrorSeverity {
+  ERROR
+  WARN
+}
+
+model SystemError {
+  id        String              @id @default(cuid())
+  source    SystemErrorSource
+  severity  SystemErrorSeverity @default(ERROR)
+  message   String              @db.Text
+  context   Json?
+  resolved  Boolean             @default(false)
+  createdAt DateTime            @default(now())
+
+  @@index([resolved, createdAt(sort: Desc)])
+  @@index([source, createdAt(sort: Desc)])
+}
+
 model AppSettings {
   id                String   @id @default("singleton")
   salesSystemPrompt String?  @db.Text

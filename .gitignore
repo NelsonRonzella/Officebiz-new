@@ -58,3 +58,9 @@ storybook-static
 
 .vercel
 .env*.local
+
+# Local infra (contém segredos)
+.evolution-v2/
+.evolution-backup/
+.vercel-env-tmp
+.env.vercel.tmp

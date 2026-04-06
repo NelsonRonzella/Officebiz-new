@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { sendText } from "@/lib/whatsapp"
+import { logError } from "@/lib/error-log"
 
 export async function POST(
   req: Request,
@@ -33,7 +34,11 @@ export async function POST(
 
   const sendResult = await sendText(convo.phone, content)
   if (!sendResult.success) {
-    console.error("[admin/vendas/send] sendText failed", sendResult.error)
+    await logError({
+      source: "ADMIN_SEND",
+      message: `Envio manual pelo admin falhou: ${sendResult.error}`,
+      context: { conversationId: id, phone: convo.phone, contentPreview: content.slice(0, 200) },
+    })
     return NextResponse.json(
       { error: sendResult.error ?? "Falha ao enviar pelo WhatsApp" },
       { status: 502 }
