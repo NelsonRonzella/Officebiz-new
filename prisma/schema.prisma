@@ -359,6 +359,7 @@ enum SalesStage {
 model SalesConversation {
   id                      String         @id @default(cuid())
   phone                   String         @unique
+  lidJid                  String?
   leadName                String?
   leadEmail               String?
   leadCity                String?

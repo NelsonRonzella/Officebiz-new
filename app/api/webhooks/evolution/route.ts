@@ -1,6 +1,6 @@
 import { NextResponse, after } from "next/server"
 import { db } from "@/lib/db"
-import { normalizePhone } from "@/lib/sales-phone"
+import { normalizePhone, isLidJid, resolveLidToPhone } from "@/lib/sales-phone"
 import { handleAiReply } from "@/lib/sales-ai"
 import { logError } from "@/lib/error-log"
 
@@ -66,8 +66,35 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, skipped: "non-direct" })
   }
 
-  const phone = normalizePhone(data.key.remoteJid)
+  const remoteJid = data.key.remoteJid
+  const isLid = isLidJid(remoteJid)
+  let lidJid: string | null = null
+  let phone: string
+
+  if (isLid) {
+    lidJid = remoteJid
+    const resolved = await resolveLidToPhone(remoteJid)
+    if (resolved) {
+      phone = resolved
+    } else {
+      // Fallback: identifica a conversa pelo próprio LID até conseguirmos
+      // resolver. A IA fica desativada porque não dá pra responder pra @lid.
+      phone = `lid:${remoteJid.split("@")[0]}`
+      await logError({
+        source: "WEBHOOK",
+        message: "Mensagem recebida com LID não resolvido — IA desativada",
+        severity: "WARN",
+        context: { remoteJid, lidPhoneKey: phone, pushName: undefined },
+      })
+    }
+  } else {
+    phone = normalizePhone(remoteJid)
+  }
+
   if (!phone) return NextResponse.json({ ok: true })
+
+  // LID não resolvido nunca tem IA ativa (não dá pra enviar pra @lid)
+  const lidUnresolved = isLid && phone.startsWith("lid:")
 
   const evolutionMsgId = data.key.id ?? null
   const fromMe = data.key.fromMe === true
@@ -91,12 +118,14 @@ export async function POST(req: Request) {
     where: { phone },
     create: {
       phone,
+      lidJid,
       lastMessageAt: new Date(),
-      aiEnabled: isText,
+      aiEnabled: isText && !lidUnresolved,
     },
     update: {
       lastMessageAt: new Date(),
-      ...(isText ? {} : { aiEnabled: false }),
+      ...(lidJid ? { lidJid } : {}),
+      ...(isText && !lidUnresolved ? {} : { aiEnabled: false }),
     },
   })
 
