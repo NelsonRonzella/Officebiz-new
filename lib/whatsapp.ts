@@ -64,7 +64,7 @@ export async function sendText(phone: string, message: string): Promise<SendResu
     method: "POST",
     body: JSON.stringify({
       number: phone,
-      text: message,
+      textMessage: { text: message },
     }),
   })
 

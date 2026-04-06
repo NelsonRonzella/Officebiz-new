@@ -120,7 +120,13 @@ async function callOpenRouter(
         "X-Title": "OfficeBiz Sales AI",
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-3.3-70b-instruct:free",
+        // Tenta o modelo free primeiro; se falhar/rate-limit, OpenRouter
+        // cai automaticamente para o pago barato (centavos por conversa).
+        // Docs: https://openrouter.ai/docs/features/model-routing#fallback-models
+        models: [
+          "meta-llama/llama-3.3-70b-instruct:free",
+          "openai/gpt-4o-mini",
+        ],
         messages,
         tools: SALES_TOOLS,
         temperature: 0.4,
