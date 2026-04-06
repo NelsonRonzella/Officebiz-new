@@ -31,7 +31,14 @@ export async function POST(
     return NextResponse.json({ error: "Não encontrada" }, { status: 404 })
   }
 
-  await sendText(convo.phone, content)
+  const sendResult = await sendText(convo.phone, content)
+  if (!sendResult.success) {
+    console.error("[admin/vendas/send] sendText failed", sendResult.error)
+    return NextResponse.json(
+      { error: sendResult.error ?? "Falha ao enviar pelo WhatsApp" },
+      { status: 502 }
+    )
+  }
 
   await db.salesConversation.update({
     where: { id },
@@ -44,6 +51,7 @@ export async function POST(
       direction: "OUT",
       sender: "ADMIN",
       content,
+      evolutionMsgId: sendResult.messageId ?? null,
     },
   })
 

@@ -35,7 +35,10 @@ async function evolutionFetch(
   options: RequestInit = {}
 ): Promise<Response | null> {
   const { url, key } = getConfig()
-  if (!url || !key) return null
+  if (!url || !key) {
+    console.error("[evolution] missing config", { hasUrl: !!url, hasKey: !!key })
+    return null
+  }
 
   try {
     const controller = new AbortController()
@@ -51,7 +54,8 @@ async function evolutionFetch(
     })
     clearTimeout(timeout)
     return res
-  } catch {
+  } catch (err) {
+    console.error("[evolution] fetch failed", path, err)
     return null
   }
 }
@@ -71,6 +75,7 @@ export async function sendText(phone: string, message: string): Promise<SendResu
   if (!res) return { success: false, error: "Falha na conexão com Evolution API" }
   if (!res.ok) {
     const body = await res.text().catch(() => "")
+    console.error("[evolution] sendText non-ok", res.status, body)
     return { success: false, error: `Evolution API: ${res.status} ${body}`.trim() }
   }
 
