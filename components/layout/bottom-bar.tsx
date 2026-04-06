@@ -218,7 +218,7 @@ export function BottomBar({ role }: BottomBarProps) {
             </Link>
           ))}
 
-          {hasMore && (
+          {hasMore ? (
             <button
               onClick={() => setMoreOpen((v) => !v)}
               className={cn(
@@ -230,6 +230,14 @@ export function BottomBar({ role }: BottomBarProps) {
             >
               <MoreHorizontal className="size-5" />
               Mais
+            </button>
+          ) : (
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex flex-1 flex-col items-center gap-0.5 py-1 text-[10px] font-medium text-muted-foreground transition-colors"
+            >
+              <LogOut className="size-5" />
+              Sair
             </button>
           )}
         </div>
