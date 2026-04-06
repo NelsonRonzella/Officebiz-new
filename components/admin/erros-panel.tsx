@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useCallback, useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -62,61 +61,80 @@ const SOURCE_COLORS: Record<string, string> = {
 }
 
 export function ErrosPanel() {
-  const qc = useQueryClient()
   const [source, setSource] = useState("")
   const [severity, setSeverity] = useState("")
   const [resolved, setResolved] = useState("false")
   const [range, setRange] = useState("7d")
   const [page, setPage] = useState(1)
+  const [data, setData] = useState<ListResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [actionPending, setActionPending] = useState(false)
   const [selected, setSelected] = useState<SystemErrorRow | null>(null)
 
-  const params = new URLSearchParams({
-    source,
-    severity,
-    resolved,
-    range,
-    page: String(page),
-  })
-
-  const { data, isLoading } = useQuery<ListResponse>({
-    queryKey: ["admin-erros", params.toString()],
-    queryFn: async () => {
+  const fetchList = useCallback(async () => {
+    const params = new URLSearchParams({
+      source,
+      severity,
+      resolved,
+      range,
+      page: String(page),
+    })
+    setLoading(true)
+    try {
       const res = await fetch(`/api/admin/erros?${params}`)
       if (!res.ok) throw new Error("Falha ao carregar erros")
-      return res.json()
-    },
-    refetchInterval: 15000,
-  })
+      const json = (await res.json()) as ListResponse
+      setData(json)
+    } catch (err) {
+      toast.error((err as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }, [source, severity, resolved, range, page])
 
-  const resolveMutation = useMutation({
-    mutationFn: async ({ id, resolved }: { id: string; resolved: boolean }) => {
+  useEffect(() => {
+    fetchList()
+  }, [fetchList])
+
+  // Auto-refresh a cada 15s
+  useEffect(() => {
+    const id = setInterval(fetchList, 15000)
+    return () => clearInterval(id)
+  }, [fetchList])
+
+  async function toggleResolved(row: SystemErrorRow) {
+    setActionPending(true)
+    try {
       const res = await fetch("/api/admin/erros", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, resolved }),
+        body: JSON.stringify({ id: row.id, resolved: !row.resolved }),
       })
       if (!res.ok) throw new Error("Falha ao atualizar")
-      return res.json()
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin-erros"] })
-      toast.success("Erro atualizado")
-    },
-    onError: (err: Error) => toast.error(err.message),
-  })
+      toast.success(row.resolved ? "Erro reaberto" : "Erro resolvido")
+      fetchList()
+    } catch (err) {
+      toast.error((err as Error).message)
+    } finally {
+      setActionPending(false)
+    }
+  }
 
-  const cleanupMutation = useMutation({
-    mutationFn: async () => {
+  async function cleanupResolved() {
+    if (!confirm("Remover todos os erros marcados como resolvidos?")) return
+    setActionPending(true)
+    try {
       const res = await fetch("/api/admin/erros?scope=resolved", { method: "DELETE" })
       if (!res.ok) throw new Error("Falha ao limpar")
-      return res.json()
-    },
-    onSuccess: (data: { deleted: number }) => {
-      qc.invalidateQueries({ queryKey: ["admin-erros"] })
-      toast.success(`${data.deleted} erros resolvidos removidos`)
-    },
-    onError: (err: Error) => toast.error(err.message),
-  })
+      const json = (await res.json()) as { deleted: number }
+      toast.success(`${json.deleted} erros resolvidos removidos`)
+      fetchList()
+    } catch (err) {
+      toast.error((err as Error).message)
+    } finally {
+      setActionPending(false)
+    }
+  }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1
 
@@ -200,12 +218,8 @@ export function ErrosPanel() {
             <Button
               variant="outline"
               size="sm"
-              disabled={cleanupMutation.isPending}
-              onClick={() => {
-                if (confirm("Remover todos os erros marcados como resolvidos?")) {
-                  cleanupMutation.mutate()
-                }
-              }}
+              disabled={actionPending}
+              onClick={cleanupResolved}
             >
               Limpar resolvidos
             </Button>
@@ -214,7 +228,7 @@ export function ErrosPanel() {
       </Card>
 
       <Card className="overflow-hidden">
-        {isLoading ? (
+        {loading && !data ? (
           <div className="p-8 text-center text-sm text-muted-foreground">Carregando...</div>
         ) : !data || data.items.length === 0 ? (
           <div className="p-8 text-center text-sm text-muted-foreground">
@@ -251,10 +265,8 @@ export function ErrosPanel() {
                   <Button
                     variant={row.resolved ? "outline" : "default"}
                     size="sm"
-                    disabled={resolveMutation.isPending}
-                    onClick={() =>
-                      resolveMutation.mutate({ id: row.id, resolved: !row.resolved })
-                    }
+                    disabled={actionPending}
+                    onClick={() => toggleResolved(row)}
                   >
                     {row.resolved ? "Reabrir" : "Resolver"}
                   </Button>
