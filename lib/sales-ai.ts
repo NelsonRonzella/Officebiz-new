@@ -6,6 +6,9 @@ import { logError } from "@/lib/error-log"
 
 const MAX_TOOL_ROUNDS = 3
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+const OPENROUTER_TIMEOUT_MS = 45_000
+const FALLBACK_REPLY =
+  "Oi! Recebi sua mensagem e em instantes um atendente vai te responder 🙏"
 
 type ChatMessage =
   | { role: "system"; content: string }
@@ -50,6 +53,10 @@ export async function handleAiReply(conversationId: string): Promise<void> {
   try {
     const finalText = await runToolLoop(apiKey, messages, conversationId)
     if (!finalText) return
+    if (finalText === FALLBACK_REPLY) {
+      await sendFallback(convo.id, convo.phone)
+      return
+    }
     const sendResult = await sendText(convo.phone, finalText)
     if (!sendResult.success) {
       await logError({
@@ -69,10 +76,41 @@ export async function handleAiReply(conversationId: string): Promise<void> {
       },
     })
   } catch (err) {
+    const e = err as Error
+    const isAbort = e.name === "AbortError" || /aborted/i.test(e.message)
     await logError({
       source: "AI_REPLY",
-      message: `handleAiReply falhou: ${(err as Error).message}`,
-      context: { conversationId, stack: (err as Error).stack?.slice(0, 1000) },
+      severity: isAbort ? "WARN" : "ERROR",
+      message: `handleAiReply falhou: ${e.message}`,
+      context: { conversationId, stack: e.stack?.slice(0, 1000) },
+    })
+    await sendFallback(conversationId, convo.phone)
+  }
+}
+
+async function sendFallback(conversationId: string, phone: string): Promise<void> {
+  try {
+    const sendResult = await sendText(phone, FALLBACK_REPLY)
+    if (sendResult.success) {
+      await db.salesMessage.create({
+        data: {
+          conversationId,
+          direction: "OUT",
+          sender: "AI",
+          content: FALLBACK_REPLY,
+          evolutionMsgId: sendResult.messageId ?? null,
+        },
+      })
+    }
+    await db.salesConversation.update({
+      where: { id: conversationId },
+      data: { aiEnabled: false },
+    })
+  } catch (err) {
+    await logError({
+      source: "AI_REPLY",
+      message: `sendFallback falhou: ${(err as Error).message}`,
+      context: { conversationId },
     })
   }
 }
@@ -112,7 +150,7 @@ async function runToolLoop(
 
     return choice.content ?? null
   }
-  return "Tive um problema técnico, um humano vai te responder em breve."
+  return FALLBACK_REPLY
 }
 
 async function callOpenRouter(
@@ -122,7 +160,7 @@ async function callOpenRouter(
   choices?: Array<{ message: { content: string | null; tool_calls?: ToolCall[] } }>
 }> {
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 20_000)
+  const timeout = setTimeout(() => controller.abort(), OPENROUTER_TIMEOUT_MS)
   try {
     const res = await fetch(OPENROUTER_URL, {
       method: "POST",
@@ -138,6 +176,7 @@ async function callOpenRouter(
         // disparar 402 (a conta não tem créditos).
         // Docs: https://openrouter.ai/docs/features/model-routing#fallback-models
         models: [
+          "openai/gpt-4o-mini",
           "openrouter/free",
           "openai/gpt-oss-20b:free",
           "minimax/minimax-m2.5:free",
