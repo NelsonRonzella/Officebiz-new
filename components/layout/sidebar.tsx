@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   MapPin,
   MessageCircle,
+  MessageSquare,
   GraduationCap,
 } from "lucide-react"
 import {
@@ -59,6 +60,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Consultar INPI", href: "/admin/consultas/inpi", icon: ShieldCheck },
         { label: "Buscador de Leads", href: "/admin/leads", icon: MapPin },
         { label: "WhatsApp", href: "/admin/whatsapp", icon: MessageCircle },
+        { label: "Vendas", href: "/admin/vendas", icon: MessageSquare },
       ]
     case "LICENCIADO":
       return [

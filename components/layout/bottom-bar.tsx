@@ -20,6 +20,7 @@ import {
   Headphones,
   LogOut,
   MoreHorizontal,
+  MessageSquare,
   X,
   GraduationCap,
 } from "lucide-react"
@@ -64,6 +65,7 @@ function getBottomBarConfig(role?: Role): BottomBarConfig {
           { label: "Dominio", href: "/admin/consultas/dominio", icon: Globe },
           { label: "INPI", href: "/admin/consultas/inpi", icon: ShieldCheck },
           { label: "Leads", href: "/admin/leads", icon: MapPin },
+          { label: "Vendas", href: "/admin/vendas", icon: MessageSquare },
           { label: "Perfil", href: "/admin/profile", icon: User },
           { label: "Suporte", href: "/suporte", icon: Headphones },
         ],
