@@ -38,6 +38,7 @@ export default async function EditarTutorialPage({
     title: tutorial.title,
     description: tutorial.description,
     link: tutorial.link,
+    category: tutorial.category,
     products: tutorial.products.map((tp) => ({
       id: tp.product.id,
       name: tp.product.name,

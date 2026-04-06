@@ -28,12 +28,17 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
     const search = searchParams.get("search") || ""
+    const category = searchParams.get("category") || ""
     const skip = (page - 1) * limit
 
     const where: Record<string, unknown> = {}
 
     if (search) {
       where.title = { contains: search, mode: "insensitive" }
+    }
+
+    if (category === "PRODUTO" || category === "TREINAMENTO") {
+      where.category = category
     }
 
     const [tutorials, total] = await Promise.all([
@@ -102,11 +107,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { productIds, ...tutorialData } = parsed.data
+    const { productIds, category, ...tutorialData } = parsed.data
 
     const tutorial = await db.$transaction(async (tx) => {
       const created = await tx.tutorial.create({
-        data: tutorialData,
+        data: { ...tutorialData, category },
       })
 
       if (productIds && productIds.length > 0) {

@@ -27,6 +27,7 @@ interface Tutorial {
   title: string
   description: string
   link: string
+  category: string
   createdAt: string
   products: LinkedProduct[]
 }
@@ -136,6 +137,9 @@ export function TutorialsTable({ initialTutorials, initialTotal }: TutorialsTabl
                 Título
               </th>
               <th className="hidden px-4 py-3 text-left text-sm font-medium text-muted-foreground sm:table-cell">
+                Categoria
+              </th>
+              <th className="hidden px-4 py-3 text-left text-sm font-medium text-muted-foreground md:table-cell">
                 Link
               </th>
               <th className="hidden px-4 py-3 text-left text-sm font-medium text-muted-foreground md:table-cell">
@@ -152,14 +156,14 @@ export function TutorialsTable({ initialTutorials, initialTotal }: TutorialsTabl
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center">
+                <td colSpan={6} className="px-4 py-8 text-center">
                   <Loader2 className="mx-auto size-6 animate-spin text-muted-foreground" />
                 </td>
               </tr>
             ) : tutorials.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   Nenhum tutorial encontrado
@@ -175,7 +179,12 @@ export function TutorialsTable({ initialTutorials, initialTotal }: TutorialsTabl
                   <td className="px-4 py-3 text-sm font-medium text-foreground">
                     {tutorial.title}
                   </td>
-                  <td className="hidden px-4 py-3 text-sm text-muted-foreground sm:table-cell">
+                  <td className="hidden px-4 py-3 sm:table-cell">
+                    <Badge variant={tutorial.category === "TREINAMENTO" ? "default" : "secondary"} className="text-xs">
+                      {tutorial.category === "TREINAMENTO" ? "Treinamento" : "Produto"}
+                    </Badge>
+                  </td>
+                  <td className="hidden px-4 py-3 text-sm text-muted-foreground md:table-cell">
                     <a
                       href={tutorial.link}
                       target="_blank"

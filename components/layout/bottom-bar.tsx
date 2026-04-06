@@ -21,6 +21,7 @@ import {
   LogOut,
   MoreHorizontal,
   X,
+  GraduationCap,
 } from "lucide-react"
 import {
   AlertDialog,
@@ -76,6 +77,7 @@ function getBottomBarConfig(role?: Role): BottomBarConfig {
           { label: "Produtos", href: "/app/produtos", icon: Package },
         ],
         more: [
+          { label: "Treinamentos", href: "/app/treinamentos", icon: GraduationCap },
           { label: "Financeiro", href: "/app/financeiro", icon: DollarSign },
           { label: "CNPJ", href: "/app/consultas/cnpj", icon: Building2 },
           { label: "Dominio", href: "/app/consultas/dominio", icon: Globe },

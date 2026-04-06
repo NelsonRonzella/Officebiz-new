@@ -103,12 +103,12 @@ export async function PUT(
       )
     }
 
-    const { productIds, ...tutorialData } = parsed.data
+    const { productIds, category, ...tutorialData } = parsed.data
 
     const tutorial = await db.$transaction(async (tx) => {
       const updated = await tx.tutorial.update({
         where: { id },
-        data: tutorialData,
+        data: { ...tutorialData, category },
       })
 
       // Re-sync product links

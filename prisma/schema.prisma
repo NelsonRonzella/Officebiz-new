@@ -150,11 +150,17 @@ model ProductDocumentCategory {
   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
+enum TutorialCategory {
+  PRODUTO
+  TREINAMENTO
+}
+
 model Tutorial {
   id          String            @id @default(cuid())
   title       String
   description String            @db.Text
   link        String
+  category    TutorialCategory  @default(PRODUTO)
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   products    TutorialProduct[]

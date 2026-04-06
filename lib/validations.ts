@@ -113,6 +113,7 @@ export const tutorialSchema = z.object({
   title: z.string().min(2, "Título obrigatório"),
   description: z.string().min(5, "Descrição obrigatória"),
   link: z.string().url("Link inválido"),
+  category: z.enum(["PRODUTO", "TREINAMENTO"]).optional().default("PRODUTO"),
   productIds: z.array(z.string()).optional(),
 })
 

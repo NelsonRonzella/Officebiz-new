@@ -9,6 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { getYoutubeThumbnail } from "@/lib/youtube"
 
@@ -23,6 +30,7 @@ interface TutorialData {
   title: string
   description: string
   link: string
+  category: string
   products: Array<{ id: string; name: string }>
 }
 
@@ -38,6 +46,7 @@ export function TutorialForm({ tutorial, products }: TutorialFormProps) {
   const [title, setTitle] = useState(tutorial?.title || "")
   const [description, setDescription] = useState(tutorial?.description || "")
   const [link, setLink] = useState(tutorial?.link || "")
+  const [category, setCategory] = useState(tutorial?.category || "PRODUTO")
   const [selectedProducts, setSelectedProducts] = useState<string[]>(
     tutorial?.products.map((p) => p.id) || []
   )
@@ -62,6 +71,7 @@ export function TutorialForm({ tutorial, products }: TutorialFormProps) {
         title,
         description,
         link,
+        category,
         productIds: selectedProducts,
       }
 
@@ -130,6 +140,21 @@ export function TutorialForm({ tutorial, products }: TutorialFormProps) {
               placeholder="https://www.youtube.com/watch?v=..."
               required
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Categoria</Label>
+            <Select value={category} onValueChange={(val) => val && setCategory(val as string)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione a categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PRODUTO" label="Produto">Produto</SelectItem>
+                <SelectItem value="TREINAMENTO" label="Treinamento">Treinamento</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Tutoriais de &quot;Produto&quot; aparecem vinculados ao produto. Tutoriais de &quot;Treinamento&quot; aparecem na página de treinamentos do licenciado.
+            </p>
           </div>
           {thumbnail && (
             <div className="space-y-2">

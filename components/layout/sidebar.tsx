@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   MapPin,
   MessageCircle,
+  GraduationCap,
 } from "lucide-react"
 import {
   AlertDialog,
@@ -65,6 +66,7 @@ function getNavItems(role?: Role): NavItem[] {
         { label: "Clientes", href: "/app/clientes", icon: Users },
         { label: "Produtos", href: "/app/produtos", icon: Package },
         { label: "Pedidos", href: "/app/pedidos", icon: ClipboardList },
+        { label: "Treinamentos", href: "/app/treinamentos", icon: GraduationCap },
         { label: "Financeiro", href: "/app/financeiro", icon: DollarSign },
         { label: "Consultar CNPJ", href: "/app/consultas/cnpj", icon: Building2 },
         { label: "Consultar Domínio", href: "/app/consultas/dominio", icon: Globe },
