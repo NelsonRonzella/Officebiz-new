@@ -6,7 +6,7 @@ export type ContractDurationMonths = typeof CONTRACT_DURATION_OPTIONS[number]
 export const DEFAULT_CONTRACT_MONTHS: ContractDurationMonths = 24
 export const TRIAL_DURATION_DAYS = 7
 
-export const CLOSER_WHATSAPP = "5517997014962"
+export const CLOSER_WHATSAPP = "5517997014926"
 export const CLOSER_WHATSAPP_URL = `https://wa.me/${CLOSER_WHATSAPP}?text=${encodeURIComponent(
   "Olá, quero saber mais sobre o OfficeBiz"
 )}`
