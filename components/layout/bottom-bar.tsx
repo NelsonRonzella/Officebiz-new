@@ -22,6 +22,16 @@ import {
   MoreHorizontal,
   X,
 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { cn } from "@/lib/utils"
 import type { Role } from "@prisma/client"
 
@@ -118,6 +128,7 @@ interface BottomBarProps {
 export function BottomBar({ role }: BottomBarProps) {
   const pathname = usePathname()
   const [moreOpen, setMoreOpen] = useState(false)
+  const [confirmLogout, setConfirmLogout] = useState(false)
   const config = getBottomBarConfig(role)
   const hasMore = config.more.length > 0
 
@@ -186,7 +197,7 @@ export function BottomBar({ role }: BottomBarProps) {
                 <button
                   onClick={() => {
                     setMoreOpen(false)
-                    signOut({ callbackUrl: "/login" })
+                    setConfirmLogout(true)
                   }}
                   className="flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
                 >
@@ -233,7 +244,7 @@ export function BottomBar({ role }: BottomBarProps) {
             </button>
           ) : (
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              onClick={() => setConfirmLogout(true)}
               className="flex flex-1 flex-col items-center gap-0.5 py-1 text-[10px] font-medium text-muted-foreground transition-colors"
             >
               <LogOut className="size-5" />
@@ -244,6 +255,24 @@ export function BottomBar({ role }: BottomBarProps) {
         {/* Safe area for phones with home indicator */}
         <div className="h-[env(safe-area-inset-bottom)]" />
       </nav>
+
+      {/* Logout confirmation dialog */}
+      <AlertDialog open={confirmLogout} onOpenChange={setConfirmLogout}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja sair?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você será desconectado da sua conta e redirecionado para a tela de login.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => signOut({ callbackUrl: "/login" })}>
+              Sair
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

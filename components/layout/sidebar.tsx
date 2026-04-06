@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
@@ -21,6 +22,16 @@ import {
   MapPin,
   MessageCircle,
 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { NotificationBell } from "@/components/notifications/notification-bell"
@@ -143,6 +154,7 @@ interface SidebarNavProps {
 
 function SidebarNav({ role, brandLogo, brandName }: SidebarNavProps) {
   const pathname = usePathname()
+  const [confirmLogout, setConfirmLogout] = useState(false)
   const navItems = getNavItems(role)
   const secondaryItems = getSecondaryItems(role)
 
@@ -181,13 +193,31 @@ function SidebarNav({ role, brandLogo, brandName }: SidebarNavProps) {
       <div className="px-3 pb-4">
         <Separator className="mb-4 bg-sidebar-border" />
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => setConfirmLogout(true)}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
           <LogOut className="size-5" />
           Sair
         </button>
       </div>
+
+      {/* Logout confirmation dialog */}
+      <AlertDialog open={confirmLogout} onOpenChange={setConfirmLogout}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja sair?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você será desconectado da sua conta e redirecionado para a tela de login.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => signOut({ callbackUrl: "/login" })}>
+              Sair
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
