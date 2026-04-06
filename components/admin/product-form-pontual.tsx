@@ -228,9 +228,9 @@ export function ProductFormPontual({ product, tutorials, prestadores = [] }: Pro
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Nenhum</SelectItem>
+                  <SelectItem value="none" label="Nenhum">Nenhum</SelectItem>
                   {prestadores.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
+                    <SelectItem key={p.id} value={p.id} label={p.name || p.email}>
                       {p.name || p.email}
                     </SelectItem>
                   ))}

@@ -214,7 +214,7 @@ function InpiNomeBusca() {
                 </SelectTrigger>
                 <SelectContent className="max-h-80 w-[var(--radix-select-trigger-width)] min-w-[400px]">
                   {NICE_CLASSES.map((c) => (
-                    <SelectItem key={c.value || "all"} value={c.value || "all"}>
+                    <SelectItem key={c.value || "all"} value={c.value || "all"} label={c.label}>
                       {c.label}
                     </SelectItem>
                   ))}

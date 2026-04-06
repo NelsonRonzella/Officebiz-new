@@ -155,9 +155,9 @@ export function ProductsTable({ initialProducts, initialTotal }: ProductsTablePr
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value=" ">Todos</SelectItem>
-              <SelectItem value="true">Ativos</SelectItem>
-              <SelectItem value="false">Inativos</SelectItem>
+              <SelectItem value=" " label="Todos">Todos</SelectItem>
+              <SelectItem value="true" label="Ativos">Ativos</SelectItem>
+              <SelectItem value="false" label="Inativos">Inativos</SelectItem>
             </SelectContent>
           </Select>
 

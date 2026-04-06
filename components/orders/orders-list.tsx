@@ -149,13 +149,13 @@ export function OrdersList({ basePath = "/app/pedidos" }: OrdersListProps) {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Todos os status</SelectItem>
-              <SelectItem value="AGUARDANDO_PAGAMENTO">Aguardando Pagamento</SelectItem>
-              <SelectItem value="PAGO">Pago</SelectItem>
-              <SelectItem value="EM_ANDAMENTO">Em Andamento</SelectItem>
-              <SelectItem value="RETORNO">Retorno</SelectItem>
-              <SelectItem value="CANCELADO">Cancelado</SelectItem>
-              <SelectItem value="CONCLUIDO">Concluído</SelectItem>
+              <SelectItem value="ALL" label="Todos os status">Todos os status</SelectItem>
+              <SelectItem value="AGUARDANDO_PAGAMENTO" label="Aguardando Pagamento">Aguardando Pagamento</SelectItem>
+              <SelectItem value="PAGO" label="Pago">Pago</SelectItem>
+              <SelectItem value="EM_ANDAMENTO" label="Em Andamento">Em Andamento</SelectItem>
+              <SelectItem value="RETORNO" label="Retorno">Retorno</SelectItem>
+              <SelectItem value="CANCELADO" label="Cancelado">Cancelado</SelectItem>
+              <SelectItem value="CONCLUIDO" label="Concluído">Concluído</SelectItem>
             </SelectContent>
           </Select>
 
@@ -170,9 +170,9 @@ export function OrdersList({ basePath = "/app/pedidos" }: OrdersListProps) {
               <SelectValue placeholder="Tipo" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Todos os tipos</SelectItem>
-              <SelectItem value="PONTUAL">Pontual</SelectItem>
-              <SelectItem value="RECORRENTE">Recorrente</SelectItem>
+              <SelectItem value="ALL" label="Todos os tipos">Todos os tipos</SelectItem>
+              <SelectItem value="PONTUAL" label="Pontual">Pontual</SelectItem>
+              <SelectItem value="RECORRENTE" label="Recorrente">Recorrente</SelectItem>
             </SelectContent>
           </Select>
         </div>

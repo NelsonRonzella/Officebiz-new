@@ -114,7 +114,7 @@ export function OrderForm({ clients, products }: OrderFormProps) {
               </SelectTrigger>
               <SelectContent>
                 {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
+                  <SelectItem key={client.id} value={client.id} label={client.name || client.email}>
                     {client.name || client.email}
                     {client.name && (
                       <span className="ml-2 text-muted-foreground">
@@ -146,7 +146,7 @@ export function OrderForm({ clients, products }: OrderFormProps) {
               </SelectTrigger>
               <SelectContent>
                 {products.map((product) => (
-                  <SelectItem key={product.id} value={product.id}>
+                  <SelectItem key={product.id} value={product.id} label={product.name}>
                     <div className="flex items-center gap-2">
                       <span>{product.name}</span>
                       <Badge variant="secondary" className="text-xs">
