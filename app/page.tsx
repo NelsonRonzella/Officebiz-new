@@ -10,6 +10,7 @@ import { FAQ } from "@/components/landing/faq";
 import { CtaFinal } from "@/components/landing/cta-final";
 import { Footer } from "@/components/landing/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
+import { getConnectedWhatsappUrl } from "@/lib/evolution-instance";
 
 export const metadata = {
   title: "OfficeBiz — Seu negócio de serviços empresariais sem investimento",
@@ -17,7 +18,8 @@ export const metadata = {
     "Plataforma completa + equipe de especialistas. Ofereça serviços empresariais com sua própria marca. Zero taxa de licença, zero setup, zero treinamento.",
 };
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const whatsappUrl = await getConnectedWhatsappUrl();
   return (
     <>
       <Navbar />
@@ -27,10 +29,10 @@ export default function LandingPage() {
         <Services />
         <HowItWorks />
         <Advantages />
-        <Pricing />
+        <Pricing whatsappUrl={whatsappUrl} />
         <Testimonials />
         <FAQ />
-        <CtaFinal />
+        <CtaFinal whatsappUrl={whatsappUrl} />
       </main>
       <Footer />
       <WhatsAppButton />

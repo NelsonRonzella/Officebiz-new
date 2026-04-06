@@ -10,6 +10,10 @@ import { SectionHeader } from "@/components/landing/section-header";
 import { Section } from "@/components/landing/section";
 import { CLOSER_WHATSAPP_URL, LICENSE_PRICE_LABEL } from "@/lib/pricing";
 
+interface PricingProps {
+  whatsappUrl?: string;
+}
+
 const includedItems = [
   "Plataforma completa de gestão",
   "Equipe de especialistas",
@@ -18,7 +22,7 @@ const includedItems = [
   "Treinamento incluso",
 ];
 
-export function Pricing() {
+export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}) {
   return (
     <Section id="pricing" background="muted">
       {/* Decorative elements */}
@@ -92,7 +96,7 @@ export function Pricing() {
               </div>
 
               {/* CTA */}
-              <a href={CLOSER_WHATSAPP_URL} target="_blank" rel="noreferrer">
+              <a href={whatsappUrl} target="_blank" rel="noreferrer">
                 <Button size="lg" className="w-full shadow-lg shadow-primary/20">
                   <Phone className="w-4 h-4 mr-2" />
                   Falar com especialista

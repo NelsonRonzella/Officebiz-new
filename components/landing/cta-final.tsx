@@ -8,7 +8,11 @@ import { FloatingDots, Squiggle } from "@/components/illustrations/decorative-el
 import { Section } from "@/components/landing/section";
 import { CLOSER_WHATSAPP_URL } from "@/lib/pricing";
 
-export function CtaFinal() {
+interface CtaFinalProps {
+  whatsappUrl?: string;
+}
+
+export function CtaFinal({ whatsappUrl = CLOSER_WHATSAPP_URL }: CtaFinalProps = {}) {
   return (
     <Section
       id="contact"
@@ -52,7 +56,7 @@ export function CtaFinal() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            <a href={CLOSER_WHATSAPP_URL} target="_blank" rel="noreferrer">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer">
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 shadow-lg text-base px-8 py-6"
