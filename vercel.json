@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/contracts-expiring",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/sales-mark-lost",
+      "schedule": "0 3 * * *"
     }
   ]
 }
