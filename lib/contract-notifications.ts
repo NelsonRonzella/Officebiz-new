@@ -1,7 +1,7 @@
 import { db } from "@/lib/db"
 import { sendText } from "@/lib/whatsapp"
 import { Resend } from "resend"
-import { CLOSER_WHATSAPP } from "@/lib/pricing"
+import { getConnectedWhatsappNumber } from "@/lib/evolution-instance"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"
@@ -10,6 +10,7 @@ export async function notifyContractExpiring(
   user: { id: string; name: string | null; email: string; telefone: string | null },
   daysRemaining: number
 ) {
+  const closerNumber = await getConnectedWhatsappNumber()
   const title = `Seu contrato expira em ${daysRemaining} dias`
   const message = `Seu contrato OfficeBiz expira em ${daysRemaining} dias. Entre em contato para renovar.`
 
@@ -34,7 +35,7 @@ export async function notifyContractExpiring(
         <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
           <h1 style="color: #1E3A5F;">OfficeBiz</h1>
           <p>${message}</p>
-          <p>Fale com um especialista: <a href="https://wa.me/${CLOSER_WHATSAPP}">${CLOSER_WHATSAPP}</a></p>
+          <p>Fale com um especialista: <a href="https://wa.me/${closerNumber}">${closerNumber}</a></p>
           <a href="${appUrl}/settings/billing" style="display:inline-block;background:#1E3A5F;color:#fff;padding:12px 32px;border-radius:8px;text-decoration:none;">Ver detalhes</a>
         </div>
       `,
@@ -45,7 +46,7 @@ export async function notifyContractExpiring(
   if (user.telefone) {
     sendText(
       user.telefone,
-      `⚠️ *OfficeBiz* — ${message} Fale com um especialista: wa.me/${CLOSER_WHATSAPP}`
+      `⚠️ *OfficeBiz* — ${message} Fale com um especialista: wa.me/${closerNumber}`
     ).catch((err) => console.error("WhatsApp contract expiring failed:", err))
   }
 }

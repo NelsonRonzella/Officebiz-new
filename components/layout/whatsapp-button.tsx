@@ -1,12 +1,14 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { CLOSER_WHATSAPP } from "@/lib/pricing";
 
-export function WhatsAppButton() {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Olá! Gostaria de saber mais sobre a OfficeBiz."
-  )}`;
+export function WhatsAppButton({ whatsappUrl }: { whatsappUrl?: string }) {
+  const whatsappLink =
+    whatsappUrl ||
+    `https://wa.me/${CLOSER_WHATSAPP}?text=${encodeURIComponent(
+      "Olá! Gostaria de saber mais sobre a OfficeBiz."
+    )}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 group">

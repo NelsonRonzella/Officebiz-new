@@ -35,7 +35,7 @@ export default async function LandingPage() {
         <CtaFinal whatsappUrl={whatsappUrl} />
       </main>
       <Footer />
-      <WhatsAppButton />
+      <WhatsAppButton whatsappUrl={whatsappUrl} />
     </>
   );
 }
