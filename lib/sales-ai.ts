@@ -115,7 +115,7 @@ async function callOpenRouter(
         "X-Title": "OfficeBiz Sales AI",
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o-mini",
+        model: "google/gemini-2.0-flash-exp:free",
         messages,
         tools: SALES_TOOLS,
         temperature: 0.4,
