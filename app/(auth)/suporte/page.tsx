@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { PageHeader } from "@/components/dashboard/page-header"
+import { getConnectedWhatsappNumber } from "@/lib/evolution-instance"
 import { MessageCircle, Mail } from "lucide-react"
 import {
   Card,
@@ -45,7 +46,9 @@ const faqItems = [
   },
 ]
 
-export default function SuportePage() {
+export default async function SuportePage() {
+  const whatsappNumber = await getConnectedWhatsappNumber()
+  const whatsappUrl = `https://wa.me/${whatsappNumber}`
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -73,7 +76,7 @@ export default function SuportePage() {
               className="w-full"
               render={
                 <Link
-                  href="https://wa.me/5517997014926"
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 />

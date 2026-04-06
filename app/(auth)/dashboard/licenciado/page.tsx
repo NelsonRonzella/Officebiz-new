@@ -5,7 +5,7 @@ import { db } from "@/lib/db"
 import { PlanCard } from "@/components/dashboard/plan-card"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { TrialBanner } from "@/components/dashboard/trial-banner"
-import { CLOSER_WHATSAPP_URL } from "@/lib/pricing"
+import { getConnectedWhatsappNumber } from "@/lib/evolution-instance"
 import {
   Card,
   CardContent,
@@ -35,6 +35,11 @@ export default async function LicenciadoDashboardPage() {
       role: "CLIENTE",
     },
   })
+
+  const whatsappNumber = await getConnectedWhatsappNumber()
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    "Olá, preciso renovar meu contrato OfficeBiz"
+  )}`
 
   const hasClients = clientCount > 0
   const hasProfile = !!user.name && !!user.telefone
@@ -72,7 +77,7 @@ export default async function LicenciadoDashboardPage() {
         <div className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm">
           <strong>Contrato expirado.</strong> Fale com um especialista para renovar:{" "}
           <a
-            href={CLOSER_WHATSAPP_URL}
+            href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
             className="underline"

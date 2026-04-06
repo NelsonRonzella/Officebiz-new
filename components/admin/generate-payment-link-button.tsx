@@ -8,9 +8,11 @@ import { CLOSER_WHATSAPP } from "@/lib/pricing"
 export function GeneratePaymentLinkButton({
   userId,
   userPhone,
+  fallbackWhatsapp,
 }: {
   userId: string
   userPhone: string | null
+  fallbackWhatsapp?: string
 }) {
   const [url, setUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -32,7 +34,7 @@ export function GeneratePaymentLinkButton({
   }
 
   const waHref = url
-    ? `https://wa.me/${(userPhone || CLOSER_WHATSAPP).replace(/\D/g, "")}?text=${encodeURIComponent(
+    ? `https://wa.me/${(userPhone || fallbackWhatsapp || CLOSER_WHATSAPP).replace(/\D/g, "")}?text=${encodeURIComponent(
         `Segue o link de pagamento da sua licença OfficeBiz: ${url}`
       )}`
     : null

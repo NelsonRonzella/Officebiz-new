@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { UserForm } from "@/components/admin/user-form"
 import { GeneratePaymentLinkButton } from "@/components/admin/generate-payment-link-button"
+import { getConnectedWhatsappNumber } from "@/lib/evolution-instance"
 
 export default async function AdminEditUserPage({
   params,
@@ -36,6 +37,7 @@ export default async function AdminEditUserPage({
   }
 
   const availableRoles = ["ADMIN", "LICENCIADO", "PRESTADOR", "CLIENTE"]
+  const fallbackWhatsapp = await getConnectedWhatsappNumber()
 
   return (
     <div className="space-y-6">
@@ -54,6 +56,7 @@ export default async function AdminEditUserPage({
           <GeneratePaymentLinkButton
             userId={user.id}
             userPhone={user.telefone}
+            fallbackWhatsapp={fallbackWhatsapp}
           />
         </div>
       )}
