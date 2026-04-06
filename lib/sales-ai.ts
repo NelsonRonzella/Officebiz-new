@@ -27,7 +27,7 @@ export async function handleAiReply(conversationId: string): Promise<void> {
   })
   if (!convo || !convo.aiEnabled) return
 
-  const apiKey = process.env.OPENROUTER_API_KEY
+  const apiKey = process.env.OPENROUTER_API_KEY?.trim()
   if (!apiKey) {
     console.error("OPENROUTER_API_KEY not set")
     return

@@ -112,9 +112,11 @@ export async function POST(req: Request) {
     select: { aiEnabled: true },
   })
   if (fresh?.aiEnabled) {
-    handleAiReply(convo.id).catch((err) =>
+    try {
+      await handleAiReply(convo.id)
+    } catch (err) {
       console.error("AI reply failed:", err)
-    )
+    }
   }
 
   return NextResponse.json({ ok: true })
