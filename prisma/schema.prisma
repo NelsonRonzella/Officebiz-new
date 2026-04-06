@@ -52,6 +52,7 @@ model User {
   contractDurationMonths  Int?
   contractEndsAt          DateTime?
   contractExpiryNotified  Json?
+  stripePaymentIntentId   String?
   createdBy              String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt

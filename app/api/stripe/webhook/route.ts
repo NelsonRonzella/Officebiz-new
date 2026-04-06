@@ -28,55 +28,80 @@ export async function POST(req: Request) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const session = event.data.object as Stripe.Checkout.Session
-        const orderId = session.metadata?.orderId
-        const userId = session.metadata?.userId
+        const checkoutSession = event.data.object as Stripe.Checkout.Session
 
-        if (orderId) {
-          // Order payment flow
-          await db.order.update({
-            where: { id: orderId },
-            data: {
-              status: "PAGO",
-              stripePaymentIntentId: session.payment_intent as string | null,
-            },
-          })
-
-          // Notify all order participants about payment
-          notifyOrderParticipants({
-            orderId,
-            title: "Pagamento confirmado",
-            message: "O pagamento do pedido foi confirmado via Stripe.",
-            emailSubject: "Pagamento confirmado — OfficeBiz",
-            emailBody: "O pagamento do seu pedido foi confirmado. O serviço será iniciado em breve.",
-            whatsappMessage: `💰 *OfficeBiz* — Pagamento confirmado para o seu pedido. Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${orderId}`,
-          }).catch(console.error)
-        } else if (userId) {
-          // Subscription payment flow
-          const subscription = await stripe.subscriptions.retrieve(
-            session.subscription as string
+        if (checkoutSession.metadata?.type === "license") {
+          // One-time license payment flow
+          const userId = checkoutSession.metadata.userId
+          const contractDurationMonths = parseInt(
+            checkoutSession.metadata.contractDurationMonths ?? "0",
+            10
           )
 
-          let periodEnd: Date | null = null
-          if (subscription.latest_invoice) {
-            const invoice = await stripe.invoices.retrieve(
-              subscription.latest_invoice as string
-            )
-            if (invoice.period_end) {
-              periodEnd = new Date(invoice.period_end * 1000)
-            }
-          }
+          const contractEndsAt = new Date()
+          contractEndsAt.setMonth(contractEndsAt.getMonth() + contractDurationMonths)
 
           await db.user.update({
             where: { id: userId },
             data: {
               plan: "PRO",
-              stripeCustomerId: session.customer as string,
-              stripeSubscriptionId: subscription.id,
-              stripePriceId: subscription.items.data[0]?.price.id,
-              stripeCurrentPeriodEnd: periodEnd,
+              contractDurationMonths,
+              contractEndsAt,
+              contractExpiryNotified: {},
+              stripeCustomerId: checkoutSession.customer as string,
+              stripePaymentIntentId: checkoutSession.payment_intent as string | null,
             },
           })
+        } else {
+          const orderId = checkoutSession.metadata?.orderId
+          const userId = checkoutSession.metadata?.userId
+
+          if (orderId) {
+            // Order payment flow
+            await db.order.update({
+              where: { id: orderId },
+              data: {
+                status: "PAGO",
+                stripePaymentIntentId: checkoutSession.payment_intent as string | null,
+              },
+            })
+
+            // Notify all order participants about payment
+            notifyOrderParticipants({
+              orderId,
+              title: "Pagamento confirmado",
+              message: "O pagamento do pedido foi confirmado via Stripe.",
+              emailSubject: "Pagamento confirmado — OfficeBiz",
+              emailBody: "O pagamento do seu pedido foi confirmado. O serviço será iniciado em breve.",
+              whatsappMessage: `💰 *OfficeBiz* — Pagamento confirmado para o seu pedido. Acesse: ${process.env.NEXT_PUBLIC_APP_URL || "https://officebiz.com.br"}/app/pedidos/${orderId}`,
+            }).catch(console.error)
+          // DEAD CODE: legacy subscription flow
+          } else if (userId) {
+            const subscription = await stripe.subscriptions.retrieve(
+              checkoutSession.subscription as string
+            )
+
+            let periodEnd: Date | null = null
+            if (subscription.latest_invoice) {
+              const invoice = await stripe.invoices.retrieve(
+                subscription.latest_invoice as string
+              )
+              if (invoice.period_end) {
+                periodEnd = new Date(invoice.period_end * 1000)
+              }
+            }
+
+            await db.user.update({
+              where: { id: userId },
+              data: {
+                plan: "PRO",
+                stripeCustomerId: checkoutSession.customer as string,
+                stripeSubscriptionId: subscription.id,
+                stripePriceId: subscription.items.data[0]?.price.id,
+                stripeCurrentPeriodEnd: periodEnd,
+              },
+            })
+          }
         }
         break
       }
