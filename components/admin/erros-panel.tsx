@@ -313,7 +313,7 @@ export function ErrosPanel() {
               <div className="text-sm">
                 <span className="font-semibold">Mensagem:</span> {selected.message}
               </div>
-              <pre className="max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs">
+              <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 text-xs">
                 {JSON.stringify(selected.context ?? {}, null, 2)}
               </pre>
             </div>
