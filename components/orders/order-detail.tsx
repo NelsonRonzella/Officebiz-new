@@ -601,7 +601,7 @@ export function OrderDetail({
                   </SelectTrigger>
                   <SelectContent>
                     {prestadores.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>
+                      <SelectItem key={p.id} value={p.id} label={p.name || p.email}>
                         {p.name || p.email}
                       </SelectItem>
                     ))}

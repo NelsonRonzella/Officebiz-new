@@ -40,25 +40,51 @@ export async function POST(
       return NextResponse.json({ error: "Pedido não encontrado" }, { status: 404 })
     }
 
-    const body = await req.json()
-    const parsed = orderMessageSchema.safeParse(body)
+    const contentType = req.headers.get("content-type") || ""
 
-    if (!parsed.success) {
+    let message: string
+    let file: string | null = null
+    let fileName: string | null = null
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData()
+      message = (formData.get("message") as string) || ""
+      const fileEntry = formData.get("file") as File | null
+      if (fileEntry && fileEntry.size > 0) {
+        // Convert file to base64 data URL for storage
+        const bytes = await fileEntry.arrayBuffer()
+        const base64 = Buffer.from(bytes).toString("base64")
+        file = `data:${fileEntry.type};base64,${base64}`
+        fileName = fileEntry.name
+      }
+    } else {
+      const body = await req.json()
+      const parsed = orderMessageSchema.safeParse(body)
+      if (!parsed.success) {
+        return NextResponse.json(
+          { error: "Dados inválidos", details: parsed.error.issues },
+          { status: 400 }
+        )
+      }
+      message = parsed.data.message
+      file = parsed.data.file || null
+      fileName = parsed.data.fileName || null
+    }
+
+    if (!message.trim() && !file) {
       return NextResponse.json(
-        { error: "Dados inválidos", details: parsed.error.issues },
+        { error: "Mensagem ou arquivo é obrigatório" },
         { status: 400 }
       )
     }
-
-    const { message, file, fileName } = parsed.data
 
     const orderMessage = await db.orderMessage.create({
       data: {
         orderId: id,
         userId: currentUser.id,
-        message,
-        file: file || null,
-        fileName: fileName || null,
+        message: message.trim(),
+        file,
+        fileName,
       },
       include: {
         user: { select: { id: true, name: true, email: true, role: true } },

@@ -214,7 +214,7 @@ export function UserForm({ user, availableRoles }: UserFormProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {availableRoles.map((r) => (
-                    <SelectItem key={r} value={r}>
+                    <SelectItem key={r} value={r} label={roleLabels[r] || r}>
                       {roleLabels[r] || r}
                     </SelectItem>
                   ))}
