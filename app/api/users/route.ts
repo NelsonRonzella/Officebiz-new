@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
         role: true,
         plan: true,
         trialEndsAt: true,
-        stripeCurrentPeriodEnd: true,
+        contractEndsAt: true,
       },
     })
 

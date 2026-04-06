@@ -16,7 +16,7 @@ interface PaywallGateProps {
   user: {
     plan: string
     trialEndsAt: Date | null
-    stripeCurrentPeriodEnd: Date | null
+    contractEndsAt: Date | null
   }
   children: React.ReactNode
 }

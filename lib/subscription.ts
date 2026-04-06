@@ -23,18 +23,28 @@ export function isTrialActive(user: Pick<User, "plan" | "trialEndsAt">): boolean
   return user.plan === "TRIAL" && !!user.trialEndsAt && user.trialEndsAt > new Date()
 }
 
-export function isSubscribed(user: Pick<User, "plan" | "stripeCurrentPeriodEnd">): boolean {
+export function isSubscribed(
+  user: Pick<User, "plan" | "contractEndsAt">
+): boolean {
   return (
     user.plan === "PRO" &&
-    !!user.stripeCurrentPeriodEnd &&
-    user.stripeCurrentPeriodEnd > new Date()
+    !!user.contractEndsAt &&
+    user.contractEndsAt > new Date()
   )
 }
 
 export function hasAccess(
-  user: Pick<User, "plan" | "trialEndsAt" | "stripeCurrentPeriodEnd">
+  user: Pick<User, "plan" | "trialEndsAt" | "contractEndsAt">
 ): boolean {
   return isTrialActive(user) || isSubscribed(user)
+}
+
+export function daysUntilContractEnd(
+  user: Pick<User, "contractEndsAt">
+): number | null {
+  if (!user.contractEndsAt) return null
+  const diff = user.contractEndsAt.getTime() - Date.now()
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
 export function daysLeftInTrial(user: Pick<User, "trialEndsAt">): number {
