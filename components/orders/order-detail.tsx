@@ -163,7 +163,7 @@ export function OrderDetail({
   const isLicenciado = currentUserRole === "LICENCIADO"
   const isPrestador = currentUserRole === "PRESTADOR"
   const isCliente = currentUserRole === "CLIENTE"
-  const canSendMessage = isAdmin || isLicenciado || isPrestador
+  const canSendMessage = isAdmin || isLicenciado || isPrestador || isCliente
 
   // Load prestadores for admin
   useEffect(() => {

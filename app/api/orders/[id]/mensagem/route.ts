@@ -25,8 +25,8 @@ export async function POST(
       return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 })
     }
 
-    // Only ADMIN, LICENCIADO, PRESTADOR can send messages
-    const allowedRoles = ["ADMIN", "LICENCIADO", "PRESTADOR"]
+    // Only ADMIN, LICENCIADO, PRESTADOR, CLIENTE can send messages
+    const allowedRoles = ["ADMIN", "LICENCIADO", "PRESTADOR", "CLIENTE"]
     if (!allowedRoles.includes(currentUser.role)) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
