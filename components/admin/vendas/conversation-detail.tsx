@@ -78,6 +78,18 @@ export function ConversationDetail({ initial }: { initial: Conversation }) {
           >
             WhatsApp <ExternalLink className="h-3 w-3" />
           </a>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              if (!confirm("Encerrar a conversa? Todas as mensagens serão apagadas e a IA reassume do zero.")) return
+              const res = await fetch(`/api/admin/vendas/${convo.id}/reset`, { method: "POST" })
+              if (res.ok) {
+                setConvo({ ...convo, messages: [], aiEnabled: true, stage: "NOVO", leadName: null, leadEmail: null, leadCity: null })
+              }
+            }}
+          >
+            Encerrar conversa
+          </Button>
           <Button variant="outline" onClick={() => router.push("/admin/vendas")}>
             Voltar
           </Button>
