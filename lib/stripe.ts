@@ -1,4 +1,5 @@
 import Stripe from "stripe"
+import { LICENSE_PRICE_CENTS, type ContractDurationMonths } from "@/lib/pricing"
 
 // Lazy init proxy pattern — avoids crash when STRIPE_SECRET_KEY is not set at build time
 function createStripeClient(): Stripe {
@@ -105,6 +106,45 @@ export async function createCustomerPortalSession(stripeCustomerId: string) {
   const session = await stripe.billingPortal.sessions.create({
     customer: stripeCustomerId,
     return_url: `${appUrl}/settings/billing`,
+  })
+
+  return session
+}
+
+export async function createLicenseCheckoutSession({
+  userId,
+  userEmail,
+  contractDurationMonths,
+}: {
+  userId: string
+  userEmail: string
+  contractDurationMonths: ContractDurationMonths
+}) {
+  const appUrl = resolveAppUrl()
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    payment_method_types: ["card"],
+    customer_email: userEmail,
+    line_items: [
+      {
+        price_data: {
+          currency: "brl",
+          product_data: {
+            name: `OfficeBiz — Licença ${contractDurationMonths} meses`,
+          },
+          unit_amount: LICENSE_PRICE_CENTS,
+        },
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      type: "license",
+      userId,
+      contractDurationMonths: String(contractDurationMonths),
+    },
+    success_url: `${appUrl}/admin/usuarios/${userId}?payment=success`,
+    cancel_url: `${appUrl}/admin/usuarios/${userId}?payment=cancelled`,
   })
 
   return session
