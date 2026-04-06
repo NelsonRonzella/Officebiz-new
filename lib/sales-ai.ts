@@ -177,7 +177,6 @@ async function callOpenRouter(
         // Docs: https://openrouter.ai/docs/features/model-routing#fallback-models
         models: [
           "openai/gpt-4o-mini",
-          "openrouter/free",
           "openai/gpt-oss-20b:free",
           "minimax/minimax-m2.5:free",
         ],
