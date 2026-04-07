@@ -62,13 +62,35 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
-  // [TEMP DEBUG @lid] — remover depois de capturar payload
+  // [TEMP DEBUG @lid] — remover depois de capturar payload.
+  // Loga o evento inteiro stringificado direto no campo `message` (com safe
+  // replacer pra BigInt/circular) — assim sobrevive mesmo se a serialização
+  // do `context` engasgar dentro do logError.
   if (data.key.remoteJid.endsWith("@lid")) {
+    const seen = new WeakSet()
+    const safeReplacer = (_key: string, value: unknown) => {
+      if (typeof value === "bigint") return value.toString()
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value as object)) return "[circular]"
+        seen.add(value as object)
+      }
+      return value
+    }
+    let raw = ""
+    try {
+      raw = JSON.stringify(event, safeReplacer)
+    } catch (e) {
+      raw = `<stringify failed: ${(e as Error).message}>`
+    }
     await logError({
       source: "WEBHOOK",
       severity: "WARN",
-      message: "[DEBUG @lid] payload bruto messages.upsert",
-      context: { rawData: data as unknown as Record<string, unknown> },
+      message: `[DEBUG @lid] ${raw.slice(0, 1900)}`,
+      context: {
+        remoteJid: data.key.remoteJid,
+        keyKeys: Object.keys(data.key ?? {}),
+        dataKeys: Object.keys(data ?? {}),
+      },
     })
   }
 
