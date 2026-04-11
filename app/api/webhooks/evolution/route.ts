@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   let event: {
     event?: string
     data?: {
-      key?: { id?: string; remoteJid?: string; fromMe?: boolean }
+      key?: { id?: string; remoteJid?: string; fromMe?: boolean; remoteJidAlt?: string }
       message?: {
         conversation?: string
         extendedTextMessage?: { text?: string }
@@ -62,38 +62,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true })
   }
 
-  // [TEMP DEBUG @lid] — remover depois de capturar payload.
-  // Loga o evento inteiro stringificado direto no campo `message` (com safe
-  // replacer pra BigInt/circular) — assim sobrevive mesmo se a serialização
-  // do `context` engasgar dentro do logError.
-  if (data.key.remoteJid.endsWith("@lid")) {
-    const seen = new WeakSet()
-    const safeReplacer = (_key: string, value: unknown) => {
-      if (typeof value === "bigint") return value.toString()
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value as object)) return "[circular]"
-        seen.add(value as object)
-      }
-      return value
-    }
-    let raw = ""
-    try {
-      raw = JSON.stringify(event, safeReplacer)
-    } catch (e) {
-      raw = `<stringify failed: ${(e as Error).message}>`
-    }
-    await logError({
-      source: "WEBHOOK",
-      severity: "WARN",
-      message: `[DEBUG @lid] ${raw.slice(0, 1900)}`,
-      context: {
-        remoteJid: data.key.remoteJid,
-        keyKeys: Object.keys(data.key ?? {}),
-        dataKeys: Object.keys(data ?? {}),
-      },
-    })
-  }
-
   if (!isDirectChat(data.key.remoteJid)) {
     return NextResponse.json({ ok: true, skipped: "non-direct" })
   }
@@ -105,7 +73,8 @@ export async function POST(req: Request) {
 
   if (isLid) {
     lidJid = remoteJid
-    const resolved = await resolveLidToPhone(remoteJid)
+    const remoteJidAlt = data.key.remoteJidAlt ?? null
+    const resolved = await resolveLidToPhone(remoteJid, remoteJidAlt)
     if (resolved) {
       phone = resolved
     } else {
@@ -127,6 +96,30 @@ export async function POST(req: Request) {
 
   // LID não resolvido nunca tem IA ativa (não dá pra enviar pra @lid)
   const lidUnresolved = isLid && phone.startsWith("lid:")
+
+  // Se resolvemos um LID que antes era irresolvível, migra a conversa antiga
+  // de "lid:xxx" pro telefone real pra unificar o histórico.
+  if (isLid && !lidUnresolved) {
+    const lidKey = `lid:${remoteJid.split("@")[0]}`
+    const oldConvo = await db.salesConversation.findUnique({ where: { phone: lidKey } })
+    if (oldConvo) {
+      // Migra mensagens da conversa lid: pra conversa com telefone real
+      const realConvo = await db.salesConversation.findUnique({ where: { phone } })
+      if (realConvo) {
+        await db.salesMessage.updateMany({
+          where: { conversationId: oldConvo.id },
+          data: { conversationId: realConvo.id },
+        })
+        await db.salesConversation.delete({ where: { id: oldConvo.id } })
+      } else {
+        // Renomeia a conversa lid: pro telefone real
+        await db.salesConversation.update({
+          where: { id: oldConvo.id },
+          data: { phone, aiEnabled: true },
+        })
+      }
+    }
+  }
 
   const evolutionMsgId = data.key.id ?? null
   const fromMe = data.key.fromMe === true

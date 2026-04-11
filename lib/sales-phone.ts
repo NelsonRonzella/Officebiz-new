@@ -23,10 +23,11 @@ export function isLidJid(jid: string): boolean {
 }
 
 /**
- * Tenta resolver um JID @lid para o telefone real (formato @s.whatsapp.net),
- * fazendo lookup na tabela de contatos da Evolution API.
+ * Tenta resolver um JID @lid para o telefone real (formato @s.whatsapp.net).
  *
- * Estratégia:
+ * Estratégia (em ordem de prioridade):
+ * 0. Se `remoteJidAlt` veio no payload do webhook (Evolution v2.3.7+),
+ *    usa direto — é o número real enviado pelo WhatsApp.
  * 1. Busca o contato pelo remoteJid LID e captura pushName + profilePicUrl
  * 2. Lista todos os contatos e procura outro com @s.whatsapp.net que tenha
  *    o MESMO profilePicUrl (match forte). Se não houver profilePicUrl,
@@ -34,8 +35,16 @@ export function isLidJid(jid: string): boolean {
  *
  * Retorna o telefone normalizado (ex: "5517997014926") ou null se não encontrar.
  */
-export async function resolveLidToPhone(lidJid: string): Promise<string | null> {
+export async function resolveLidToPhone(
+  lidJid: string,
+  remoteJidAlt?: string | null,
+): Promise<string | null> {
   if (!isLidJid(lidJid)) return null
+
+  // Prioridade 0: remoteJidAlt do webhook (Evolution v2.3.7+)
+  if (remoteJidAlt && remoteJidAlt.endsWith("@s.whatsapp.net")) {
+    return normalizePhone(remoteJidAlt)
+  }
 
   const url = process.env.EVOLUTION_API_URL?.trim()
   const key = process.env.EVOLUTION_API_KEY?.trim()
