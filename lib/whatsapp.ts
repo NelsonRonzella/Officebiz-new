@@ -21,9 +21,9 @@ interface QrCodeResult {
 
 function getConfig() {
   return {
-    url: process.env.EVOLUTION_API_URL ?? "",
-    key: process.env.EVOLUTION_API_KEY ?? "",
-    instance: process.env.EVOLUTION_API_INSTANCE ?? "officebiz",
+    url: (process.env.EVOLUTION_API_URL ?? "").trim().replace(/\/$/, ""),
+    key: (process.env.EVOLUTION_API_KEY ?? "").trim(),
+    instance: (process.env.EVOLUTION_API_INSTANCE ?? "officebiz").trim(),
   }
 }
 
