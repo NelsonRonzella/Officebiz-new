@@ -333,6 +333,68 @@
 }
 .ds-hero-shot-meta small { font-size: 12px; opacity: .82; letter-spacing: .04em; }
 
+/* Hero browser mockup with scroll-driven perspective */
+.ds-hero-browser {
+  position: relative;
+  margin: 64px auto 0;
+  max-width: 1100px;
+  perspective: 1500px;
+  perspective-origin: 50% 0%;
+}
+.ds-hero-browser-mock {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(13, 36, 16, 0.92);
+  border: 1px solid rgba(228, 229, 223, 0.1);
+  box-shadow:
+    0 80px 140px -40px rgba(0, 0, 0, 0.7),
+    0 30px 60px -20px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(228, 229, 223, 0.04);
+  transform-origin: 50% 0%;
+  will-change: transform;
+}
+.ds-hero-browser-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 20px;
+  background: rgba(8, 22, 11, 0.95);
+  border-bottom: 1px solid rgba(228, 229, 223, 0.08);
+}
+.ds-hero-browser-dots { display: flex; gap: 8px; flex-shrink: 0; }
+.ds-hero-browser-dots span {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(228, 229, 223, 0.2);
+}
+.ds-hero-browser-dots span:nth-child(1) { background: #ff5f57; }
+.ds-hero-browser-dots span:nth-child(2) { background: #febc2e; }
+.ds-hero-browser-dots span:nth-child(3) { background: #28c840; }
+.ds-hero-browser-url {
+  flex: 1; max-width: 380px; margin: 0 auto;
+  padding: 6px 16px; border-radius: 999px;
+  background: rgba(228, 229, 223, 0.08);
+  color: var(--ds-text-muted-light);
+  font-size: 13px; text-align: center;
+  letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ds-hero-browser-actions { width: 60px; flex-shrink: 0; }
+.ds-hero-browser-screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: rgba(13, 36, 16, 0.6);
+  overflow: hidden;
+}
+.ds-hero-browser-screen img {
+  width: 100% !important; height: 100% !important;
+  object-fit: cover; object-position: top center;
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-hero-browser { perspective: none; }
+  .ds-hero-browser-mock { transform: none !important; }
+}
+
 /* ---------- Cards ---------- */
 .ds-card {
   background: #fff; border: 1px solid var(--ds-border);
