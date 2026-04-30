@@ -1,23 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 
 export function Hero() {
-  const browserRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: browserRef,
-    offset: ["start 0.9", "start 0.3"],
-  });
-
-  const rotateX = useTransform(scrollYProgress, [0, 1], [28, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.92, 1]);
-  const yShift = useTransform(scrollYProgress, [0, 1], [40, 0]);
-
   return (
     <header className="ds-hero">
       <div className="ds-orb ds-orb--1" />
@@ -97,41 +82,6 @@ export function Hero() {
           </div>
         </motion.div>
 
-        <motion.div
-          ref={browserRef}
-          className="ds-hero-browser hidden md:block"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-        >
-          <motion.div
-            className="ds-hero-browser-mock"
-            style={
-              reduceMotion
-                ? undefined
-                : { rotateX, scale, y: yShift }
-            }
-          >
-            <div className="ds-hero-browser-bar">
-              <div className="ds-hero-browser-dots" aria-hidden>
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="ds-hero-browser-url">officebiz.com.br/dashboard</div>
-              <div className="ds-hero-browser-actions" aria-hidden />
-            </div>
-            <div className="ds-hero-browser-screen">
-              <Image
-                src="/landing/features/dashboard.png"
-                alt="Painel do licenciado e faturamento da OfficeBiz"
-                width={1340}
-                height={950}
-                priority={false}
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
     </header>
   );

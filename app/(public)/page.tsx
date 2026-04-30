@@ -1,11 +1,13 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
+import { DashboardScroll } from "@/components/landing/dashboard-scroll";
 import { WhatIs } from "@/components/landing/what-is";
 import { Services } from "@/components/landing/services";
 import { Features } from "@/components/landing/features";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { Advantages } from "@/components/landing/advantages";
 import { Pricing } from "@/components/landing/pricing";
+import { Competitors } from "@/components/landing/competitors";
 import { Testimonials } from "@/components/landing/testimonials";
 import { FAQ } from "@/components/landing/faq";
 import { CtaFinal } from "@/components/landing/cta-final";
@@ -26,12 +28,14 @@ export default async function LandingPage() {
       <Navbar />
       <main>
         <Hero />
+        <DashboardScroll />
         <WhatIs />
         <Services />
         <Features />
         <HowItWorks />
         <Advantages />
         <Pricing whatsappUrl={whatsappUrl} />
+        <Competitors />
         <Testimonials />
         <FAQ />
         <CtaFinal whatsappUrl={whatsappUrl} />

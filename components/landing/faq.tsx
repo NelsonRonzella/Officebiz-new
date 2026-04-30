@@ -59,7 +59,7 @@ export function FAQ() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ds-eyebrow">08 · Dúvidas frequentes</span>
+          <span className="ds-eyebrow">09 · Dúvidas frequentes</span>
           <h2>Perguntas que todo licenciado faz no começo.</h2>
         </motion.div>
 
