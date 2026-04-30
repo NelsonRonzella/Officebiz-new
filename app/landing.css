@@ -409,14 +409,43 @@
 }
 .ds-price-amount {
   font-family: 'Airbnb Cereal', Manrope, sans-serif;
-  font-size: clamp(56px, 9vw, 88px); font-weight: 800; line-height: 1;
+  font-size: clamp(64px, 10vw, 104px); font-weight: 800; line-height: 1;
   color: var(--ds-secondary);
   text-align: center;
-  margin: 18px 0 6px;
-  letter-spacing: -.03em;
+  margin: 14px 0 0;
+  letter-spacing: -.035em;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  width: 100%;
+  gap: 0;
+}
+.ds-price-amount .installments-label {
+  font-size: .44em;
+  font-weight: 700;
+  color: var(--ds-primary-deep);
+  margin-right: 12px;
+  align-self: center;
+  letter-spacing: -.02em;
 }
 .ds-price-amount .currency {
-  font-size: .42em; vertical-align: top; margin-right: 4px; font-weight: 700;
+  font-size: .36em;
+  vertical-align: top;
+  margin-right: 6px;
+  font-weight: 700;
+  align-self: flex-start;
+  margin-top: .35em;
+  color: var(--ds-text-muted);
+}
+.ds-price-amount .installment-value {
+  font-weight: 800;
+}
+.ds-price-amount .cents {
+  font-size: .38em;
+  font-weight: 700;
+  color: var(--ds-text-muted);
+  align-self: flex-start;
+  margin-top: .55em;
 }
 .ds-price-amount .period {
   font-size: .26em; color: var(--ds-text-muted); font-weight: 600; margin-left: 6px;

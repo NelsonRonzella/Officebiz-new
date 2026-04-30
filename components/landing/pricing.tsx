@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CLOSER_WHATSAPP_URL, LICENSE_PRICE_LABEL } from "@/lib/pricing";
+import { CLOSER_WHATSAPP_URL } from "@/lib/pricing";
 
 interface PricingProps {
   whatsappUrl?: string;
@@ -50,27 +50,46 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
           transition={{ duration: 0.6 }}
         >
           <div className="ds-price-card-inner">
-            <p className="ds-price-eyebrow">Licença OfficeBiz</p>
-
-            <p className="ds-price-amount">
-              <span className="currency">R$</span>
-              {LICENSE_PRICE_LABEL.replace(/^R\$\s*/, "")}
-              <span className="period">único</span>
-            </p>
-
-            <div className="flex flex-col items-center gap-3 mb-2">
+            <div className="flex justify-center mb-4">
               <span
-                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold"
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider"
                 style={{
                   background: "var(--ds-primary)",
                   color: "var(--ds-secondary-deep)",
                   boxShadow: "0 8px 22px rgba(185,232,72,.35)",
+                  letterSpacing: ".08em",
                 }}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                Promoção: 3 anos pelo preço de 2
+                Parcele em 12×
               </span>
             </div>
+
+            <p className="ds-price-eyebrow">Licença OfficeBiz</p>
+
+            <p className="ds-price-amount">
+              <span className="installments-label">12×</span>
+              <span className="currency">R$</span>
+              <span className="installment-value">299</span>
+              <span className="cents">,00</span>
+            </p>
+
+            <p
+              className="text-center text-sm mt-3 mb-1"
+              style={{ color: "var(--ds-text-muted)" }}
+            >
+              ou{" "}
+              <strong style={{ color: "var(--ds-secondary)", fontWeight: 700 }}>
+                R$ 2.990,00 à vista
+              </strong>
+            </p>
+
+            <p
+              className="text-center text-xs mt-2 mb-6"
+              style={{ color: "var(--ds-text-muted)" }}
+            >
+              2 anos de acesso · em promoção, 3 anos pelo preço de 2
+            </p>
 
             <ul className="ds-price-features">
               {includedItems.map((item) => (
@@ -95,7 +114,7 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
               className="text-center text-xs mt-4"
               style={{ color: "var(--ds-text-muted)" }}
             >
-              Pagamento único · Sem fidelidade · Cancele quando quiser
+              Sem fidelidade · Cancele quando quiser
             </p>
           </div>
         </motion.div>
