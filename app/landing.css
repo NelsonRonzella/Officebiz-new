@@ -280,17 +280,58 @@
 .ds-hero-stat .label { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--ds-text-muted-light); }
 .ds-hero-stat .value { font-family: 'Airbnb Cereal', Manrope, sans-serif; font-size: 36px; font-weight: 800; color: var(--ds-text-light); margin: 8px 0 4px; }
 .ds-hero-stat .delta { font-size: 13px; color: var(--ds-primary); }
-.ds-hero-stat .bar { margin-top: 12px; height: 6px; border-radius: 999px; background: rgba(228,229,223,.12); overflow: hidden; }
-.ds-hero-stat .bar > span {
-  display: block; height: 100%; border-radius: 999px;
-  background: linear-gradient(90deg, var(--ds-primary), var(--ds-primary-soft));
-  box-shadow: 0 0 14px rgba(185,232,72,.6);
-  animation: dsBarFill 2.2s var(--ds-easing) .4s both;
-  transform-origin: left;
+
+/* Hero screenshot cards (dashboard real) */
+.ds-hero-shot {
+  position: relative;
+  border-radius: var(--ds-radius-lg);
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(228, 229, 223, 0.14);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(13, 36, 16, 0.06);
+  transition: transform .5s var(--ds-easing), box-shadow .5s var(--ds-easing);
 }
-.ds-hero-stat:nth-child(1) .bar > span { width: 78%; }
-.ds-hero-stat:nth-child(2) .bar > span { width: 54%; animation-delay: .55s; }
-.ds-hero-stat:nth-child(3) .bar > span { width: 92%; animation-delay: .7s; }
+.ds-hero-shot:hover { transform: translateY(-4px); box-shadow: 0 40px 100px rgba(0,0,0,.45), 0 0 0 1px rgba(185,232,72,.2); }
+.ds-hero-shot-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #f9fafb;
+}
+.ds-hero-shot-frame img {
+  width: 100% !important; height: 100% !important;
+  object-fit: cover; object-position: top center;
+  display: block;
+  transition: transform 1.2s var(--ds-easing);
+}
+.ds-hero-shot-frame img.ds-hero-shot--bottom {
+  object-position: center 70%;
+}
+.ds-hero-shot:hover .ds-hero-shot-frame img { transform: scale(1.04); }
+.ds-hero-shot::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(13, 36, 16, 0) 55%, rgba(13, 36, 16, 0.92) 100%);
+  pointer-events: none;
+}
+.ds-hero-shot-tag {
+  position: absolute; top: 14px; left: 14px;
+  padding: 5px 12px; border-radius: 999px;
+  background: rgba(13, 36, 16, .72); backdrop-filter: blur(6px);
+  color: var(--ds-text-light); font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  border: 1px solid rgba(228, 229, 223, .25);
+  z-index: 2;
+}
+.ds-hero-shot-meta {
+  position: absolute; left: 22px; right: 22px; bottom: 18px;
+  color: var(--ds-text-light); z-index: 2;
+}
+.ds-hero-shot-meta h4 {
+  font-family: 'Airbnb Cereal', Manrope, sans-serif;
+  font-size: 18px; font-weight: 700;
+  margin: 0 0 4px;
+}
+.ds-hero-shot-meta small { font-size: 12px; opacity: .82; letter-spacing: .04em; }
 
 /* ---------- Cards ---------- */
 .ds-card {

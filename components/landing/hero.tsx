@@ -69,62 +69,57 @@ export function Hero() {
                 <div className="label">Serviços no portfólio</div>
                 <div className="value">12+</div>
                 <div className="delta">Prontos pra revenda</div>
-                <div className="bar"><span /></div>
               </div>
               <div className="ds-hero-stat">
                 <div className="label">Margem média</div>
                 <div className="value">3×</div>
                 <div className="delta">Sobre o custo de execução</div>
-                <div className="bar"><span /></div>
               </div>
               <div className="ds-hero-stat">
                 <div className="label">Setup do licenciado</div>
                 <div className="value">0 dia</div>
                 <div className="delta">Acesso imediato</div>
-                <div className="bar"><span /></div>
               </div>
             </div>
           </div>
         </motion.div>
 
         <motion.div
-          className="hidden md:grid grid-cols-2 gap-6 max-w-[920px] mx-auto mt-12"
+          className="hidden md:grid grid-cols-2 gap-6 max-w-[1000px] mx-auto mt-14"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
         >
-          <div className="ds-img-card relative aspect-[4/5] overflow-hidden rounded-[24px]">
-            <div
-              className="frame absolute inset-0 flex items-end justify-center bg-[linear-gradient(180deg,#0d2410_0%,#143a18_60%,#1b3a1c_100%)]"
-            >
+          <div className="ds-hero-shot">
+            <div className="ds-hero-shot-frame">
               <Image
-                src="/landing/images/hero-mockup-1.avif"
-                alt="Mockup do app OfficeBiz"
-                width={520}
-                height={650}
-                className="!relative !inline-block max-w-[88%] max-h-[88%] -rotate-6 translate-y-[6%]"
+                src="/landing/features/dashboard.png"
+                alt="Painel do licenciado da OfficeBiz"
+                width={1340}
+                height={950}
+                className="!relative"
+                priority={false}
               />
             </div>
-            <div className="overlay" />
-            <span className="tag">Painel · Licenciado</span>
-            <div className="meta">
+            <span className="ds-hero-shot-tag">Painel · Licenciado</span>
+            <div className="ds-hero-shot-meta">
               <h4>Gestão de pedidos</h4>
               <small>Acompanhe cada serviço em tempo real</small>
             </div>
           </div>
-          <div className="ds-img-card relative aspect-[4/5] overflow-hidden rounded-[24px]">
-            <div className="frame absolute inset-0 flex items-end justify-center bg-[linear-gradient(180deg,#0d2410_0%,#1b3a1c_100%)]">
+          <div className="ds-hero-shot">
+            <div className="ds-hero-shot-frame">
               <Image
-                src="/landing/images/hero-mockup-2.avif"
-                alt="Mockup do app OfficeBiz mostrando estatísticas"
-                width={520}
-                height={650}
-                className="!relative !inline-block max-w-[88%] max-h-[88%] rotate-6 translate-y-[6%]"
+                src="/landing/features/dashboard.png"
+                alt="Métricas e gráficos do dashboard"
+                width={1340}
+                height={950}
+                className="!relative ds-hero-shot--bottom"
+                priority={false}
               />
             </div>
-            <div className="overlay" />
-            <span className="tag">Faturamento · em tempo real</span>
-            <div className="meta">
+            <span className="ds-hero-shot-tag">Faturamento · em tempo real</span>
+            <div className="ds-hero-shot-meta">
               <h4>Indicadores claros</h4>
               <small>Margens, vendas e crescimento por serviço</small>
             </div>
