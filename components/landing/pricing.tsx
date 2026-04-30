@@ -34,7 +34,7 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ds-eyebrow">05 · Investimento único</span>
+          <span className="ds-eyebrow">06 · Investimento</span>
           <h2>Quanto custa? Menos do que você imagina.</h2>
           <p>
             Uma única licença, dois anos de acesso garantido. Hoje, com promoção,

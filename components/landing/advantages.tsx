@@ -81,7 +81,7 @@ export function Advantages() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ds-eyebrow">04 · Vantagens</span>
+          <span className="ds-eyebrow">05 · Vantagens</span>
           <h2>Por que ser um licenciado OfficeBiz?</h2>
           <p>
             Você ganha estrutura de uma operação grande sem precisar montar uma — e mantém

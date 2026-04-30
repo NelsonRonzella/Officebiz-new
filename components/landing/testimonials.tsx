@@ -92,7 +92,7 @@ export function Testimonials() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ds-eyebrow">06 · Depoimentos reais</span>
+          <span className="ds-eyebrow">07 · Depoimentos reais</span>
           <h2>O que os licenciados estão falando.</h2>
           <p>Nada de stock — depoimentos de quem opera a plataforma todo dia.</p>
         </motion.div>

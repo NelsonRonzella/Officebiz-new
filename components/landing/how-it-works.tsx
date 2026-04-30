@@ -49,7 +49,7 @@ export function HowItWorks() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ds-eyebrow">03 · Simples e rápido</span>
+          <span className="ds-eyebrow">04 · Simples e rápido</span>
           <h2>Como funciona? Em três passos.</h2>
           <p>
             Sem burocracia, sem treinamento longo. Você sai do cadastro com tudo no lugar
