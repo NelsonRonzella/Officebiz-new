@@ -6,7 +6,10 @@ import { useScroll, useTransform, motion, type MotionValue } from "framer-motion
 
 export function DashboardScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "start 0.2"],
+  });
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -16,11 +19,11 @@ export function DashboardScroll() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const scaleDimensions = (): [number, number] => (isMobile ? [0.7, 0.9] : [1.05, 1]);
+  const scaleDimensions = (): [number, number] => (isMobile ? [0.75, 1] : [0.9, 1]);
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [30, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions());
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const translate = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
   return (
     <section ref={containerRef} className="ds-dash">
