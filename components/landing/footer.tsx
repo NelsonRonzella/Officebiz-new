@@ -51,6 +51,14 @@ export function Footer() {
               Plataforma white-label de serviços empresariais. Você gerencia, nossa equipe
               executa — tudo com a sua marca.
             </p>
+            <div className="ds-footer-legal">
+              <p>CNPJ: 52.269.695/0001-05</p>
+              <p>
+                Avenida Paulista, 777 — Andar 15, Conj. 15, Sala 990
+                <br />
+                Bela Vista · São Paulo — SP · 01311-100
+              </p>
+            </div>
           </div>
 
           <div>
@@ -88,7 +96,10 @@ export function Footer() {
         </div>
 
         <div className="ds-footer-bottom">
-          <span>&copy; 2026 OfficeBiz · Todos os direitos reservados</span>
+          <span>
+            &copy; 2026 OfficeBiz · Todos os direitos reservados · Powered by{" "}
+            <strong>Zella Digital</strong>
+          </span>
           <div className="socials">
             <a
               href="#"

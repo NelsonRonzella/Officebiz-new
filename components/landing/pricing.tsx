@@ -37,8 +37,8 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
           <span className="ds-eyebrow">06 · Investimento</span>
           <h2>Quanto custa? Menos do que você imagina.</h2>
           <p>
-            Uma única licença, dois anos de acesso garantido. Hoje, com promoção,
-            você leva três anos pelo mesmo preço.
+            Uma única licença OfficeBiz, um ano de acesso completo à plataforma e
+            à equipe de especialistas.
           </p>
         </motion.div>
 
@@ -88,7 +88,7 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
               className="text-center text-xs mt-2 mb-6"
               style={{ color: "var(--ds-text-muted)" }}
             >
-              2 anos de acesso · em promoção, 3 anos pelo preço de 2
+              1 ano de acesso completo
             </p>
 
             <ul className="ds-price-features">
@@ -114,7 +114,7 @@ export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}
               className="text-center text-xs mt-4"
               style={{ color: "var(--ds-text-muted)" }}
             >
-              Sem fidelidade · Cancele quando quiser
+              Compra segura com Stripe
             </p>
           </div>
         </motion.div>

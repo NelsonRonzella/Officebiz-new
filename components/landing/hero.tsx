@@ -16,7 +16,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          R$ 0 de entrada · sem fidelidade
+          Sem taxa de setup
         </motion.span>
 
         <motion.h1

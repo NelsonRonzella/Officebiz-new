@@ -155,17 +155,6 @@ export function Testimonials() {
             />
           ))}
         </div>
-
-        <div className="ds-logo-cloud ds-logo-cloud--light mt-12">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
-            <img
-              key={n}
-              src={`/landing/images/client-logo-${n}.svg`}
-              alt={`Cliente ${n}`}
-              loading="lazy"
-            />
-          ))}
-        </div>
       </div>
     </section>
   );

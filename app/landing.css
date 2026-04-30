@@ -794,6 +794,19 @@
 .ds-footer ul a:hover { color: var(--ds-primary); }
 .ds-footer-brand img { height: 40px; margin-bottom: 18px; }
 .ds-footer-brand p { color: var(--ds-text-muted-light); font-size: 14px; line-height: 1.6; max-width: 360px; }
+.ds-footer-legal {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(228, 229, 223, 0.08);
+  max-width: 360px;
+}
+.ds-footer-legal p {
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(228, 229, 223, 0.45);
+  margin: 0 0 6px;
+}
+.ds-footer-legal p:last-child { margin-bottom: 0; }
 .ds-footer-bottom {
   position: relative;
   padding-top: 32px;

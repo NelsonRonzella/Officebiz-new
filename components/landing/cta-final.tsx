@@ -41,7 +41,7 @@ export function CtaFinal({ whatsappUrl = CLOSER_WHATSAPP_URL }: CtaFinalProps = 
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            Sem taxa de entrada. Sem fidelidade. Sem burocracia. Fale com um especialista
+            Sem taxa de entrada. Sem burocracia. Fale com um especialista
             no WhatsApp e tire dúvidas direto com quem opera a plataforma.
           </motion.p>
 
@@ -70,7 +70,6 @@ export function CtaFinal({ whatsappUrl = CLOSER_WHATSAPP_URL }: CtaFinalProps = 
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <span>Sem compromisso</span>
             <span>Suporte incluso</span>
             <span>Atendimento via WhatsApp</span>
           </motion.div>
