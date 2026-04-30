@@ -1,42 +1,57 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Star, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { SectionHeader } from "@/components/landing/section-header";
-import { Section } from "@/components/landing/section";
 
 const testimonials = [
   {
     quote:
-      "Em menos de um mês já tinha 5 clientes. A plataforma é intuitiva e o suporte responde super rápido. Melhor decisão que tomei!",
+      "Em menos de um mês já tinha 5 clientes. A plataforma é intuitiva e o suporte responde super rápido. Melhor decisão que tomei.",
     name: "Maria Silva",
-    role: "Consultora Empresarial",
-    city: "São Paulo, SP",
-    avatar: "MS",
+    role: "Consultora Empresarial · São Paulo, SP",
+    avatar: "/landing/images/avatar-1.avif",
   },
   {
     quote:
       "Eu já atendia alguns clientes com contabilidade, mas com a OfficeBiz consegui ampliar meu portfólio sem contratar ninguém. Meu faturamento triplicou.",
     name: "Carlos Mendes",
-    role: "Contador",
-    city: "Belo Horizonte, MG",
-    avatar: "CM",
+    role: "Contador · Belo Horizonte, MG",
+    avatar: "/landing/images/avatar-2.avif",
   },
   {
     quote:
-      "O modelo white-label é incrível. Meus clientes acham que tenho uma mega estrutura. Recomendo para qualquer empreendedor digital.",
+      "O modelo white-label é incrível. Meus clientes acham que tenho uma mega estrutura. Recomendo pra qualquer empreendedor digital.",
     name: "Ana Costa",
-    role: "Empreendedora Digital",
-    city: "Curitiba, PR",
-    avatar: "AC",
+    role: "Empreendedora Digital · Curitiba, PR",
+    avatar: "/landing/images/avatar-3.avif",
+  },
+  {
+    quote:
+      "Adquiri a licença mês passado, vendi 3 abertura de CNPJs na primeira semana. O time executa com qualidade, sem precisar de revisão minha.",
+    name: "Rafael Almeida",
+    role: "Sócio · RA Consultoria · Recife, PE",
+    avatar: "/landing/images/avatar-4.avif",
+  },
+  {
+    quote:
+      "Trabalho como designer e agora consigo vender pacote completo: marca + site + CNPJ. Faturamento por cliente quadruplicou.",
+    name: "Patrícia Rocha",
+    role: "Designer · Florianópolis, SC",
+    avatar: "/landing/images/avatar-5.avif",
   },
 ];
 
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M12 2l2.9 6.6L22 10l-5.5 4.7L18.2 22 12 18.3 5.8 22l1.7-7.3L2 10l7.1-1.4z" />
+    </svg>
+  );
+}
+
 export function Testimonials() {
   const [active, setActive] = useState(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const next = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -44,7 +59,7 @@ export function Testimonials() {
 
   const resetTimer = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(next, 5000);
+    intervalRef.current = setInterval(next, 6000);
   }, [next]);
 
   useEffect(() => {
@@ -65,87 +80,93 @@ export function Testimonials() {
     };
   }, [resetTimer]);
 
+  const t = testimonials[active];
+
   return (
-    <Section id="testimonials">
-      <SectionHeader
-        subtitle="Depoimentos reais"
-        title="O que nossos licenciados dizem"
-      />
+    <section id="testimonials" className="ds-section">
+      <div className="ds-container">
+        <motion.div
+          className="ds-section-head"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="ds-eyebrow">06 · Depoimentos reais</span>
+          <h2>O que os licenciados estão falando.</h2>
+          <p>Nada de stock — depoimentos de quem opera a plataforma todo dia.</p>
+        </motion.div>
 
-      <div className="max-w-2xl mx-auto">
-        {/* Testimonial card */}
-        <Card className="border border-border/60 bg-card shadow-lg relative overflow-hidden">
-          {/* Quote decoration */}
-          <Quote className="absolute top-6 right-6 w-10 h-10 text-primary/8" />
+        <div className="ds-testimonial">
+          <div className="ds-testimonial-stars" aria-label="5 estrelas">
+            <StarIcon />
+            <StarIcon />
+            <StarIcon />
+            <StarIcon />
+            <StarIcon />
+          </div>
 
-          <CardContent className="p-8 md:p-10 text-center">
-            {/* Stars */}
-            <div className="flex justify-center gap-1 mb-6">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 fill-warning text-warning"
-                />
-              ))}
-            </div>
+          <AnimatePresence mode="wait">
+            <motion.blockquote
+              key={active}
+              className="ds-testimonial-quote"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35 }}
+            >
+              {t.quote}
+            </motion.blockquote>
+          </AnimatePresence>
 
-            {/* Quote */}
-            <AnimatePresence mode="wait">
-              <motion.blockquote
-                key={active}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="text-lg text-foreground leading-relaxed mb-8 min-h-[80px]"
-              >
-                &ldquo;{testimonials[active].quote}&rdquo;
-              </motion.blockquote>
-            </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`author-${active}`}
+              className="ds-testimonial-author"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div
+                className="ds-testimonial-avatar"
+                style={{ backgroundImage: `url(${t.avatar})` }}
+                role="img"
+                aria-label={`Avatar de ${t.name}`}
+              />
+              <div>
+                <p className="ds-testimonial-name">{t.name}</p>
+                <p className="ds-testimonial-role">{t.role}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-            {/* Author */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center gap-3"
-              >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-                  {testimonials[active].avatar}
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">
-                    {testimonials[active].name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {testimonials[active].role} &middot;{" "}
-                    {testimonials[active].city}
-                  </p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </CardContent>
-        </Card>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="ds-testimonial-dots">
           {testimonials.map((_, i) => (
             <button
               key={i}
-              onClick={() => { setActive(i); resetTimer(); }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === active
-                  ? "bg-primary w-8"
-                  : "bg-border w-2 hover:bg-primary/30"
-              }`}
-              aria-label={`Depoimento ${i + 1}`}
+              className={i === active ? "is-active" : ""}
+              onClick={() => {
+                setActive(i);
+                resetTimer();
+              }}
+              aria-label={`Ver depoimento ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className="ds-logo-cloud ds-logo-cloud--light mt-12">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <img
+              key={n}
+              src={`/landing/images/client-logo-${n}.svg`}
+              alt={`Cliente ${n}`}
+              loading="lazy"
             />
           ))}
         </div>
       </div>
-    </Section>
+    </section>
   );
 }

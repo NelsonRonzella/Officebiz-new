@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./landing.css";
 import { cn } from "@/lib/utils";
 import { RegisterSW } from "@/components/pwa/register-sw";
 import { Toaster } from "@/components/ui/sonner";

@@ -1,106 +1,94 @@
 "use client";
 
-import { User, Monitor, Users, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { HandDrawnArrow } from "@/components/illustrations/decorative-elements";
-import { staggerContainer, fadeInItem } from "@/lib/motion";
-import { SectionHeader } from "@/components/landing/section-header";
-import { Section } from "@/components/landing/section";
 
 const steps = [
   {
-    icon: User,
-    title: "LICENCIADO",
-    subtitle: "Você capta clientes e gerencia pedidos",
-    color: "bg-primary/10 text-primary",
+    label: "Licenciado",
+    sub: "Você capta clientes e gerencia pedidos pelo painel",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21a8 8 0 0 1 16 0" />
+      </svg>
+    ),
   },
   {
-    icon: Monitor,
-    title: "PLATAFORMA",
-    subtitle: "Sistema completo para gestão de pedidos",
-    color: "bg-accent/20 text-accent-foreground",
+    label: "Plataforma",
+    sub: "Sistema completo conecta você à equipe",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M8 21h8 M12 17v4" />
+      </svg>
+    ),
   },
   {
-    icon: Users,
-    title: "ESPECIALISTAS",
-    subtitle: "Nossa equipe executa cada serviço",
-    color: "bg-primary/10 text-primary",
+    label: "Especialistas",
+    sub: "Contadores, designers e devs executam cada serviço",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="9" cy="8" r="3.5" />
+        <circle cx="17" cy="9" r="3" />
+        <path d="M3 21a6 6 0 0 1 12 0 M14 21a5 5 0 0 1 8 0" />
+      </svg>
+    ),
   },
   {
-    icon: Building2,
-    title: "CLIENTE FINAL",
-    subtitle: "Recebe o serviço com a sua marca",
-    color: "bg-accent/20 text-accent-foreground",
+    label: "Cliente final",
+    sub: "Recebe o serviço entregue com a sua marca",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 21h18 M5 21V8l7-4 7 4v13 M9 21v-6h6v6" />
+      </svg>
+    ),
   },
 ];
 
-const containerVariants = staggerContainer(0.15);
-const itemVariants = fadeInItem("y", 20, 0.5);
-
 export function WhatIs() {
   return (
-    <Section id="what-is">
-      <SectionHeader
-        subtitle="Como tudo se conecta"
-        title="O que é a OfficeBiz?"
-        description="Uma plataforma white-label que permite a qualquer pessoa oferecer serviços empresariais completos — sem precisar de equipe própria. Você gerencia seus clientes, nós cuidamos da execução."
-      />
+    <section id="what-is" className="ds-section">
+      <div className="ds-container">
+        <motion.div
+          className="ds-section-head"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="ds-eyebrow">01 · Como tudo se conecta</span>
+          <h2>O que é a OfficeBiz?</h2>
+          <p>
+            Uma plataforma white-label que permite a qualquer pessoa oferecer serviços empresariais
+            completos — sem precisar montar equipe própria. Você gerencia seus clientes, nós cuidamos
+            da execução.
+          </p>
+        </motion.div>
 
-      {/* Flow diagram */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 max-w-4xl mx-auto"
-      >
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.title}
-            variants={itemVariants}
-            className="flex flex-col md:flex-row items-center"
-          >
-            {/* Step card */}
-            <div className="flex flex-col items-center text-center w-36 sm:w-44 md:w-48 group">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-[1080px] mx-auto">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.label}
+              className="ds-mini-card relative"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+            >
+              <div className="ds-mini-card-icon">{step.icon}</div>
+              <h3 className="ds-mini-card-title">{step.label}</h3>
+              <p className="ds-mini-card-text">{step.sub}</p>
               <div
-                className={`size-[4.5rem] rounded-2xl ${step.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}
+                aria-hidden
+                className="absolute top-5 right-5 text-[11px] font-mono font-semibold tracking-widest"
+                style={{ color: "var(--ds-primary-deep)" }}
               >
-                <step.icon className="w-7 h-7" />
+                0{i + 1}
               </div>
-              <h3 className="text-sm font-bold text-foreground tracking-wide">
-                {step.title}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                {step.subtitle}
-              </p>
-            </div>
-
-            {/* Hand-drawn arrow between steps */}
-            {index < steps.length - 1 && (
-              <>
-                <HandDrawnArrow className="hidden md:block w-16 h-6 text-primary/40 mx-2 shrink-0" />
-                <div className="md:hidden my-3">
-                  <svg viewBox="0 0 24 60" className="w-4 h-10 text-primary/40" fill="none">
-                    <path
-                      d="M12 2 C10 20, 14 30, 12 48"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M6 42 L12 50 L18 42"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
-    </Section>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

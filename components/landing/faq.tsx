@@ -1,27 +1,23 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { SectionHeader } from "@/components/landing/section-header";
-import { Section } from "@/components/landing/section";
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
-    question: "Preciso ter CNPJ para ser licenciado?",
+    question: "Preciso ter CNPJ pra ser licenciado?",
     answer:
-      "Não! Você pode começar como pessoa física. Quando estiver pronto, podemos ajudar você a abrir seu CNPJ — inclusive esse é um dos serviços da plataforma.",
+      "Não. Você pode começar como pessoa física. Quando quiser abrir o CNPJ, podemos ajudar — inclusive esse é um dos serviços da plataforma.",
   },
   {
     question: "Preciso montar uma equipe?",
     answer:
-      "Não. Toda a execução dos serviços é feita pela equipe da OfficeBiz. Você só precisa focar em captar clientes e fazer os pedidos pelo painel.",
+      "Não. A execução de todos os serviços é feita pela equipe da OfficeBiz. Você só precisa focar em captar clientes e fazer os pedidos pelo painel.",
   },
   {
     question: "Como eu ganho dinheiro?",
     answer:
-      "Você define o preço que cobra dos seus clientes. A diferença entre o que você cobra e o custo do serviço na plataforma é o seu lucro. Simples assim.",
+      "Você define o preço que cobra dos seus clientes. A diferença entre o que você cobra e o custo do serviço na plataforma é o seu lucro. Sem teto, sem split forçado.",
   },
   {
     question: "Tem contrato de fidelidade?",
@@ -29,19 +25,19 @@ const faqs = [
       "Não. Você pode cancelar a qualquer momento, sem multa e sem burocracia. Acreditamos que você fica porque quer, não porque é obrigado.",
   },
   {
-    question: "Quanto custa para começar?",
+    question: "Quanto custa pra começar?",
     answer:
-      "Zero. Não há taxa de licença, nem de setup, nem de treinamento. O único custo é a manutenção mensal de R$ 390/mês, que cobre toda a infraestrutura e equipe.",
+      "Hoje a licença é R$ 2.990 (pagamento único) que dá acesso por 2 anos — em promoção, 3 anos pelo mesmo preço. Não tem taxa de setup nem de treinamento.",
   },
   {
     question: "Posso usar minha própria marca?",
     answer:
-      "Sim! O modelo é 100% white-label. Seus clientes interagem com a sua marca. A OfficeBiz opera nos bastidores.",
+      "Sim. O modelo é 100% white-label. Seus clientes interagem com a sua marca, sua identidade visual. A OfficeBiz opera nos bastidores.",
   },
   {
     question: "Preciso ter experiência na área?",
     answer:
-      "Não. Oferecemos treinamento e materiais de apoio. Além disso, a equipe de especialistas cuida de toda a parte técnica dos serviços.",
+      "Não. Oferecemos treinamento, materiais de apoio e a equipe de especialistas cuida de toda a parte técnica dos serviços que você vende.",
   },
   {
     question: "Quantos clientes posso atender?",
@@ -51,31 +47,65 @@ const faqs = [
 ];
 
 export function FAQ() {
-  return (
-    <Section id="faq" background="surface">
-      <SectionHeader
-        title="Perguntas Frequentes"
-        animated={false}
-      />
+  const [open, setOpen] = useState<number | null>(0);
 
-      <div className="max-w-2xl mx-auto">
-        <Accordion className="space-y-3">
-          {faqs.map((faq, index) => (
-            <AccordionItem
-              key={index}
-              value={`item-${index}`}
-              className="border border-border rounded-lg bg-card px-4 sm:px-6"
-            >
-              <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+  return (
+    <section id="faq" className="ds-section ds-section--alt">
+      <div className="ds-container">
+        <motion.div
+          className="ds-section-head"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="ds-eyebrow">07 · Dúvidas frequentes</span>
+          <h2>Perguntas que todo licenciado faz no começo.</h2>
+        </motion.div>
+
+        <div className="ds-faq-list">
+          {faqs.map((faq, i) => {
+            const isOpen = open === i;
+            return (
+              <div
+                key={i}
+                className="ds-faq-item"
+                data-open={isOpen ? "true" : "false"}
+              >
+                <button
+                  type="button"
+                  className="ds-faq-trigger"
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-content-${i}`}
+                >
+                  <span>{faq.question}</span>
+                  <span className="icon" aria-hidden>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M12 5v14 M5 12h14" />
+                    </svg>
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      id={`faq-content-${i}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div className="ds-faq-content">{faq.answer}</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }

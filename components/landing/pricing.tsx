@@ -1,13 +1,6 @@
 "use client";
 
-import { CheckCircle, Phone } from "lucide-react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { SparkleStars, FloatingDots } from "@/components/illustrations/decorative-elements";
-import { SectionHeader } from "@/components/landing/section-header";
-import { Section } from "@/components/landing/section";
 import { CLOSER_WHATSAPP_URL, LICENSE_PRICE_LABEL } from "@/lib/pricing";
 
 interface PricingProps {
@@ -16,96 +9,97 @@ interface PricingProps {
 
 const includedItems = [
   "Plataforma completa de gestão",
-  "Equipe de especialistas",
+  "Equipe de especialistas inclusa",
   "Suporte dedicado via WhatsApp",
   "Marca própria (white-label)",
-  "Treinamento incluso",
+  "Treinamento e materiais de apoio",
 ];
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12 L10 17 L19 7" />
+    </svg>
+  );
+}
 
 export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}) {
   return (
-    <Section id="pricing" background="muted">
-      {/* Decorative elements */}
-      <FloatingDots className="absolute top-10 left-10 w-40 h-40 text-primary pointer-events-none hidden lg:block" />
-      <FloatingDots className="absolute bottom-10 right-10 w-32 h-32 text-primary pointer-events-none hidden lg:block" />
-
-      <div className="relative z-10">
-        <SectionHeader
-          subtitle="Investimento único"
-          title="Quanto custa? Menos do que você imagina."
-        />
+    <section id="pricing" className="ds-section ds-section--alt">
+      <div className="ds-container">
+        <motion.div
+          className="ds-section-head"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="ds-eyebrow">05 · Investimento único</span>
+          <h2>Quanto custa? Menos do que você imagina.</h2>
+          <p>
+            Uma única licença, dois anos de acesso garantido. Hoje, com promoção,
+            você leva três anos pelo mesmo preço.
+          </p>
+        </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="ds-price-card"
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative max-w-lg mx-auto"
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Sparkle decorations */}
-          <SparkleStars className="absolute -top-8 -left-8 w-20 h-20 text-primary pointer-events-none hidden md:block" />
-          <SparkleStars className="absolute -bottom-6 -right-6 w-16 h-16 text-primary rotate-45 pointer-events-none hidden md:block" />
+          <div className="ds-price-card-inner">
+            <p className="ds-price-eyebrow">Licença OfficeBiz</p>
 
-          <Card className="border-2 border-primary/20 shadow-2xl shadow-primary/10 bg-card relative overflow-hidden">
-            {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-accent/[0.02] pointer-events-none" />
+            <p className="ds-price-amount">
+              <span className="currency">R$</span>
+              {LICENSE_PRICE_LABEL.replace(/^R\$\s*/, "")}
+              <span className="period">único</span>
+            </p>
 
-            <CardContent className="p-8 md:p-10 relative">
-              {/* Label */}
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center mb-6">
-                Licença OfficeBiz
-              </p>
+            <div className="flex flex-col items-center gap-3 mb-2">
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold"
+                style={{
+                  background: "var(--ds-primary)",
+                  color: "var(--ds-secondary-deep)",
+                  boxShadow: "0 8px 22px rgba(185,232,72,.35)",
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                Promoção: 3 anos pelo preço de 2
+              </span>
+            </div>
 
-              {/* Price */}
-              <div className="text-center space-y-2 mb-6">
-                <motion.p
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-                  className="text-6xl md:text-7xl font-bold text-primary"
-                >
-                  {LICENSE_PRICE_LABEL}
-                </motion.p>
-                <p className="text-sm text-muted-foreground">
-                  pagamento único
-                </p>
-              </div>
+            <ul className="ds-price-features">
+              {includedItems.map((item) => (
+                <li key={item}>
+                  <span className="check"><CheckIcon /></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
 
-              {/* Main feature + promo */}
-              <div className="flex flex-col items-center gap-3 mb-8">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-primary shrink-0" />
-                  <span className="text-foreground font-semibold text-lg">
-                    2 anos de acesso
-                  </span>
-                </div>
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-1.5">
-                  Promoção: 3 anos pelo mesmo preço
-                </Badge>
-              </div>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="ds-btn ds-btn--primary ds-btn--lg w-full justify-center"
+            >
+              Falar com especialista
+              <span className="arrow" aria-hidden>→</span>
+            </a>
 
-              {/* Included items */}
-              <div className="space-y-2.5 mb-8">
-                {includedItems.map((item) => (
-                  <div key={item} className="flex items-center gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-primary/60 shrink-0" />
-                    <span className="text-sm text-muted-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <a href={whatsappUrl} target="_blank" rel="noreferrer">
-                <Button size="lg" className="w-full shadow-lg shadow-primary/20">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Falar com especialista
-                </Button>
-              </a>
-            </CardContent>
-          </Card>
+            <p
+              className="text-center text-xs mt-4"
+              style={{ color: "var(--ds-text-muted)" }}
+            >
+              Pagamento único · Sem fidelidade · Cancele quando quiser
+            </p>
+          </div>
         </motion.div>
       </div>
-    </Section>
+    </section>
   );
 }

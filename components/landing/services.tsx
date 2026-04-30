@@ -1,134 +1,115 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  CnpjIllustration,
-  ContabilidadeIllustration,
-  MarcaIllustration,
-  LogoIllustration,
-  PapelariaIllustration,
-  SiteIllustration,
-  EmailIllustration,
-  CartaoVirtualIllustration,
-} from "@/components/illustrations/service-illustrations";
-import { staggerContainer, fadeInItem } from "@/lib/motion";
-import { SectionHeader } from "@/components/landing/section-header";
-import { Section } from "@/components/landing/section";
 
 const services = [
   {
-    Illustration: CnpjIllustration,
     title: "Abertura de CNPJ",
-    description:
-      "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
+    description: "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
+    icon: "/landing/images/icon-folder.svg",
     featured: true,
   },
   {
-    Illustration: ContabilidadeIllustration,
     title: "Contabilidade",
-    description:
-      "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
+    description: "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
+    icon: "/landing/images/icon-card.svg",
     featured: true,
   },
   {
-    Illustration: MarcaIllustration,
     title: "Registro de Marca",
-    description:
-      "Pesquisa de anterioridade e registro junto ao INPI com acompanhamento.",
-    featured: false,
+    description: "Pesquisa de anterioridade e registro junto ao INPI com acompanhamento.",
+    icon: "/landing/images/icon-shield.svg",
   },
   {
-    Illustration: LogoIllustration,
     title: "Logotipos",
-    description:
-      "Criação de identidade visual profissional com manual de marca.",
-    featured: false,
+    description: "Criação de identidade visual profissional com manual de marca.",
+    icon: "/landing/images/icon-language.svg",
   },
   {
-    Illustration: PapelariaIllustration,
     title: "Papelaria",
-    description:
-      "Cartões de visita, papel timbrado, envelopes e materiais impressos.",
-    featured: false,
+    description: "Cartões de visita, papel timbrado, envelopes e materiais impressos.",
+    icon: "/landing/images/icon-folder.svg",
   },
   {
-    Illustration: SiteIllustration,
     title: "Sites",
-    description:
-      "Sites institucionais e landing pages otimizadas para conversão.",
-    featured: false,
+    description: "Sites institucionais e landing pages otimizadas para conversão.",
+    icon: "/landing/images/icon-computer.svg",
   },
   {
-    Illustration: EmailIllustration,
     title: "E-mail e Domínios",
-    description:
-      "Registro de domínio e configuração de e-mail profissional.",
-    featured: false,
+    description: "Registro de domínio e configuração de e-mail profissional.",
+    icon: "/landing/images/icon-language.svg",
   },
   {
-    Illustration: CartaoVirtualIllustration,
     title: "Cartão Virtual",
-    description:
-      "Cartão de visita digital interativo com QR Code e link compartilhável.",
-    featured: false,
+    description: "Cartão de visita digital interativo com QR Code e link compartilhável.",
+    icon: "/landing/images/icon-card.svg",
   },
 ];
 
-const containerVariants = staggerContainer(0.08);
-const itemVariants = fadeInItem("y", 20, 0.4);
-
 export function Services() {
   return (
-    <Section id="services" background="muted">
-      <SectionHeader
-        subtitle="Portfólio completo"
-        title="Serviços que você pode oferecer aos seus clientes"
-        description="Um portfólio completo, pronto para revenda. Sem precisar de equipe própria."
-      />
+    <section id="services" className="ds-section ds-section--alt">
+      <div className="ds-container">
+        <motion.div
+          className="ds-section-head"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="ds-eyebrow">02 · Portfólio completo</span>
+          <h2>Serviços que você pode oferecer aos seus clientes</h2>
+          <p>
+            Um portfólio inteiro pronto pra revenda. Sem precisar de equipe própria,
+            sem precisar saber executar — basta vender com a sua marca.
+          </p>
+        </motion.div>
 
-      {/* Bento grid */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5"
-      >
-        {services.map((service) => (
-          <motion.div
-            key={service.title}
-            variants={itemVariants}
-            className={service.featured ? "sm:col-span-2 lg:col-span-2" : ""}
-          >
-            <Card
-              className={`group relative overflow-hidden border border-border/60 bg-card hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 h-full ${
-                service.featured ? "bg-gradient-to-br from-primary/[0.03] to-transparent" : ""
-              }`}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+          {services.map((service, i) => (
+            <motion.div
+              key={service.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
+              className={service.featured ? "sm:col-span-2 lg:col-span-2" : ""}
             >
-              <CardContent className={`flex ${service.featured ? "flex-row items-center gap-6 p-8" : "flex-col items-start gap-4 p-6"}`}>
+              <article
+                className="ds-card h-full flex flex-col gap-4"
+                style={
+                  service.featured
+                    ? {
+                        background:
+                          "linear-gradient(135deg, rgba(185,232,72,.08), transparent 60%), #fff",
+                      }
+                    : undefined
+                }
+              >
                 <div
-                  className={`shrink-0 ${
-                    service.featured ? "w-24 h-24" : "w-16 h-16"
-                  }`}
+                  className="inline-flex items-center justify-center rounded-[14px] w-14 h-14"
+                  style={{
+                    background: "rgba(185,232,72,.18)",
+                    color: "var(--ds-secondary)",
+                  }}
                 >
-                  <service.Illustration className="w-full h-full" />
+                  <Image src={service.icon} alt="" width={28} height={28} />
                 </div>
                 <div>
-                  <h3 className={`font-semibold text-foreground mb-1.5 ${service.featured ? "text-lg" : ""}`}>
+                  <h3 className="ds-card-title" style={{ fontSize: 18 }}>
                     {service.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="ds-card-sub" style={{ margin: "8px 0 0" }}>
                     {service.description}
                   </p>
                 </div>
-              </CardContent>
-              {/* Hover glow */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
-    </Section>
+              </article>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

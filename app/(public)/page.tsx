@@ -21,7 +21,7 @@ export const metadata = {
 export default async function LandingPage() {
   const whatsappUrl = await getConnectedWhatsappUrl();
   return (
-    <>
+    <div className="ds-scope">
       <Navbar />
       <main>
         <Hero />
@@ -36,6 +36,6 @@ export default async function LandingPage() {
       </main>
       <Footer />
       <WhatsAppButton whatsappUrl={whatsappUrl} />
-    </>
+    </div>
   );
 }
