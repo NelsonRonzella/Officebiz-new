@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
-import { DashboardScroll } from "@/components/landing/dashboard-scroll";
 import { WhatIs } from "@/components/landing/what-is";
 import { Services } from "@/components/landing/services";
 import { Features } from "@/components/landing/features";
@@ -28,7 +27,6 @@ export default async function LandingPage() {
       <Navbar />
       <main>
         <Hero />
-        <DashboardScroll />
         <WhatIs />
         <Services />
         <Features />
