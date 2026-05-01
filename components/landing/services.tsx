@@ -8,13 +8,18 @@ const services = [
     title: "Abertura de CNPJ",
     description: "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
     icon: "/landing/images/icon-folder.svg",
-    featured: true,
   },
   {
     title: "Contabilidade",
     description: "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
     icon: "/landing/images/icon-card.svg",
-    featured: true,
+    comingSoon: true,
+  },
+  {
+    title: "Seguros",
+    description: "Seguros empresariais e de vida — você oferece proteção completa pros seus clientes com a sua marca.",
+    icon: "/landing/images/icon-shield.svg",
+    comingSoon: true,
   },
   {
     title: "Registro de Marca",
@@ -67,27 +72,28 @@ export function Services() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
           {services.map((service, i) => (
             <motion.div
               key={service.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
-              className={service.featured ? "sm:col-span-2 lg:col-span-2" : ""}
+              transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
             >
-              <article
-                className="ds-card h-full flex flex-col gap-4"
-                style={
-                  service.featured
-                    ? {
-                        background:
-                          "linear-gradient(135deg, rgba(185,232,72,.08), transparent 60%), #fff",
-                      }
-                    : undefined
-                }
-              >
+              <article className="ds-card h-full flex flex-col gap-4 relative">
+                {service.comingSoon && (
+                  <span
+                    className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    style={{
+                      background: "rgba(185,232,72,.18)",
+                      color: "var(--ds-primary-deep)",
+                      letterSpacing: ".08em",
+                    }}
+                  >
+                    Em breve
+                  </span>
+                )}
                 <div
                   className="inline-flex items-center justify-center rounded-[14px] w-14 h-14"
                   style={{
