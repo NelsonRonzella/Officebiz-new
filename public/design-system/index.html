@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="w-mod-js wf-manrope-n4-active wf-manrope-n6-active wf-manrope-n5-active wf-manrope-n7-active wf-manrope-n3-active wf-active w-mod-ix">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OfficeBiz · Design System</title>
+  <meta name="description" content="Sistema de design vivo OfficeBiz — tokens, componentes, animações e diretrizes visuais.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="./styles/officebiz.shared.css" rel="stylesheet" type="text/css">
+  <link rel="icon" type="image/png" href="./images/favicon.png">
+  <link rel="shortcut icon" href="./images/favicon.png">
+  <script src="./scripts/webfont.js" type="text/javascript"></script>
+  <script type="text/javascript">WebFont.load({google:{families:["Manrope:300,400,500,600,700,800"]}});</script>
+
+  <style>
+    /* =========================================================
+       OfficeBiz Design System — custom styles
+       Layered on top of officebiz.shared.css
+       ========================================================= */
+
+    :root {
+      --ds-primary: #b9e848;
+      --ds-primary-soft: #d4f08a;
+      --ds-primary-deep: #8fc026;
+      --ds-secondary: #1b3a1c;
+      --ds-secondary-deep: #0d2410;
+      --ds-bg: #f8f8f8;
+      --ds-bg-alt: #f1f3ed;
+      --ds-text-light: #e4e5df;
+      --ds-text-dark: #1b3a1c;
+      --ds-text-muted: rgba(27, 58, 28, 0.62);
+      --ds-text-muted-light: rgba(228, 229, 223, 0.6);
+      --ds-border: rgba(27, 58, 28, 0.12);
+      --ds-border-strong: rgba(27, 58, 28, 0.22);
+      --ds-border-light: rgba(228, 229, 223, 0.16);
+      --ds-success: #4ade80;
+      --ds-warning: #fbbf24;
+      --ds-danger:  #ef4444;
+      --ds-info:    #60a5fa;
+      --ds-radius-sm: 8px;
+      --ds-radius:    16px;
+      --ds-radius-lg: 24px;
+      --ds-radius-xl: 40px;
+      --ds-shadow-sm: 0 4px 12px rgba(13, 36, 16, 0.06);
+      --ds-shadow:    0 12px 36px rgba(13, 36, 16, 0.10);
+      --ds-shadow-lg: 0 24px 64px rgba(13, 36, 16, 0.18);
+      --ds-glow:      0 0 0 4px rgba(185, 232, 72, 0.18), 0 0 32px rgba(185, 232, 72, 0.45);
+      --ds-glow-soft: 0 0 48px rgba(185, 232, 72, 0.28);
+      --ds-easing: cubic-bezier(.2,.8,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      font-weight: 400;
+      color: var(--ds-text-dark);
+      background: var(--ds-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+
+    /* ---------- Layout helpers ---------- */
+    .ds-container { width: min(1200px, 92vw); margin: 0 auto; }
+    .ds-section { padding: 120px 0; position: relative; overflow: hidden; }
+    .ds-section + .ds-section { border-top: 1px solid var(--ds-border); }
+    .ds-section--dark { background: var(--ds-secondary-deep); color: var(--ds-text-light); }
+    .ds-section--alt { background: var(--ds-bg-alt); }
+
+    .ds-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 16px;
+      background: rgba(185, 232, 72, 0.15);
+      color: var(--ds-secondary);
+      border: 1px solid rgba(185, 232, 72, 0.45);
+      border-radius: 999px;
+      font-size: 13px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .ds-section--dark .ds-eyebrow {
+      background: rgba(185, 232, 72, 0.12);
+      color: var(--ds-primary);
+      border-color: rgba(185, 232, 72, 0.4);
+    }
+    .ds-eyebrow::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--ds-primary);
+      box-shadow: 0 0 10px var(--ds-primary);
+      animation: dsPulse 1.8s ease-in-out infinite;
+    }
+
+    .ds-section-head { max-width: 760px; margin: 0 auto 80px; text-align: center; }
+    .ds-section-head h2 {
+      font-family: "Airbnb cereal", Manrope, sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin: 24px 0 16px;
+      color: inherit;
+    }
+    .ds-section-head p { font-size: 18px; line-height: 1.6; color: var(--ds-text-muted); margin: 0; }
+    .ds-section--dark .ds-section-head p { color: var(--ds-text-muted-light); }
+
+    /* =========================================================
+       Top nav
+       ========================================================= */
+    .ds-nav {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      width: min(1180px, 94vw); z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; padding: 12px 16px 12px 22px;
+      background: rgba(13, 36, 16, 0.72);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(228, 229, 223, 0.12);
+      border-radius: 999px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+    .ds-nav-brand { display: flex; align-items: center; gap: 12px; color: var(--ds-text-light); text-decoration: none; }
+    .ds-nav-brand img { height: 32px; width: auto; }
+    .ds-nav-links { display: flex; gap: 6px; align-items: center; }
+    .ds-nav-link {
+      color: var(--ds-text-light); text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      padding: 8px 14px; border-radius: 999px;
+      transition: background .25s var(--ds-easing), color .25s var(--ds-easing);
+    }
+    .ds-nav-link:hover { background: rgba(185, 232, 72, 0.15); color: var(--ds-primary); }
+    .ds-nav-cta {
+      background: var(--ds-primary); color: var(--ds-secondary-deep);
+      padding: 10px 20px; border-radius: 999px;
+      font-weight: 700; font-size: 14px; text-decoration: none;
+      transition: transform .25s var(--ds-easing), box-shadow .25s var(--ds-easing);
+    }
+    .ds-nav-cta:hover { transform: translateY(-1px); box-shadow: var(--ds-glow); }
+    @media (max-width: 1080px) { .ds-nav-links { display: none; } }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+    .ds-hero {
+      position: relative; min-height: 100vh; padding: 160px 0 120px;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(185, 232, 72, 0.18), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 100% 100%, rgba(185, 232, 72, 0.12), transparent 70%),
+        linear-gradient(180deg, #0c2410 0%, #143a18 50%, #0e2a13 100%);
+      color: var(--ds-text-light);
+      overflow: hidden;
+    }
+    .ds-hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(228, 229, 223, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(228, 229, 223, .055) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, #000 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, #000 20%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .ds-orb {
+      position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none;
+      animation: dsFloat 14s ease-in-out infinite;
+    }
+    .ds-orb--1 { width: 480px; height: 480px; background: radial-gradient(circle, rgba(185,232,72,.55), transparent 70%); top: -120px; left: -120px; }
+    .ds-orb--2 { width: 360px; height: 360px; background: radial-gradient(circle, rgba(143,192,38,.55), transparent 70%); bottom: 10%; right: -80px; animation-delay: -5s; }
+    .ds-orb--3 { width: 260px; height: 260px; background: radial-gradient(circle, rgba(212,240,138,.45), transparent 70%); top: 40%; left: 55%; animation-delay: -9s; }
+
+    .ds-hero-inner { position: relative; z-index: 2; text-align: center; max-width: 980px; margin: 0 auto; }
+    .ds-hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px;
+      background: rgba(228, 229, 223, .08); border: 1px solid rgba(228, 229, 223, .18);
+      border-radius: 999px; font-size: 14px; color: var(--ds-text-light);
+      backdrop-filter: blur(8px); }
+    .ds-hero-tag::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--ds-primary); box-shadow: 0 0 12px var(--ds-primary);
+      animation: dsPulse 1.6s ease-in-out infinite;
+    }
+
+    .ds-hero h1 {
+      font-family: "Airbnb cereal", Manrope, sans-serif;
+      font-size: clamp(44px, 7.5vw, 96px);
+      font-weight: 800;
+      line-height: .98;
+      letter-spacing: -.025em;
+      margin: 24px 0 20px;
+      color: var(--ds-text-light);
+    }
+    .ds-hero h1 .accent {
+      background: linear-gradient(90deg, var(--ds-primary), var(--ds-primary-soft) 60%, #e7f9b6);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      position: relative; display: inline-block;
+    }
+    .ds-hero h1 .accent::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+      height: 8px; border-radius: 999px; background: rgba(185, 232, 72, .22);
+      filter: blur(8px); transform: scaleX(.85); transform-origin: center;
+      animation: dsUnderlineGrow 2.4s var(--ds-easing) 1s forwards;
+    }
+    .ds-hero p { font-size: clamp(16px, 1.6vw, 20px); line-height: 1.6; color: var(--ds-text-muted-light);
+      max-width: 640px; margin: 0 auto 36px; }
+
+    .ds-hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .ds-btn {
+      position: relative; display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 28px;
+      border: none; cursor: pointer;
+      font-family: inherit; font-size: 16px; font-weight: 700;
+      border-radius: 999px; text-decoration: none;
+      transition: transform .25s var(--ds-easing), box-shadow .25s var(--ds-easing), background .25s var(--ds-easing), color .25s var(--ds-easing);
+      overflow: hidden;
+    }
+    .ds-btn--primary { background: var(--ds-primary); color: var(--ds-secondary-deep); box-shadow: 0 12px 30px rgba(185,232,72,.35); }
+    .ds-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(185,232,72,.55), var(--ds-glow); }
+    .ds-btn--ghost { background: transparent; color: var(--ds-text-light); border: 1px solid rgba(228, 229, 223, .25); }
+    .ds-btn--ghost:hover { background: rgba(228, 229, 223, .08); border-color: rgba(228, 229, 223, .55); transform: translateY(-2px); }
+    .ds-btn--secondary { background: var(--ds-secondary); color: var(--ds-text-light); }
+    .ds-btn--secondary:hover { background: var(--ds-secondary-deep); transform: translateY(-2px); }
+    .ds-btn .arrow {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--ds-secondary-deep); color: var(--ds-primary);
+      transition: transform .35s var(--ds-easing);
+    }
+    .ds-btn:hover .arrow { transform: translateX(3px) rotate(-12deg); }
+    .ds-btn--ghost .arrow { background: var(--ds-primary); color: var(--ds-secondary-deep); }
+    .ds-btn::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.45), transparent);
+      transition: left .9s var(--ds-easing);
+    }
+    .ds-btn:hover::after { left: 130%; }
+
+    /* Hero showcase preview cards (parallax-like) */
+    .ds-hero-stage {
+      position: relative; margin-top: 72px;
+      perspective: 1400px;
+    }
+    .ds-hero-frame {
+      position: relative; max-width: 920px; margin: 0 auto;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(228,229,223,.06), rgba(228,229,223,.02));
+      border: 1px solid rgba(228,229,223,.14);
+      border-radius: 28px;
+      transform: rotateX(8deg);
+      box-shadow: 0 60px 120px rgba(0,0,0,.4);
+    }
+    .ds-hero-frame::before {
+      content: ""; position: absolute; inset: -1px; border-radius: 29px;
+      background: linear-gradient(135deg, rgba(185,232,72,.4), transparent 30%, transparent 70%, rgba(185,232,72,.4));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude; -webkit-mask-composite: xor;
+      padding: 1px; pointer-events: none;
+      opacity: .55;
+    }
+    .ds-hero-frame-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .ds-hero-stat {
+      background: rgba(13, 36, 16, .55);
+      border: 1px solid rgba(228,229,223,.1);
+      border-radius: 18px; padding: 22px;
+    }
+    .ds-hero-stat .label { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--ds-text-muted-light); }
+    .ds-hero-stat .value { font-family: "Airbnb cereal", Manrope, sans-serif; font-size: 36px; font-weight: 800; color: var(--ds-text-light); margin: 8px 0 4px; }
+    .ds-hero-stat .delta { font-size: 13px; color: var(--ds-primary); }
+    .ds-hero-stat .bar { margin-top: 12px; height: 6px; border-radius: 999px; background: rgba(228,229,223,.12); overflow: hidden; }
+    .ds-hero-stat .bar > span { display: block; height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--ds-primary), var(--ds-primary-soft));
+      box-shadow: 0 0 14px rgba(185,232,72,.6);
+      animation: dsBarFill 2.2s var(--ds-easing) .4s both; transform-origin: left; }
+    .ds-hero-stat:nth-child(1) .bar > span { width: 78%; }
+    .ds-hero-stat:nth-child(2) .bar > span { width: 54%; animation-delay: .55s; }
+    .ds-hero-stat:nth-child(3) .bar > span { width: 92%; animation-delay: .7s; }
+
+    /* =========================================================
+       Reveal-on-scroll
+       ========================================================= */
+    .ds-reveal { opacity: 1; transform: none; transition: opacity .8s var(--ds-easing), transform .8s var(--ds-easing); }
+    html.has-js .ds-reveal { opacity: 0; transform: translateY(28px); }
+    html.has-js .ds-reveal.is-visible { opacity: 1; transform: none; }
+    .ds-reveal--delay-1 { transition-delay: .1s; }
+    .ds-reveal--delay-2 { transition-delay: .2s; }
+    .ds-reveal--delay-3 { transition-delay: .3s; }
+    .ds-reveal--delay-4 { transition-delay: .4s; }
+
+    /* =========================================================
+       Typography section
+       ========================================================= */
+    .ds-type-grid { display: grid; gap: 20px; }
+    .ds-type-row {
+      display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: center;
+      background: #fff; border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-lg); padding: 28px 32px;
+      transition: transform .35s var(--ds-easing), box-shadow .35s var(--ds-easing), border-color .35s var(--ds-easing);
+    }
+    .ds-type-row:hover { transform: translateY(-3px); box-shadow: var(--ds-shadow); border-color: var(--ds-border-strong); }
+    .ds-type-meta { font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 13px; color: var(--ds-text-muted); line-height: 1.7; }
+    .ds-type-meta strong { color: var(--ds-secondary); font-weight: 700; }
+    .ds-type-sample { font-family: "Airbnb cereal", Manrope, sans-serif; color: var(--ds-secondary); margin: 0; }
+    .ds-type-sample.h1 { font-size: 68px; font-weight: 800; line-height: 1.05; letter-spacing: -.66px; }
+    .ds-type-sample.h2 { font-size: 52px; font-weight: 800; line-height: 1.15; letter-spacing: -1px; }
+    .ds-type-sample.h3 { font-size: 32px; font-weight: 700; line-height: 1.1; letter-spacing: -.24px; }
+    .ds-type-sample.h4 { font-size: 24px; font-weight: 700; line-height: 1.1; letter-spacing: -.88px; }
+    .ds-type-sample.h5 { font-size: 20px; font-weight: 600; line-height: 1.2; letter-spacing: -.84px; }
+    .ds-type-sample.h6 { font-size: 18px; font-weight: 600; line-height: 1.3; letter-spacing: -.64px; }
+    .ds-type-sample.body-lg { font-family: Manrope; font-size: 20px; font-weight: 400; line-height: 1.4; letter-spacing: -.4px; color: var(--ds-secondary); }
+    .ds-type-sample.body { font-family: Manrope; font-size: 18px; font-weight: 400; line-height: 1.5; letter-spacing: -.36px; color: var(--ds-secondary); }
+    .ds-type-sample.body-sm { font-family: Manrope; font-size: 16px; font-weight: 400; line-height: 1.62; letter-spacing: -.24px; color: var(--ds-secondary); }
+    .ds-type-sample.caption { font-family: Manrope; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ds-text-muted); }
+    @media (max-width: 720px) {
+      .ds-type-row { grid-template-columns: 1fr; }
+      .ds-type-sample.h1 { font-size: 44px; }
+      .ds-type-sample.h2 { font-size: 36px; }
+    }
+
+    /* =========================================================
+       Color tokens
+       ========================================================= */
+    .ds-color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+    .ds-color {
+      position: relative; border-radius: var(--ds-radius-lg);
+      padding: 24px; min-height: 180px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      border: 1px solid var(--ds-border-light);
+      overflow: hidden;
+      transition: transform .4s var(--ds-easing), box-shadow .4s var(--ds-easing);
+    }
+    .ds-color:hover { transform: translateY(-4px); box-shadow: var(--ds-shadow); }
+    .ds-color::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255,255,255,.18), transparent 60%);
+      pointer-events: none;
+    }
+    .ds-color-name { font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+    .ds-color-role { font-size: 12px; opacity: .72; text-transform: uppercase; letter-spacing: .12em; margin-top: 4px; }
+    .ds-color-values { display: grid; gap: 4px; font-family: "JetBrains Mono", monospace; font-size: 12px; opacity: .85; }
+    .ds-color--on-light { color: var(--ds-secondary); }
+    .ds-color--on-dark { color: var(--ds-text-light); }
+
+    .ds-grad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 28px; }
+    .ds-gradient {
+      height: 140px; border-radius: var(--ds-radius-lg);
+      position: relative; overflow: hidden;
+      box-shadow: var(--ds-shadow-sm);
+    }
+    .ds-gradient::after {
+      content: attr(data-name); position: absolute; left: 16px; bottom: 14px;
+      color: #fff; font-weight: 700; font-size: 14px;
+      text-shadow: 0 2px 8px rgba(0,0,0,.35);
+    }
+
+    /* =========================================================
+       Components
+       ========================================================= */
+    .ds-comp-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 28px; }
+    .ds-card {
+      grid-column: span 6;
+      background: #fff; border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-lg); padding: 32px;
+      transition: transform .4s var(--ds-easing), box-shadow .4s var(--ds-easing), border-color .4s var(--ds-easing);
+    }
+    .ds-section--dark .ds-card { background: rgba(228,229,223,.04); border-color: rgba(228,229,223,.1); }
+    .ds-card:hover { transform: translateY(-4px); box-shadow: var(--ds-shadow); border-color: var(--ds-border-strong); }
+    .ds-card-title { font-family: "Airbnb cereal", Manrope, sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 6px; color: inherit; }
+    .ds-card-sub { color: var(--ds-text-muted); font-size: 14px; margin: 0 0 24px; }
+    .ds-section--dark .ds-card-sub { color: var(--ds-text-muted-light); }
+    .ds-card-body { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    @media (max-width: 880px) { .ds-card { grid-column: span 12; } }
+
+    /* Buttons examples */
+    .ds-btn--sm { padding: 10px 18px; font-size: 14px; }
+    .ds-btn--lg { padding: 18px 32px; font-size: 18px; }
+    .ds-btn--icon { width: 48px; height: 48px; padding: 0; justify-content: center; }
+    .ds-btn:disabled, .ds-btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Inputs */
+    .ds-input-wrap { position: relative; width: 100%; max-width: 360px; }
+    .ds-input {
+      width: 100%; padding: 14px 18px;
+      font-family: inherit; font-size: 15px;
+      background: #fff; color: var(--ds-secondary);
+      border: 1.5px solid var(--ds-border-strong);
+      border-radius: 12px; outline: none;
+      transition: border-color .25s var(--ds-easing), box-shadow .25s var(--ds-easing), transform .25s var(--ds-easing);
+    }
+    .ds-input::placeholder { color: rgba(27,58,28,.42); }
+    .ds-input:focus { border-color: var(--ds-primary-deep); box-shadow: 0 0 0 4px rgba(185,232,72,.25); transform: translateY(-1px); }
+    .ds-section--dark .ds-input { background: rgba(228,229,223,.06); color: var(--ds-text-light); border-color: rgba(228,229,223,.18); }
+    .ds-section--dark .ds-input::placeholder { color: rgba(228,229,223,.4); }
+    .ds-section--dark .ds-input:focus { border-color: var(--ds-primary); box-shadow: 0 0 0 4px rgba(185,232,72,.3); }
+    .ds-input-label { display: block; font-size: 13px; font-weight: 600; color: var(--ds-text-muted); margin-bottom: 8px; letter-spacing: .02em; }
+    .ds-section--dark .ds-input-label { color: var(--ds-text-muted-light); }
+
+    /* Switch */
+    .ds-switch { position: relative; display: inline-block; width: 52px; height: 30px; }
+    .ds-switch input { opacity: 0; width: 0; height: 0; }
+    .ds-switch .track {
+      position: absolute; cursor: pointer; inset: 0;
+      background: rgba(27,58,28,.16); border-radius: 999px;
+      transition: background .25s var(--ds-easing);
+    }
+    .ds-switch .track::before {
+      content: ""; position: absolute; height: 22px; width: 22px; left: 4px; top: 4px;
+      background: #fff; border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      transition: transform .3s var(--ds-easing), background .25s var(--ds-easing);
+    }
+    .ds-switch input:checked + .track { background: var(--ds-primary); box-shadow: 0 0 0 4px rgba(185,232,72,.18); }
+    .ds-switch input:checked + .track::before { transform: translateX(22px); background: var(--ds-secondary-deep); }
+
+    /* Mini cards */
+    .ds-mini-card {
+      background: var(--ds-bg-alt); border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius); padding: 20px; width: 100%;
+      transition: transform .35s var(--ds-easing), box-shadow .35s var(--ds-easing);
+    }
+    .ds-mini-card:hover { transform: translateY(-3px); box-shadow: var(--ds-shadow-sm); }
+    .ds-mini-card-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--ds-primary); color: var(--ds-secondary-deep);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; box-shadow: 0 8px 18px rgba(185,232,72,.3);
+    }
+
+    /* Mini navbar preview */
+    .ds-mini-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(13,36,16,.85); border-radius: 999px;
+      border: 1px solid rgba(228,229,223,.14);
+      width: 100%;
+      color: var(--ds-text-light);
+    }
+    .ds-mini-nav .links { display: flex; gap: 4px; }
+    .ds-mini-nav .links a {
+      color: inherit; text-decoration: none; padding: 6px 10px; font-size: 13px; border-radius: 999px;
+      transition: background .2s var(--ds-easing);
+    }
+    .ds-mini-nav .links a:hover { background: rgba(185,232,72,.18); color: var(--ds-primary); }
+    .ds-mini-nav .cta { background: var(--ds-primary); color: var(--ds-secondary-deep); padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none; }
+
+    /* Modal demo */
+    .ds-modal-demo { position: relative; background: linear-gradient(180deg, var(--ds-bg-alt), #fff); border: 1px dashed var(--ds-border-strong); border-radius: 16px; padding: 28px; min-height: 220px; display: flex; align-items: center; justify-content: center; }
+    .ds-modal {
+      width: 100%; max-width: 360px;
+      background: #fff; border: 1px solid var(--ds-border);
+      border-radius: 18px; padding: 24px;
+      box-shadow: var(--ds-shadow-lg);
+      transform: scale(.92); opacity: .55;
+      transition: transform .35s var(--ds-easing), opacity .35s var(--ds-easing);
+    }
+    .ds-modal-demo:hover .ds-modal { transform: scale(1); opacity: 1; }
+    .ds-modal h4 { margin: 0 0 6px; font-family: "Airbnb cereal", Manrope, sans-serif; font-size: 18px; font-weight: 700; color: var(--ds-secondary); }
+    .ds-modal p { margin: 0 0 18px; color: var(--ds-text-muted); font-size: 14px; line-height: 1.5; }
+    .ds-modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    /* Badge & Tooltip */
+    .ds-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      font-size: 12px; font-weight: 700;
+      border-radius: 999px;
+      letter-spacing: .04em;
+    }
+    .ds-badge--primary { background: var(--ds-primary); color: var(--ds-secondary-deep); }
+    .ds-badge--success { background: rgba(74,222,128,.18); color: #166534; border: 1px solid rgba(74,222,128,.4); }
+    .ds-badge--warning { background: rgba(251,191,36,.18); color: #854d0e; border: 1px solid rgba(251,191,36,.4); }
+    .ds-badge--danger  { background: rgba(239,68,68,.16); color: #991b1b; border: 1px solid rgba(239,68,68,.45); }
+    .ds-badge--info    { background: rgba(96,165,250,.16); color: #1e3a8a; border: 1px solid rgba(96,165,250,.4); }
+    .ds-section--dark .ds-badge--success { background: rgba(74,222,128,.16); color: #bbf7d0; }
+    .ds-section--dark .ds-badge--warning { background: rgba(251,191,36,.16); color: #fde68a; }
+    .ds-section--dark .ds-badge--danger  { background: rgba(239,68,68,.18); color: #fecaca; }
+    .ds-section--dark .ds-badge--info    { background: rgba(96,165,250,.18); color: #bfdbfe; }
+    .ds-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .85; }
+
+    .ds-tooltip { position: relative; display: inline-flex; }
+    .ds-tooltip > .trigger {
+      padding: 10px 18px; background: var(--ds-secondary); color: var(--ds-text-light);
+      border-radius: 999px; font-size: 14px; cursor: pointer;
+      border: none; font-family: inherit; font-weight: 600;
+    }
+    .ds-tooltip > .bubble {
+      position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%) translateY(6px);
+      background: #0d2410; color: var(--ds-text-light);
+      padding: 8px 14px; border-radius: 10px;
+      font-size: 13px; white-space: nowrap;
+      box-shadow: var(--ds-shadow);
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s var(--ds-easing), transform .25s var(--ds-easing);
+    }
+    .ds-tooltip > .bubble::after {
+      content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: #0d2410;
+    }
+    .ds-tooltip:hover > .bubble { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* =========================================================
+       Logo section
+       ========================================================= */
+    .ds-logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 880px) { .ds-logo-grid { grid-template-columns: 1fr; } }
+    .ds-logo-tile {
+      position: relative; border-radius: var(--ds-radius-lg);
+      padding: 56px 32px; min-height: 280px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      overflow: hidden;
+      transition: transform .4s var(--ds-easing), box-shadow .4s var(--ds-easing);
+    }
+    .ds-logo-tile:hover { transform: translateY(-4px); box-shadow: var(--ds-shadow-lg); }
+    .ds-logo-tile--dark {
+      background:
+        radial-gradient(ellipse 60% 50% at 30% 20%, rgba(185, 232, 72, .14), transparent 60%),
+        linear-gradient(135deg, var(--ds-secondary-deep) 0%, var(--ds-secondary) 100%);
+      color: var(--ds-text-light);
+      border: 1px solid rgba(228, 229, 223, .12);
+    }
+    .ds-logo-tile--light {
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 80%, rgba(185, 232, 72, .12), transparent 60%),
+        linear-gradient(135deg, #ffffff 0%, var(--ds-bg-alt) 100%);
+      color: var(--ds-secondary);
+      border: 1px solid var(--ds-border);
+    }
+    .ds-logo-tile img { max-width: 320px; width: 80%; height: auto; transition: transform .4s var(--ds-easing); }
+    .ds-logo-tile:hover img { transform: scale(1.04); }
+    .ds-logo-meta { font-size: 13px; opacity: .75; text-align: center; line-height: 1.6; }
+    .ds-logo-meta code { background: rgba(0,0,0,.18); padding: 2px 8px; border-radius: 6px; font-size: 12px; }
+    .ds-logo-tile--light .ds-logo-meta code { background: rgba(27,58,28,.08); color: var(--ds-secondary); }
+
+    .ds-logo-clearspace {
+      position: relative;
+      background: var(--ds-bg-alt); border: 1px dashed var(--ds-border-strong);
+      border-radius: var(--ds-radius); padding: 56px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 220px;
+      overflow: hidden;
+    }
+    .ds-logo-clearspace::before {
+      content: ""; position: absolute; inset: 24px;
+      border: 2px dashed rgba(185, 232, 72, .55);
+      border-radius: 14px; pointer-events: none;
+    }
+    .ds-logo-clearspace .label-x {
+      position: absolute; font-family: "JetBrains Mono", monospace; font-size: 12px;
+      color: var(--ds-primary-deep); font-weight: 700;
+      background: var(--ds-bg-alt); padding: 0 6px;
+    }
+    .ds-logo-clearspace .label-x.top    { top: 18px; left: 50%; transform: translateX(-50%); }
+    .ds-logo-clearspace .label-x.bottom { bottom: 18px; left: 50%; transform: translateX(-50%); }
+    .ds-logo-clearspace .label-x.left   { left: 14px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+    .ds-logo-clearspace .label-x.right  { right: 14px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .ds-logo-clearspace img { max-width: 240px; width: 60%; height: auto; }
+
+    .ds-logo-sizes { display: flex; align-items: flex-end; gap: 32px; flex-wrap: wrap; padding: 24px 0; }
+    .ds-logo-sizes .size {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .ds-logo-sizes .size img { height: var(--h, 40px); width: auto; }
+    .ds-logo-sizes .size span { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ds-text-muted); }
+
+    .ds-do-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .ds-do-tile {
+      position: relative; padding: 24px 22px;
+      border-radius: var(--ds-radius); min-height: 160px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      border: 1px solid var(--ds-border);
+      background: #fff;
+      overflow: hidden;
+    }
+    .ds-do-tile img { max-height: 56px; width: auto; max-width: 100%; }
+    .ds-do-tile .badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .ds-do-tile.is-do .badge   { background: rgba(34,197,94,.16); color: #166534; border: 1px solid rgba(34,197,94,.4); }
+    .ds-do-tile.is-dont .badge { background: rgba(239,68,68,.16); color: #991b1b; border: 1px solid rgba(239,68,68,.4); }
+    .ds-do-tile .label { font-size: 13px; color: var(--ds-text-muted); text-align: center; margin-top: 4px; }
+    .ds-do-tile.warp     img { transform: scaleX(1.6) skewX(-8deg); }
+    .ds-do-tile.recolor  img { filter: hue-rotate(220deg) saturate(2); }
+    .ds-do-tile.shadowed img { filter: drop-shadow(0 0 18px #ef4444); }
+    .ds-do-tile.rotated  img { transform: rotate(-8deg); }
+    .ds-do-tile.cluttered { background: linear-gradient(45deg, #ffd1d1 0 25%, #c2f0c2 25% 50%, #ffd1d1 50% 75%, #c2f0c2 75%); }
+
+    /* =========================================================
+       Imagens section
+       ========================================================= */
+    .ds-img-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .ds-img-card {
+      grid-column: span 4;
+      position: relative; border-radius: var(--ds-radius-lg);
+      overflow: hidden; aspect-ratio: 4/5;
+      transition: transform .5s var(--ds-easing), box-shadow .5s var(--ds-easing);
+    }
+    .ds-img-card.is-wide { grid-column: span 8; aspect-ratio: 16/9; }
+    .ds-img-card.is-tall { grid-column: span 4; aspect-ratio: 3/4; }
+    .ds-img-card.is-half { grid-column: span 6; aspect-ratio: 4/3; }
+    @media (max-width: 880px) {
+      .ds-img-card,
+      .ds-img-card.is-wide,
+      .ds-img-card.is-tall,
+      .ds-img-card.is-half { grid-column: span 12; aspect-ratio: 16/10; }
+    }
+    .ds-img-card:hover { transform: translateY(-4px); box-shadow: var(--ds-shadow-lg); }
+    .ds-img-card .frame {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 1.2s var(--ds-easing), filter .5s var(--ds-easing);
+    }
+    .ds-img-card:hover .frame { transform: scale(1.06); }
+    .ds-img-card .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(13,36,16,0) 50%, rgba(13,36,16,.85) 100%);
+    }
+    .ds-img-card .meta {
+      position: absolute; left: 22px; right: 22px; bottom: 18px;
+      color: var(--ds-text-light); z-index: 2;
+    }
+    .ds-img-card .meta h4 {
+      font-family: "Airbnb cereal", Manrope, sans-serif; font-size: 18px; font-weight: 700;
+      margin: 0 0 4px;
+    }
+    .ds-img-card .meta small {
+      font-size: 12px; opacity: .8; letter-spacing: .04em;
+    }
+    .ds-img-card .tag {
+      position: absolute; top: 16px; left: 16px;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(13, 36, 16, .55); backdrop-filter: blur(6px);
+      color: var(--ds-text-light); font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      border: 1px solid rgba(228, 229, 223, .2);
+    }
+    .ds-img-tint {
+      position: absolute; inset: 0; mix-blend-mode: multiply;
+      background: linear-gradient(135deg, rgba(27, 58, 28, .25), rgba(185, 232, 72, .12));
+      pointer-events: none;
+    }
+
+    .ds-img-rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+    .ds-img-rule {
+      padding: 22px;
+      border-radius: var(--ds-radius);
+      background: var(--ds-bg-alt);
+      border: 1px solid var(--ds-border);
+    }
+    .ds-img-rule .ico {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--ds-primary); color: var(--ds-secondary-deep);
+      margin-bottom: 12px;
+    }
+    .ds-img-rule h5 { margin: 0 0 6px; font-family: "Airbnb cereal", Manrope; font-size: 16px; color: var(--ds-secondary); font-weight: 700; }
+    .ds-img-rule p { margin: 0; font-size: 13px; color: var(--ds-text-muted); line-height: 1.5; }
+
+    /* =========================================================
+       Icons section
+       ========================================================= */
+    #icones .ds-icon-grid,
+    #icones .ds-card-title {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .ds-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (max-width: 720px) { .ds-icon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 420px) { .ds-icon-grid { grid-template-columns: 1fr; } }
+    .ds-icon-card {
+      background: rgba(228,229,223,.04); border: 1px solid rgba(228,229,223,.1);
+      border-radius: var(--ds-radius); padding: 24px 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      text-align: center;
+      transition: background .35s var(--ds-easing), transform .35s var(--ds-easing), border-color .35s var(--ds-easing);
+    }
+    .ds-icon-card:hover {
+      background: rgba(185,232,72,.12); border-color: rgba(185,232,72,.4);
+      transform: translateY(-3px);
+    }
+    .ds-icon-thumb {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(185,232,72,.14); color: var(--ds-primary);
+      transition: background .35s var(--ds-easing), color .35s var(--ds-easing), box-shadow .35s var(--ds-easing);
+    }
+    .ds-icon-card:hover .ds-icon-thumb { background: var(--ds-primary); color: var(--ds-secondary-deep); box-shadow: var(--ds-glow); }
+    .ds-icon-name { font-size: 13px; font-weight: 600; color: var(--ds-text-light); }
+    .ds-icon-card svg { width: 28px; height: 28px; }
+
+    /* =========================================================
+       Animations section
+       ========================================================= */
+    .ds-anim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+    .ds-anim-tile {
+      background: #fff; border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius); padding: 28px 22px;
+      text-align: center;
+      cursor: pointer; user-select: none;
+      transition: border-color .25s var(--ds-easing);
+    }
+    .ds-anim-tile:hover { border-color: var(--ds-primary-deep); }
+    .ds-anim-tile h6 { margin: 14px 0 4px; font-family: "Airbnb cereal", Manrope; font-size: 14px; color: var(--ds-secondary); }
+    .ds-anim-tile small { color: var(--ds-text-muted); font-size: 12px; }
+    .ds-anim-stage {
+      width: 80px; height: 80px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ds-anim-shape {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--ds-primary), var(--ds-primary-soft));
+      box-shadow: 0 12px 30px rgba(185,232,72,.4);
+    }
+    .ds-anim-tile:hover .ds-anim-shape { animation-play-state: running; }
+    .ds-anim-shape { animation-play-state: paused; }
+    .anim-pulse { animation: dsPulse 1.4s ease-in-out infinite; }
+    .anim-float { animation: dsFloatTile 3s ease-in-out infinite; }
+    .anim-spin  { animation: dsSpin 6s linear infinite; }
+    .anim-morph { animation: dsMorph 4s ease-in-out infinite; }
+    .anim-glow  { animation: dsGlowTile 2.4s ease-in-out infinite; }
+
+    /* =========================================================
+       Footer
+       ========================================================= */
+    .ds-footer {
+      padding: 56px 0 48px;
+      background: var(--ds-secondary-deep); color: var(--ds-text-light);
+      text-align: center;
+    }
+    .ds-footer img { height: 56px; margin: 0 auto 18px; }
+    .ds-footer p { color: var(--ds-text-muted-light); font-size: 14px; margin: 4px 0; }
+
+    /* =========================================================
+       Keyframes
+       ========================================================= */
+    @keyframes dsPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.85); opacity: .55; } }
+    @keyframes dsFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      33% { transform: translate3d(40px, -30px, 0) scale(1.05); }
+      66% { transform: translate3d(-20px, 20px, 0) scale(.95); }
+    }
+    @keyframes dsFloatTile { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes dsSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes dsMorph {
+      0%, 100% { border-radius: 16px; }
+      33% { border-radius: 50% 16px 50% 16px; }
+      66% { border-radius: 50%; transform: scale(.9); }
+    }
+    @keyframes dsGlowTile {
+      0%, 100% { box-shadow: 0 12px 30px rgba(185,232,72,.4); }
+      50% { box-shadow: 0 0 0 12px rgba(185,232,72,.18), 0 24px 60px rgba(185,232,72,.7); }
+    }
+    @keyframes dsBarFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes dsUnderlineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    @media (max-width: 720px) {
+      .ds-section { padding: 80px 0; }
+      .ds-hero { padding: 140px 0 80px; }
+      .ds-hero-frame { transform: none; }
+      .ds-hero-frame-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================= NAV ========================= -->
+<nav class="ds-nav">
+  <a href="#top" class="ds-nav-brand">
+    <img src="./images/officebiz-logo-white.png" alt="OfficeBiz">
+  </a>
+  <div class="ds-nav-links">
+    <a href="#tipografia"  class="ds-nav-link">Tipografia</a>
+    <a href="#cores"       class="ds-nav-link">Cores</a>
+    <a href="#logo"        class="ds-nav-link">Logo</a>
+    <a href="#imagens"     class="ds-nav-link">Imagens</a>
+    <a href="#componentes" class="ds-nav-link">Componentes</a>
+    <a href="#icones"      class="ds-nav-link">Ícones</a>
+    <a href="#animacoes"   class="ds-nav-link">Animações</a>
+  </div>
+  <a href="#componentes" class="ds-nav-cta">Explorar</a>
+</nav>
+
+<!-- ========================= HERO ========================= -->
+<header id="top" class="ds-hero">
+  <div class="ds-orb ds-orb--1"></div>
+  <div class="ds-orb ds-orb--2"></div>
+  <div class="ds-orb ds-orb--3"></div>
+
+  <div class="ds-container ds-hero-inner">
+    <span class="ds-hero-tag ds-reveal">Sistema de Design · v1.0 — vivo</span>
+    <h1 class="ds-reveal ds-reveal--delay-1">
+      O design system <br>
+      que <span class="accent">soluciona</span> sem burocracia.
+    </h1>
+    <p class="ds-reveal ds-reveal--delay-2">
+      Tokens, componentes e animações construídos sobre a mesma fundação CSS do site OfficeBiz.
+      Para times que querem velocidade sem perder identidade.
+    </p>
+    <div class="ds-hero-actions ds-reveal ds-reveal--delay-3">
+      <a href="#componentes" class="ds-btn ds-btn--primary">
+        Ver componentes
+        <span class="arrow">→</span>
+      </a>
+      <a href="#tipografia" class="ds-btn ds-btn--ghost">
+        Tokens & tipografia
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="ds-hero-stage ds-reveal ds-reveal--delay-4">
+      <div class="ds-hero-frame">
+        <div class="ds-hero-frame-grid">
+          <div class="ds-hero-stat">
+            <div class="label">Cobertura de tokens</div>
+            <div class="value">78%</div>
+            <div class="delta">+12 pts vs. trim. anterior</div>
+            <div class="bar"><span></span></div>
+          </div>
+          <div class="ds-hero-stat">
+            <div class="label">Componentes prontos</div>
+            <div class="value">24</div>
+            <div class="delta">+5 em revisão</div>
+            <div class="bar"><span></span></div>
+          </div>
+          <div class="ds-hero-stat">
+            <div class="label">Adoção pelos times</div>
+            <div class="value">92%</div>
+            <div class="delta">+3 squads conectados</div>
+            <div class="bar"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========================= TIPOGRAFIA ========================= -->
+<section id="tipografia" class="ds-section">
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">02 · Tipografia</span>
+      <h2>Hierarquia que fala antes do conteúdo.</h2>
+      <p>Manrope para corpo, Airbnb&nbsp;Cereal para títulos. Pesos numéricos, line-heights generosos e letter-spacing ajustados para densidade ideal em telas modernas.</p>
+    </div>
+
+    <div class="ds-type-grid">
+      <div class="ds-type-row ds-reveal">
+        <div class="ds-type-meta">
+          <strong>H1</strong> · Display<br>
+          font-family: Airbnb&nbsp;Cereal<br>
+          weight: 800 · size: 68px<br>
+          line-height: 105% · tracking: -0.66px
+        </div>
+        <p class="ds-type-sample h1">Soluções que escalam</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-1">
+        <div class="ds-type-meta">
+          <strong>H2</strong> · Section<br>
+          weight: 800 · size: 52px<br>
+          line-height: 115% · tracking: -1px
+        </div>
+        <p class="ds-type-sample h2">Seções com presença</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-2">
+        <div class="ds-type-meta">
+          <strong>H3</strong> · Subsection<br>
+          weight: 700 · size: 32px<br>
+          line-height: 110% · tracking: -0.24px
+        </div>
+        <p class="ds-type-sample h3">Cabeçalhos de bloco</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-3">
+        <div class="ds-type-meta">
+          <strong>H4</strong> · Card title<br>
+          weight: 700 · size: 24px<br>
+          line-height: 110% · tracking: -0.88px
+        </div>
+        <p class="ds-type-sample h4">Títulos de cartão</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal">
+        <div class="ds-type-meta">
+          <strong>H5</strong> · Eyebrow<br>
+          weight: 600 · size: 20px<br>
+          line-height: 120%
+        </div>
+        <p class="ds-type-sample h5">Subtítulo de apoio</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-1">
+        <div class="ds-type-meta">
+          <strong>H6</strong> · Label heading<br>
+          weight: 600 · size: 18px<br>
+          line-height: 130%
+        </div>
+        <p class="ds-type-sample h6">Tag de seção</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-2">
+        <div class="ds-type-meta">
+          <strong>Body LG</strong><br>
+          family: Manrope · weight: 400<br>
+          size: 20px · line-height: 140%
+        </div>
+        <p class="ds-type-sample body-lg">Para parágrafos de destaque, intros de seção e descrições longas. Conforto de leitura em densidades altas.</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-3">
+        <div class="ds-type-meta">
+          <strong>Body</strong><br>
+          family: Manrope · weight: 400<br>
+          size: 18px · line-height: 150%
+        </div>
+        <p class="ds-type-sample body">Texto padrão para o corpo de páginas. Pensado para leitura digital sem fadiga, com tracking levemente negativo (-0.36px) para manter densidade.</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal">
+        <div class="ds-type-meta">
+          <strong>Body SM</strong><br>
+          family: Manrope · weight: 400<br>
+          size: 16px · line-height: 162%
+        </div>
+        <p class="ds-type-sample body-sm">Para descrições de cartões, captions e contextos de meta-informação onde o conteúdo precisa ceder espaço para o destaque visual.</p>
+      </div>
+
+      <div class="ds-type-row ds-reveal ds-reveal--delay-1">
+        <div class="ds-type-meta">
+          <strong>Caption / Label</strong><br>
+          family: Manrope · weight: 600<br>
+          size: 12px · uppercase · tracking: 0.14em
+        </div>
+        <p class="ds-type-sample caption">Eyebrows · etiquetas · meta</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= CORES ========================= -->
+<section id="cores" class="ds-section ds-section--dark">
+  <div class="ds-orb ds-orb--1" style="opacity:.35; top:-200px; left: 60%"></div>
+  <div class="ds-orb ds-orb--2" style="opacity:.3"></div>
+
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">03 · Cores</span>
+      <h2>Paleta enxuta. Decisões claras.</h2>
+      <p>Quatro famílias semânticas, três neutros e um accent que se torna assinatura. Cada token vive em hex, RGB e HSL, com regras de contraste e contexto.</p>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin-bottom:24px; color:var(--ds-text-light)">Tokens primários</h3>
+    <div class="ds-color-grid ds-reveal">
+      <div class="ds-color ds-color--on-dark" style="background: var(--ds-primary); color: var(--ds-secondary-deep);">
+        <div>
+          <div class="ds-color-name">Primary · Lime</div>
+          <div class="ds-color-role">Accent · Decorative · CTA</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#B9E848</span>
+          <span>rgb(185, 232, 72)</span>
+          <span>hsl(75, 78%, 60%)</span>
+          <span style="opacity:.6">opacity 12 / 24 / 45%</span>
+        </div>
+      </div>
+      <div class="ds-color ds-color--on-dark" style="background: var(--ds-secondary); color: var(--ds-text-light);">
+        <div>
+          <div class="ds-color-name">Secondary · Forest</div>
+          <div class="ds-color-role">Neutral text on light · BG dark</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#1B3A1C</span>
+          <span>rgb(27, 58, 28)</span>
+          <span>hsl(122, 36%, 17%)</span>
+          <span style="opacity:.6">contrast AAA on bg</span>
+        </div>
+      </div>
+      <div class="ds-color ds-color--on-dark" style="background: var(--ds-secondary-deep); color: var(--ds-text-light);">
+        <div>
+          <div class="ds-color-name">Secondary Deep</div>
+          <div class="ds-color-role">Hero BG · Footer · Modal scrim</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#0D2410</span>
+          <span>rgb(13, 36, 16)</span>
+          <span>hsl(127, 47%, 10%)</span>
+        </div>
+      </div>
+      <div class="ds-color ds-color--on-light" style="background: var(--ds-bg); color: var(--ds-secondary);">
+        <div>
+          <div class="ds-color-name">Background</div>
+          <div class="ds-color-role">Surface base on light</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#F8F8F8</span>
+          <span>rgb(248, 248, 248)</span>
+          <span>hsl(0, 0%, 97%)</span>
+        </div>
+      </div>
+      <div class="ds-color ds-color--on-light" style="background: var(--ds-bg-alt); color: var(--ds-secondary);">
+        <div>
+          <div class="ds-color-name">Background Alt</div>
+          <div class="ds-color-role">Mini-cards · Subtle separations</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#F1F3ED</span>
+          <span>rgb(241, 243, 237)</span>
+          <span>hsl(80, 17%, 94%)</span>
+        </div>
+      </div>
+      <div class="ds-color ds-color--on-light" style="background: var(--ds-text-light); color: var(--ds-secondary);">
+        <div>
+          <div class="ds-color-name">Text Light</div>
+          <div class="ds-color-role">Body text on dark surfaces</div>
+        </div>
+        <div class="ds-color-values">
+          <span>#E4E5DF</span>
+          <span>rgb(228, 229, 223)</span>
+          <span>hsl(70, 9%, 89%)</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 56px 0 24px; color:var(--ds-text-light)">Feedback semântico</h3>
+    <div class="ds-color-grid ds-reveal">
+      <div class="ds-color ds-color--on-dark" style="background:#22c55e">
+        <div><div class="ds-color-name">Success</div><div class="ds-color-role">Confirmações · estados positivos</div></div>
+        <div class="ds-color-values"><span>#22C55E</span><span>rgb(34, 197, 94)</span><span>hsl(142, 71%, 45%)</span></div>
+      </div>
+      <div class="ds-color ds-color--on-dark" style="background:#fbbf24; color:#3a2c00">
+        <div><div class="ds-color-name">Warning</div><div class="ds-color-role">Alertas · pendências</div></div>
+        <div class="ds-color-values"><span>#FBBF24</span><span>rgb(251, 191, 36)</span><span>hsl(43, 96%, 56%)</span></div>
+      </div>
+      <div class="ds-color ds-color--on-dark" style="background:#ef4444">
+        <div><div class="ds-color-name">Danger</div><div class="ds-color-role">Erros · ações destrutivas</div></div>
+        <div class="ds-color-values"><span>#EF4444</span><span>rgb(239, 68, 68)</span><span>hsl(0, 84%, 60%)</span></div>
+      </div>
+      <div class="ds-color ds-color--on-dark" style="background:#60a5fa">
+        <div><div class="ds-color-name">Info</div><div class="ds-color-role">Tooltips · neutros informativos</div></div>
+        <div class="ds-color-values"><span>#60A5FA</span><span>rgb(96, 165, 250)</span><span>hsl(213, 94%, 68%)</span></div>
+      </div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 56px 0 24px; color:var(--ds-text-light)">Gradientes decorativos</h3>
+    <div class="ds-grad-grid ds-reveal">
+      <div class="ds-gradient" data-name="Primary Glow" style="background: radial-gradient(circle at 30% 30%, #d4f08a, #b9e848 50%, #8fc026)"></div>
+      <div class="ds-gradient" data-name="Forest Mist"  style="background: linear-gradient(135deg, #0d2410, #1b3a1c 60%, #2c5e2f)"></div>
+      <div class="ds-gradient" data-name="Lime Mesh"    style="background: linear-gradient(120deg, #1b3a1c 0%, #0d2410 35%, #b9e848 100%)"></div>
+      <div class="ds-gradient" data-name="Soft Surface" style="background: linear-gradient(180deg, #f8f8f8, #e8efd4)"></div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 56px 0 24px; color:var(--ds-text-light)">Regras de uso</h3>
+    <div class="ds-comp-grid ds-reveal">
+      <div class="ds-card">
+        <h4 class="ds-card-title">Texto · BG · Borda</h4>
+        <p class="ds-card-sub">Texto principal: <code style="background:rgba(255,255,255,.08); padding:2px 6px; border-radius:4px">Secondary</code> sobre BG claro · <code style="background:rgba(255,255,255,.08); padding:2px 6px; border-radius:4px">Text Light</code> sobre BG escuro. Bordas: 8% do Secondary em estados padrão, 22% em hover/focus.</p>
+      </div>
+      <div class="ds-card">
+        <h4 class="ds-card-title">Hover · Active · Disabled</h4>
+        <p class="ds-card-sub">Hover sobe Y -2px e adiciona <em>glow</em> primary. Active comprime para Y 0 e diminui shadow. Disabled: opacidade 45%, cursor not-allowed, sem hover.</p>
+      </div>
+      <div class="ds-card">
+        <h4 class="ds-card-title">Contraste · A11y</h4>
+        <p class="ds-card-sub">Primary sobre Secondary Deep: AA Large. Text Light sobre Secondary Deep: AAA. Body sobre BG: AAA. Evite Primary como texto pequeno em BG claro.</p>
+      </div>
+      <div class="ds-card">
+        <h4 class="ds-card-title">Decorativos vs. semânticos</h4>
+        <p class="ds-card-sub">Primary = accent decorativo + CTA. Feedback (success/warning/danger/info) é reservado a estados de sistema, jamais como cor de marca.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= LOGO ========================= -->
+<section id="logo" class="ds-section">
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">04 · Logo</span>
+      <h2>Identidade que respira.</h2>
+      <p>Duas versões cromáticas, regras claras de espaço, tamanhos mínimos e armadilhas a evitar. A maleta verde + tipografia OfficeBiz é a assinatura da marca — protegê-la é proteger o produto.</p>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin-bottom:24px">Versões oficiais</h3>
+    <div class="ds-logo-grid ds-reveal">
+      <div class="ds-logo-tile ds-logo-tile--dark">
+        <img src="./images/officebiz-logo-white.png" alt="Logo OfficeBiz versão clara">
+        <p class="ds-logo-meta">
+          <strong>Logo · White</strong><br>
+          Use em fundos escuros · <code>secondary-deep</code> · imagens de baixa luminância<br>
+          <code>./images/officebiz-logo-white.png</code>
+        </p>
+      </div>
+      <div class="ds-logo-tile ds-logo-tile--light">
+        <img src="./images/officebiz-logo-black.png" alt="Logo OfficeBiz versão escura">
+        <p class="ds-logo-meta">
+          <strong>Logo · Black</strong><br>
+          Use em fundos claros · <code>background</code> · BG&nbsp;alt · imagens claras<br>
+          <code>./images/officebiz-logo-black.png</code>
+        </p>
+      </div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 64px 0 24px">Anatomia &amp; espaço de respiro</h3>
+    <div class="ds-comp-grid ds-reveal">
+      <div class="ds-card" style="grid-column: span 7">
+        <h4 class="ds-card-title">Clear space</h4>
+        <p class="ds-card-sub">Reserve no mínimo <code>x</code> = altura da maleta em torno da logo. Nada de ícones, texto ou outros elementos dentro dessa área.</p>
+        <div class="ds-logo-clearspace">
+          <span class="label-x top">x</span>
+          <span class="label-x right">x</span>
+          <span class="label-x bottom">x</span>
+          <span class="label-x left">x</span>
+          <img src="./images/officebiz-logo-black.png" alt="Logo com clear space">
+        </div>
+      </div>
+
+      <div class="ds-card" style="grid-column: span 5">
+        <h4 class="ds-card-title">Tamanhos mínimos</h4>
+        <p class="ds-card-sub">Para garantir legibilidade da tipografia, respeite os tamanhos abaixo conforme o contexto digital ou impresso.</p>
+        <div class="ds-logo-sizes" style="background: var(--ds-bg-alt); border-radius: 14px; padding: 20px 24px;">
+          <div class="size">
+            <img src="./images/officebiz-logo-black.png" alt="" style="--h:24px; height:24px;">
+            <span>24px · favicon, badges</span>
+          </div>
+          <div class="size">
+            <img src="./images/officebiz-logo-black.png" alt="" style="--h:32px; height:32px;">
+            <span>32px · nav padrão</span>
+          </div>
+          <div class="size">
+            <img src="./images/officebiz-logo-black.png" alt="" style="--h:56px; height:56px;">
+            <span>56px · footer, hero</span>
+          </div>
+        </div>
+        <div style="margin-top: 18px; font-size: 13px; color: var(--ds-text-muted); line-height:1.6">
+          Mínimo absoluto: <strong>20px</strong> de altura. Abaixo disso, use apenas a maleta como ícone (sem o texto OfficeBiz).
+        </div>
+      </div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 64px 0 24px">Fazer &amp; não fazer</h3>
+    <div class="ds-do-grid ds-reveal">
+      <div class="ds-do-tile is-do">
+        <span class="badge">Faça</span>
+        <img src="./images/officebiz-logo-black.png" alt="Logo correta">
+        <span class="label">Versão preta sobre fundo claro</span>
+      </div>
+      <div class="ds-do-tile is-do" style="background: var(--ds-secondary-deep);">
+        <span class="badge">Faça</span>
+        <img src="./images/officebiz-logo-white.png" alt="Logo correta no escuro">
+        <span class="label" style="color: var(--ds-text-muted-light)">Versão branca sobre fundo escuro</span>
+      </div>
+      <div class="ds-do-tile is-dont warp">
+        <span class="badge">Evite</span>
+        <img src="./images/officebiz-logo-black.png" alt="">
+        <span class="label">Não distorça as proporções</span>
+      </div>
+      <div class="ds-do-tile is-dont recolor">
+        <span class="badge">Evite</span>
+        <img src="./images/officebiz-logo-black.png" alt="">
+        <span class="label">Não recolora a marca</span>
+      </div>
+      <div class="ds-do-tile is-dont rotated">
+        <span class="badge">Evite</span>
+        <img src="./images/officebiz-logo-black.png" alt="">
+        <span class="label">Não rotacione</span>
+      </div>
+      <div class="ds-do-tile is-dont shadowed">
+        <span class="badge">Evite</span>
+        <img src="./images/officebiz-logo-black.png" alt="">
+        <span class="label">Não aplique sombras coloridas / glow forte</span>
+      </div>
+      <div class="ds-do-tile is-dont cluttered">
+        <span class="badge">Evite</span>
+        <img src="./images/officebiz-logo-black.png" alt="">
+        <span class="label">Não use sobre fundos com baixo contraste</span>
+      </div>
+      <div class="ds-do-tile is-do" style="background: linear-gradient(135deg, var(--ds-primary) 0%, var(--ds-primary-soft) 100%);">
+        <span class="badge">Faça</span>
+        <img src="./images/officebiz-logo-black.png" alt="Logo sobre primary">
+        <span class="label" style="color: var(--ds-secondary-deep); font-weight: 600">Versão escura sobre primary</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= IMAGENS ========================= -->
+<section id="imagens" class="ds-section ds-section--alt">
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">05 · Imagens</span>
+      <h2>Imagens que reforçam o tom: confiança e movimento.</h2>
+      <p>Mockups de produto, fundos verdes profundos com glow lime, gradientes mesh decorativos e fotografias de equipe em luz quente. Toda imagem passa por um leve <em>tint</em> da paleta para amarrar a identidade.</p>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin-bottom: 24px">Galeria de assets do site OfficeBiz</h3>
+    <div class="ds-img-grid ds-reveal">
+      <div class="ds-img-card is-wide">
+        <div class="frame" style="background-image: url('./images/6925914c4447c3ced596ee7c_hero-bg.avif')"></div>
+        <div class="ds-img-tint"></div>
+        <div class="overlay"></div>
+        <span class="tag">Hero · Background</span>
+        <div class="meta">
+          <h4>Floresta digital</h4>
+          <small>hero-bg.avif · 1920×1080 · grid sutil + grão</small>
+        </div>
+      </div>
+      <div class="ds-img-card">
+        <div class="frame" style="background: linear-gradient(180deg, #0d2410 0%, #143a18 60%, #1b3a1c 100%); display:flex; align-items:flex-end; justify-content:center;">
+          <img src="./images/6925a3744a6dcd43d3007c33_hero-image-1.avif" alt="Mockup mobile 1" style="max-width:90%; max-height:90%; transform: rotate(-6deg) translateY(8%);">
+        </div>
+        <div class="overlay"></div>
+        <span class="tag">Mockup · 1</span>
+        <div class="meta">
+          <h4>Card balance</h4>
+          <small>hero-image-1.avif · interface mobile</small>
+        </div>
+      </div>
+      <div class="ds-img-card">
+        <div class="frame" style="background: linear-gradient(180deg, #0d2410 0%, #1b3a1c 100%); display:flex; align-items:flex-end; justify-content:center;">
+          <img src="./images/6925a374651c5c1ee4af868d_hero-image-2.avif" alt="Mockup mobile 2" style="max-width:90%; max-height:90%; transform: rotate(6deg) translateY(8%);">
+        </div>
+        <div class="overlay"></div>
+        <span class="tag">Mockup · 2</span>
+        <div class="meta">
+          <h4>Statistic</h4>
+          <small>hero-image-2.avif · gauge + linha</small>
+        </div>
+      </div>
+      <div class="ds-img-card is-wide">
+        <div class="frame" style="background: radial-gradient(ellipse 60% 50% at 30% 30%, #d4f08a, #b9e848 50%, #8fc026)"></div>
+        <span class="tag">Brand · Glow</span>
+        <div class="overlay" style="background: linear-gradient(180deg, transparent 50%, rgba(13,36,16,.45))"></div>
+        <div class="meta">
+          <h4>Primary glow</h4>
+          <small>Composição decorativa · use atrás de stat cards</small>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 64px 0 24px">Avatares &amp; testemunhos</h3>
+    <div class="ds-img-grid ds-reveal" style="grid-template-columns: repeat(5, 1fr);">
+      <div class="ds-img-card" style="grid-column: span 1; aspect-ratio: 1/1; border-radius: 50%;">
+        <div class="frame" style="background-image: url('https://api.dicebear.com/9.x/notionists/svg?seed=Aaliyah&amp;backgroundColor=b9e848'); background-size: contain; background-color: #b9e848;"></div>
+      </div>
+      <div class="ds-img-card" style="grid-column: span 1; aspect-ratio: 1/1; border-radius: 50%;">
+        <div class="frame" style="background-image: url('https://api.dicebear.com/9.x/notionists/svg?seed=Kenji&amp;backgroundColor=d4f08a'); background-size: contain; background-color: #d4f08a;"></div>
+      </div>
+      <div class="ds-img-card" style="grid-column: span 1; aspect-ratio: 1/1; border-radius: 50%;">
+        <div class="frame" style="background-image: url('https://api.dicebear.com/9.x/notionists/svg?seed=Camila&amp;backgroundColor=f1f3ed'); background-size: contain; background-color: #f1f3ed;"></div>
+      </div>
+      <div class="ds-img-card" style="grid-column: span 1; aspect-ratio: 1/1; border-radius: 50%;">
+        <div class="frame" style="background-image: url('https://api.dicebear.com/9.x/notionists/svg?seed=Diego&amp;backgroundColor=e4e5df'); background-size: contain; background-color: #e4e5df;"></div>
+      </div>
+      <div class="ds-img-card" style="grid-column: span 1; aspect-ratio: 1/1; border-radius: 50%;">
+        <div class="frame" style="background-image: url('https://api.dicebear.com/9.x/notionists/svg?seed=Yara&amp;backgroundColor=b9e848'); background-size: contain; background-color: #b9e848;"></div>
+      </div>
+    </div>
+    <p class="ds-reveal" style="text-align:center; color: var(--ds-text-muted); font-size: 14px; margin: 18px 0 0;">
+      Avatares circulares 1:1 no estilo <strong>Notion</strong> · ilustrações vetoriais (SVG) geradas via <a href="https://www.dicebear.com/styles/notionists/" target="_blank" rel="noopener" style="color: var(--ds-secondary); border-bottom: 1px dashed currentColor; text-decoration: none;">DiceBear · notionists</a> · resolução infinita, hand-drawn, fundos da paleta. Use em depoimentos, listas de membros e badges de equipe.
+    </p>
+
+    <h3 class="ds-card-title ds-reveal" style="text-align:center; margin: 64px 0 16px">Diretrizes de uso</h3>
+    <div class="ds-img-rules ds-reveal">
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 22a10 10 0 1 1 10-10 5.5 5.5 0 0 1-5.5 5.5h-1.75a1.75 1.75 0 0 0-1.75 1.75v.5A1.75 1.75 0 0 1 12 22Z"/></svg>
+        </span>
+        <h5>Tint da marca</h5>
+        <p>Toda foto colorida recebe overlay 25% <code>secondary</code> + 12% <code>primary</code> em mix-blend multiply.</p>
+      </div>
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        </span>
+        <h5>Aspect ratios</h5>
+        <p>16:9 para hero, 4:5 para mockup, 4:3 para textura, 1:1 para avatares circulares. Nunca corte conteúdo essencial.</p>
+      </div>
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </span>
+        <h5>Iluminação</h5>
+        <p>Luz quente e direcional, contraste médio-alto. Sombras suaves, nunca duras. Evite cenários estéreis ou stock genérico.</p>
+      </div>
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+        </span>
+        <h5>Composição</h5>
+        <p>Mockups em ângulo (-6° / +6°) sobrepostos em pares. Texturas decorativas com mesh radial em <code>primary</code> a 12-18% de opacidade.</p>
+      </div>
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/></svg>
+        </span>
+        <h5>Pessoas</h5>
+        <p>Diversidade de gênero, etnia e idade. Plano peito ou rosto. Olhar discreto, não posado em excesso. Sempre com consentimento.</p>
+      </div>
+      <div class="ds-img-rule">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="13" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>
+        </span>
+        <h5>Formato &amp; peso</h5>
+        <p>AVIF para fotografias de hero (até 280KB), SVG para ícones e ilustrações vetoriais. PNG só quando precisar de transparência rasterizada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= COMPONENTES ========================= -->
+<section id="componentes" class="ds-section">
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">06 · Componentes</span>
+      <h2>Peças prontas, rápidas e consistentes.</h2>
+      <p>Botões com glow e shimmer, inputs com focus ring suave, cards com lift, navbar pílula, modais que respondem ao hover. Tudo com transições <code>cubic-bezier(.2,.8,.2,1)</code>.</p>
+    </div>
+
+    <div class="ds-comp-grid">
+      <!-- Buttons -->
+      <div class="ds-card ds-reveal">
+        <h3 class="ds-card-title">Buttons</h3>
+        <p class="ds-card-sub">Primary com glow, ghost para BG escuro, secondary forest. Variantes <code>--sm</code> e <code>--lg</code>. Hover dispara shimmer diagonal e elevação.</p>
+        <div class="ds-card-body">
+          <button class="ds-btn ds-btn--primary">Primary <span class="arrow">→</span></button>
+          <button class="ds-btn ds-btn--secondary">Secondary <span class="arrow">→</span></button>
+          <button class="ds-btn ds-btn--primary ds-btn--sm">Small</button>
+          <button class="ds-btn ds-btn--primary ds-btn--lg">Large <span class="arrow">→</span></button>
+          <button class="ds-btn ds-btn--primary" disabled>Disabled</button>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="ds-card ds-reveal ds-reveal--delay-1">
+        <h3 class="ds-card-title">Inputs</h3>
+        <p class="ds-card-sub">Borda forte, focus com ring de 4px <em>primary @ 25%</em> e leve translate Y. Usa o mesmo radius dos botões small.</p>
+        <div class="ds-card-body" style="flex-direction: column; align-items: stretch; gap:16px">
+          <div class="ds-input-wrap">
+            <label class="ds-input-label">E-mail corporativo</label>
+            <input class="ds-input" type="email" placeholder="time@officebiz.com">
+          </div>
+          <div class="ds-input-wrap">
+            <label class="ds-input-label">Toggle de preferência</label>
+            <label class="ds-switch">
+              <input type="checkbox" checked>
+              <span class="track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="ds-card ds-reveal">
+        <h3 class="ds-card-title">Cards</h3>
+        <p class="ds-card-sub">Mini-cards para features e métricas. Hover eleva, amplia sombra e fortalece a borda. Ícone com glow primary.</p>
+        <div class="ds-card-body" style="gap: 14px">
+          <div class="ds-mini-card" style="flex:1; min-width:200px">
+            <div class="ds-mini-card-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <h4 style="margin:0 0 6px; font-size:16px; font-weight:700">Privacy first</h4>
+            <p style="margin:0; font-size:13px; color:var(--ds-text-muted)">Tokens auditáveis e versionados.</p>
+          </div>
+          <div class="ds-mini-card" style="flex:1; min-width:200px">
+            <div class="ds-mini-card-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+            </div>
+            <h4 style="margin:0 0 6px; font-size:16px; font-weight:700">Multi-locale</h4>
+            <p style="margin:0; font-size:13px; color:var(--ds-text-muted)">Suporte a pt-BR e en-US.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navbar -->
+      <div class="ds-card ds-reveal ds-reveal--delay-1">
+        <h3 class="ds-card-title">Navbar (pill)</h3>
+        <p class="ds-card-sub">Pílula flutuante com blur, borda translúcida e CTA primary. Links com hover em fundo lime soft.</p>
+        <div class="ds-card-body">
+          <div class="ds-mini-nav">
+            <strong style="font-size:14px">OfficeBiz</strong>
+            <div class="links">
+              <a href="#">Home</a>
+              <a href="#">Recursos</a>
+              <a href="#">Preço</a>
+            </div>
+            <a class="cta" href="#">Demo →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section block -->
+      <div class="ds-card ds-reveal" style="grid-column: span 12">
+        <h3 class="ds-card-title">Sections (padrão de bloco)</h3>
+        <p class="ds-card-sub">Padding vertical generoso (120px desktop), centralização do head, eyebrow + título + subtítulo. Backgrounds variam entre <code>BG</code>, <code>BG Alt</code> e <code>Secondary Deep</code>.</p>
+        <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-top:8px">
+          <div style="padding:18px; border-radius:14px; background:var(--ds-bg);            color:var(--ds-secondary); border:1px solid var(--ds-border); text-align:center"><strong>Light</strong><br><small>BG base</small></div>
+          <div style="padding:18px; border-radius:14px; background:var(--ds-bg-alt);        color:var(--ds-secondary); border:1px solid var(--ds-border); text-align:center"><strong>Alt</strong><br><small>BG alternada</small></div>
+          <div style="padding:18px; border-radius:14px; background:var(--ds-secondary-deep);color:var(--ds-text-light);border:1px solid rgba(255,255,255,.08); text-align:center"><strong>Dark</strong><br><small>Secondary Deep</small></div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="ds-card ds-reveal">
+        <h3 class="ds-card-title">Modals</h3>
+        <p class="ds-card-sub">Animação de entrada: scale .92 → 1 com fade. Passe o mouse no quadro tracejado para ver.</p>
+        <div class="ds-modal-demo">
+          <div class="ds-modal">
+            <h4>Confirmar publicação?</h4>
+            <p>Os tokens novos serão distribuídos a todos os squads imediatamente após confirmação.</p>
+            <div class="ds-modal-actions">
+              <button class="ds-btn ds-btn--ghost ds-btn--sm" style="color:var(--ds-secondary); border-color:var(--ds-border-strong)">Cancelar</button>
+              <button class="ds-btn ds-btn--primary ds-btn--sm">Publicar <span class="arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges & Tooltip -->
+      <div class="ds-card ds-reveal ds-reveal--delay-1">
+        <h3 class="ds-card-title">Badges &amp; Tooltips</h3>
+        <p class="ds-card-sub">Badges com dot opcional. Tooltip aparece em <code>hover</code> com slide vertical de 6px.</p>
+        <div class="ds-card-body" style="gap:10px">
+          <span class="ds-badge ds-badge--primary"><span class="dot"></span> Live</span>
+          <span class="ds-badge ds-badge--success">Stable</span>
+          <span class="ds-badge ds-badge--warning">Beta</span>
+          <span class="ds-badge ds-badge--danger">Deprecated</span>
+          <span class="ds-badge ds-badge--info">Preview</span>
+        </div>
+        <div style="margin-top:18px; display:flex; gap:14px; flex-wrap:wrap">
+          <div class="ds-tooltip">
+            <button class="trigger">Passe o mouse</button>
+            <span class="bubble">Tooltip primary</span>
+          </div>
+          <div class="ds-tooltip">
+            <button class="trigger" style="background:var(--ds-primary); color:var(--ds-secondary-deep)">Outra dica</button>
+            <span class="bubble">Atalho ⌘K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ÍCONES ========================= -->
+<section id="icones" class="ds-section ds-section--dark">
+  <div class="ds-orb ds-orb--3" style="top:10%; left:10%"></div>
+  <div class="ds-orb ds-orb--1" style="bottom:-160px; right:-100px; opacity:.5"></div>
+
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">07 · Ícones · Lucide</span>
+      <h2>Glifos com peso e cantos consistentes.</h2>
+      <p>Biblioteca <a href="https://lucide.dev/icons/" target="_blank" rel="noopener" style="color:var(--ds-primary); text-decoration:none; border-bottom:1px dashed currentColor;">Lucide</a>: stroke 2px, cantos arredondados, viewBox 24×24. Cada ícone amarrado ao tema em que aparece — segurança, finanças, métricas, time e ações.</p>
+    </div>
+
+    <!-- Família · Segurança & Privacidade -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Segurança &amp; privacidade</h3>
+    <div class="ds-icon-grid" style="margin-bottom: 40px;">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <span class="ds-icon-name">shield-check</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <span class="ds-icon-name">lock</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg></div>
+        <span class="ds-icon-name">key-round</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></div>
+        <span class="ds-icon-name">fingerprint</span>
+      </div>
+    </div>
+
+    <!-- Família · Finanças & Pagamentos -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Finanças &amp; pagamentos</h3>
+    <div class="ds-icon-grid" style="margin-bottom: 40px;">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+        <span class="ds-icon-name">credit-card</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></div>
+        <span class="ds-icon-name">wallet</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div>
+        <span class="ds-icon-name">banknote</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg></div>
+        <span class="ds-icon-name">receipt</span>
+      </div>
+    </div>
+
+    <!-- Família · Análise & métricas -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Análise &amp; métricas</h3>
+    <div class="ds-icon-grid" style="margin-bottom: 40px;">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+        <span class="ds-icon-name">trending-up</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16v-7"/><path d="M11 16V7"/><path d="M15 16v-5"/><path d="M19 16v-9"/></svg></div>
+        <span class="ds-icon-name">bar-chart-3</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+        <span class="ds-icon-name">pie-chart</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <span class="ds-icon-name">target</span>
+      </div>
+    </div>
+
+    <!-- Família · Produtividade & time -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Produtividade &amp; time</h3>
+    <div class="ds-icon-grid" style="margin-bottom: 40px;">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="6" rx="2"/><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <span class="ds-icon-name">briefcase</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <span class="ds-icon-name">users</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M8 10v4"/><path d="M12 10v2"/><path d="M16 10v6"/></svg></div>
+        <span class="ds-icon-name">folder-kanban</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg></div>
+        <span class="ds-icon-name">calendar-days</span>
+      </div>
+    </div>
+
+    <!-- Família · Interface & sistema -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Interface &amp; sistema</h3>
+    <div class="ds-icon-grid" style="margin-bottom: 40px;">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></div>
+        <span class="ds-icon-name">monitor</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <span class="ds-icon-name">bell</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <span class="ds-icon-name">search</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <span class="ds-icon-name">settings</span>
+      </div>
+    </div>
+
+    <!-- Família · Ações universais -->
+    <h3 class="ds-card-title" style="text-align:center; margin: 0 0 22px; color: var(--ds-text-light); font-size: 18px; opacity: .85;">Ações universais</h3>
+    <div class="ds-icon-grid">
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <span class="ds-icon-name">check</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+        <span class="ds-icon-name">plus</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+        <span class="ds-icon-name">arrow-right</span>
+      </div>
+      <div class="ds-icon-card">
+        <div class="ds-icon-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <span class="ds-icon-name">star</span>
+      </div>
+    </div>
+
+    <p style="text-align:center; color: var(--ds-text-muted-light); font-size: 13px; margin: 40px auto 0; max-width: 640px;">
+      Todos os ícones vêm da biblioteca <strong style="color: var(--ds-primary);">Lucide</strong> · use o nome do ícone como referência: <code style="background: rgba(228,229,223,.08); padding: 2px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">import { ShieldCheck } from 'lucide-react'</code>
+    </p>
+  </div>
+</section>
+
+<!-- ========================= ANIMAÇÕES ========================= -->
+<section id="animacoes" class="ds-section ds-section--alt">
+  <div class="ds-container">
+    <div class="ds-section-head ds-reveal">
+      <span class="ds-eyebrow">08 · Animações</span>
+      <h2>Movimento que guia, não distrai.</h2>
+      <p>Easing único <code>cubic-bezier(.2,.8,.2,1)</code>, durações entre 250ms e 800ms. Reveal por <em>IntersectionObserver</em>, glow contínuo e shimmer disparado em hover.</p>
+    </div>
+
+    <div class="ds-anim-grid ds-reveal">
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage"><div class="ds-anim-shape anim-pulse"></div></div>
+        <h6>Pulse</h6>
+        <small>Indicadores live, dots</small>
+      </div>
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage"><div class="ds-anim-shape anim-float"></div></div>
+        <h6>Float</h6>
+        <small>Orbs, partículas, ícones leves</small>
+      </div>
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage"><div class="ds-anim-shape anim-spin"></div></div>
+        <h6>Spin</h6>
+        <small>Loaders, transições contínuas</small>
+      </div>
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage"><div class="ds-anim-shape anim-morph"></div></div>
+        <h6>Morph</h6>
+        <small>Formas decorativas</small>
+      </div>
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage"><div class="ds-anim-shape anim-glow"></div></div>
+        <h6>Glow</h6>
+        <small>CTAs em foco, badges live</small>
+      </div>
+      <div class="ds-anim-tile">
+        <div class="ds-anim-stage" style="position:relative; overflow:hidden; border-radius:16px">
+          <div class="ds-anim-shape" style="background:linear-gradient(135deg,#1b3a1c,#0d2410)"></div>
+          <div style="position:absolute; inset:0; background:linear-gradient(120deg, transparent, rgba(185,232,72,.55), transparent); transform:translateX(-100%); animation: dsShimmer 2s var(--ds-easing) infinite"></div>
+        </div>
+        <h6>Shimmer</h6>
+        <small>Disparo em hover de CTA</small>
+      </div>
+    </div>
+
+    <div class="ds-comp-grid" style="margin-top:48px">
+      <div class="ds-card ds-reveal">
+        <h3 class="ds-card-title">Reveal on scroll</h3>
+        <p class="ds-card-sub">Adicione <code>.ds-reveal</code> a qualquer elemento. Use <code>.ds-reveal--delay-1..4</code> para encadear.</p>
+        <pre style="background:var(--ds-secondary-deep); color:var(--ds-text-light); padding:14px 16px; border-radius:12px; font-size:13px; overflow:auto"><code>const io = new IntersectionObserver(es =&gt; {
+  es.forEach(e =&gt; e.isIntersecting &amp;&amp; e.target.classList.add('is-visible'))
+}, { threshold: 0.12 })
+document.querySelectorAll('.ds-reveal').forEach(el =&gt; io.observe(el))</code></pre>
+      </div>
+      <div class="ds-card ds-reveal ds-reveal--delay-1">
+        <h3 class="ds-card-title">Princípios</h3>
+        <p class="ds-card-sub">Movimento curto (≤ 350ms) para feedback de interação; longo (600–800ms) para entrada. Nunca anime cor sem easing. Respeite <code>prefers-reduced-motion</code>.</p>
+        <ul style="margin:0; padding-left:18px; color:var(--ds-text-muted); font-size:14px; line-height:1.7">
+          <li>Easing padrão: <code>cubic-bezier(.2,.8,.2,1)</code></li>
+          <li>Reveal: 800ms / 28px de offset</li>
+          <li>Hover: lift Y -2px + shadow up</li>
+          <li>Glow primary: ring + outer glow</li>
+          <li>Shimmer: 900ms · gradient diagonal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>@keyframes dsShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(160%); } }</style>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="ds-footer">
+  <div class="ds-container">
+    <img src="./images/officebiz-logo-white.png" alt="OfficeBiz">
+    <p>Design System · v1.0 · soluções sem burocracia</p>
+    <p style="font-size:12px; opacity:.5">© 2025 OfficeBiz. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<!-- ========================= JS ========================= -->
+<script>
+  (function () {
+    document.documentElement.classList.add('has-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px 0px 0px' });
+    document.querySelectorAll('.ds-reveal').forEach(function (el) { io.observe(el); });
+    // Safety: force-reveal any element that hasn't kicked in after 1.5s
+    setTimeout(function(){
+      document.querySelectorAll('.ds-reveal:not(.is-visible)').forEach(function(el){
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('is-visible');
+      });
+    }, 1500);
+
+    // Cursor-follow glow on hero
+    var hero = document.querySelector('.ds-hero');
+    if (hero) {
+      hero.addEventListener('mousemove', function (e) {
+        var r = hero.getBoundingClientRect();
+        var x = ((e.clientX - r.left) / r.width) * 100;
+        var y = ((e.clientY - r.top) / r.height) * 100;
+        hero.style.setProperty('--mx', x + '%');
+        hero.style.setProperty('--my', y + '%');
+      });
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:absolute; inset:0; pointer-events:none; z-index:1; background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%), rgba(185,232,72,.18), transparent 50%); transition: background .3s ease;';
+      hero.appendChild(glow);
+    }
+
+    // Tilt parallax in hero frame
+    var frame = document.querySelector('.ds-hero-frame');
+    if (frame) {
+      var stage = frame.parentElement;
+      stage.addEventListener('mousemove', function (e) {
+        var r = stage.getBoundingClientRect();
+        var dx = (e.clientX - r.left - r.width / 2) / r.width;
+        var dy = (e.clientY - r.top - r.height / 2) / r.height;
+        frame.style.transform = 'rotateX(' + (8 - dy * 6) + 'deg) rotateY(' + (dx * 6) + 'deg)';
+      });
+      stage.addEventListener('mouseleave', function () {
+        frame.style.transform = 'rotateX(8deg) rotateY(0deg)';
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
+  rewrites: async () => [
+    { source: "/design-system", destination: "/design-system/index.html" },
+  ],
 };
 
 export default nextConfig;
