@@ -1,55 +1,73 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import {
+  Building2,
+  Calculator,
+  ShieldCheck,
+  BadgeCheck,
+  Palette,
+  FileText,
+  Globe,
+  AtSign,
+  QrCode,
+  type LucideIcon,
+} from "lucide-react";
 
-const services = [
+type Service = {
+  title: string;
+  description: string;
+  Icon: LucideIcon;
+  comingSoon?: boolean;
+};
+
+const services: Service[] = [
   {
     title: "Abertura de CNPJ",
     description: "MEI, ME, EPP — todo o processo de formalização empresarial simplificado.",
-    icon: "/landing/images/icon-folder.svg",
+    Icon: Building2,
   },
   {
     title: "Contabilidade",
     description: "Escrituração, impostos, folha de pagamento e obrigações acessórias.",
-    icon: "/landing/images/icon-card.svg",
+    Icon: Calculator,
     comingSoon: true,
   },
   {
     title: "Seguros",
     description: "Seguros empresariais e de vida — você oferece proteção completa pros seus clientes com a sua marca.",
-    icon: "/landing/images/icon-shield.svg",
+    Icon: ShieldCheck,
     comingSoon: true,
   },
   {
     title: "Registro de Marca",
     description: "Pesquisa de anterioridade e registro junto ao INPI com acompanhamento.",
-    icon: "/landing/images/icon-shield.svg",
+    Icon: BadgeCheck,
   },
   {
     title: "Logotipos",
     description: "Criação de identidade visual profissional com manual de marca.",
-    icon: "/landing/images/icon-language.svg",
+    Icon: Palette,
   },
   {
     title: "Papelaria",
     description: "Cartões de visita, papel timbrado, envelopes e materiais impressos.",
-    icon: "/landing/images/icon-folder.svg",
+    Icon: FileText,
   },
   {
     title: "Sites",
     description: "Sites institucionais e landing pages otimizadas para conversão.",
-    icon: "/landing/images/icon-computer.svg",
+    Icon: Globe,
   },
   {
     title: "E-mail e Domínios",
     description: "Registro de domínio e configuração de e-mail profissional.",
-    icon: "/landing/images/icon-language.svg",
+    Icon: AtSign,
   },
   {
     title: "Cartão Virtual",
     description: "Cartão de visita digital interativo com QR Code e link compartilhável.",
-    icon: "/landing/images/icon-card.svg",
+    Icon: QrCode,
   },
 ];
 
@@ -101,7 +119,7 @@ export function Services() {
                     color: "var(--ds-secondary)",
                   }}
                 >
-                  <Image src={service.icon} alt="" width={28} height={28} />
+                  <service.Icon size={28} strokeWidth={2} />
                 </div>
                 <div>
                   <h3 className="ds-card-title" style={{ fontSize: 18 }}>
