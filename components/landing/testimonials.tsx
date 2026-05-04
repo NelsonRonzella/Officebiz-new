@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -42,11 +43,7 @@ const testimonials = [
 ];
 
 function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-      <path d="M12 2l2.9 6.6L22 10l-5.5 4.7L18.2 22 12 18.3 5.8 22l1.7-7.3L2 10l7.1-1.4z" />
-    </svg>
-  );
+  return <Star size={18} fill="currentColor" strokeWidth={0} />;
 }
 
 export function Testimonials() {

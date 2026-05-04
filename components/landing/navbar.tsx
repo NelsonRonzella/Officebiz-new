@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "O que é", href: "#what-is" },
@@ -63,21 +64,11 @@ export function Navbar() {
           aria-label="Abrir menu"
           aria-expanded={open}
         >
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            {open ? (
-              <path d="M6 6l12 12 M18 6l-12 12" />
-            ) : (
-              <path d="M4 7h16 M4 12h16 M4 17h16" />
-            )}
-          </svg>
+          {open ? (
+            <X size={20} strokeWidth={2} />
+          ) : (
+            <Menu size={20} strokeWidth={2} />
+          )}
         </button>
       </nav>
 

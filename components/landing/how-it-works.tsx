@@ -1,40 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { FileSignature, UserPlus, ClipboardList } from "lucide-react";
 
 const steps = [
   {
     title: "Adquira sua licença",
     description:
       "Cadastre-se, pague a licença única e receba acesso imediato ao painel de licenciado.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="14" r="4" />
-        <path d="M11.5 11.5l8.5-8.5 M16 7l3 3 M14 9l3 3" />
-      </svg>
-    ),
+    icon: <FileSignature size={26} strokeWidth={2} />,
   },
   {
     title: "Cadastre seus clientes",
     description:
       "Adicione seus clientes na plataforma e ofereça os serviços do portfólio com a sua marca.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="10" cy="8" r="4" />
-        <path d="M2 21a8 8 0 0 1 16 0 M19 8v6 M22 11h-6" />
-      </svg>
-    ),
+    icon: <UserPlus size={26} strokeWidth={2} />,
   },
   {
     title: "Faça pedidos pelo painel",
     description:
       "Solicite serviços com poucos cliques. Nossa equipe cuida da execução de ponta a ponta.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="4" y="3" width="16" height="18" rx="2" />
-        <path d="M8 8h8 M8 12h8 M8 16h5" />
-      </svg>
-    ),
+    icon: <ClipboardList size={26} strokeWidth={2} />,
   },
 ];
 

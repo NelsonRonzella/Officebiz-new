@@ -1,69 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { DollarSign, TrendingUp, Users, Boxes, BadgeCheck, MessageCircle } from "lucide-react";
 
 const advantages = [
   {
     title: "Zero investimento",
     description:
       "Sem taxa de licença, sem setup, sem treinamento. Comece sem gastar nada além da mensalidade.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2v20 M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H7" />
-      </svg>
-    ),
+    icon: <DollarSign size={22} strokeWidth={2} />,
   },
   {
     title: "Ganhe em cada venda",
     description:
       "Defina suas próprias margens. Quanto mais vende, mais lucra — sem teto, sem repasse forçado.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 17l6-6 4 4 8-8 M21 7v6 M21 7h-6" />
-      </svg>
-    ),
+    icon: <TrendingUp size={22} strokeWidth={2} />,
   },
   {
     title: "Equipe inclusa",
     description:
       "Contadores, designers, desenvolvedores — todos prontos pra executar. Você não contrata ninguém.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="8" r="3" />
-        <circle cx="17" cy="9" r="2.5" />
-        <path d="M3 20a6 6 0 0 1 12 0 M14 20a5 5 0 0 1 8 0" />
-      </svg>
-    ),
+    icon: <Users size={22} strokeWidth={2} />,
   },
   {
     title: "Escalável",
     description:
       "Atenda 1 ou 1.000 clientes. A plataforma cresce com você sem precisar refazer nada.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2 L4 7 V17 L12 22 L20 17 V7 Z M12 2 V22 M4 7 L20 17 M20 7 L4 17" />
-      </svg>
-    ),
+    icon: <Boxes size={22} strokeWidth={2} />,
   },
   {
     title: "White-label",
     description:
       "Ofereça tudo com a sua marca. Seus clientes nem sabem que existimos nos bastidores.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 7L9 18l-5-5" />
-      </svg>
-    ),
+    icon: <BadgeCheck size={22} strokeWidth={2} />,
   },
   {
     title: "Suporte dedicado",
     description:
       "Canal direto via WhatsApp pra dúvidas, acompanhamento de pedidos e novidades da plataforma.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a4 4 0 0 1-4 4H8l-5 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-      </svg>
-    ),
+    icon: <MessageCircle size={22} strokeWidth={2} />,
   },
 ];
 

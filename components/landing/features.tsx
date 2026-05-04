@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { Check, Clock, Shield, Search, Building2, Globe } from "lucide-react";
 
 function CheckBullet({ children }: { children: React.ReactNode }) {
   return (
@@ -18,9 +19,7 @@ function CheckBullet({ children }: { children: React.ReactNode }) {
           color: "var(--ds-secondary-deep)",
         }}
       >
-        <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12 L10 17 L19 7" />
-        </svg>
+        <Check size={10} strokeWidth={3.5} />
       </span>
       <span>{children}</span>
     </li>
@@ -56,10 +55,7 @@ export function Features() {
         >
           <div className="ds-feature-hero-text">
             <span className="ds-feature-pill">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 7v5l3 2" />
-              </svg>
+              <Clock size={14} strokeWidth={2} />
               Cronograma de entrega
             </span>
             <h3>Cada pedido com etapas claras e prazos definidos.</h3>
@@ -107,9 +103,7 @@ export function Features() {
             </div>
             <div className="ds-feature-card-body">
               <span className="ds-feature-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2 L4 6 V12 C4 17 8 21 12 22 C16 21 20 17 20 12 V6 Z" />
-                </svg>
+                <Shield size={14} strokeWidth={2} />
                 Consulta de marca
               </span>
               <h3>Verifique se a marca tá liberada antes de cobrar.</h3>
@@ -129,10 +123,7 @@ export function Features() {
           >
             <div className="ds-feature-card-body">
               <span className="ds-feature-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="M21 21 l-4 -4" />
-                </svg>
+                <Search size={14} strokeWidth={2} />
                 Buscador de leads
               </span>
               <h3>Ache potenciais clientes por região e segmento.</h3>
@@ -168,9 +159,7 @@ export function Features() {
             transition={{ duration: 0.5 }}
           >
             <div className="ds-feature-mini-icon">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 21h18 M5 21V8l7-4 7 4v13 M9 21v-6h6v6" />
-              </svg>
+              <Building2 size={20} strokeWidth={2} />
             </div>
             <div>
               <h3>Consulta de CNPJ</h3>
@@ -198,10 +187,7 @@ export function Features() {
             transition={{ duration: 0.5, delay: 0.08 }}
           >
             <div className="ds-feature-mini-icon">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M3 12h18 M12 3 a14 14 0 0 1 0 18 a14 14 0 0 1 0 -18" />
-              </svg>
+              <Globe size={20} strokeWidth={2} />
             </div>
             <div>
               <h3>Consulta de domínio</h3>

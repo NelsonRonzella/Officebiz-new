@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { CLOSER_WHATSAPP_URL } from "@/lib/pricing";
 
 interface PricingProps {
@@ -16,11 +17,7 @@ const includedItems = [
 ];
 
 function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 12 L10 17 L19 7" />
-    </svg>
-  );
+  return <Check size={14} strokeWidth={3} />;
 }
 
 export function Pricing({ whatsappUrl = CLOSER_WHATSAPP_URL }: PricingProps = {}) {
