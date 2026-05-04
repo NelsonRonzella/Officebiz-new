@@ -64,3 +64,16 @@ storybook-static
 .evolution-backup/
 .vercel-env-tmp
 .env.vercel.tmp
+
+# Design system source (referência visual local; deploy vive em public/design-system/)
+/DesignSystem/
+/Faviicon.png
+
+# Planning
+/.planning/
+
+# Old project archive
+/projeto-antigo/
+
+# Local scripts
+/scripts/start-npi-tunnel.bat
